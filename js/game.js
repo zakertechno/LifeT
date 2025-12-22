@@ -2795,13 +2795,13 @@ const JobSystem = {
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Siguiente Nivel</div>
-                    <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 10px;">${nextJob.title}</div>
-                    <div style="font-size: 0.95rem; color: #cbd5e1;">Has cumplido todos los requisitos para ascender.</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('promotion')}</div>
+                    <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 10px;">${getJobTranslation(nextJob.title)}</div>
+                    <div style="font-size: 0.95rem; color: #cbd5e1;">${t('promotion_ready')}</div>
                 </div>
 
                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                    Ve a la sección de <strong>Trabajo</strong> para solicitar tu ascenso y mejorar tu salario.
+                    ${t('promotion_go_to_work')}
                 </p>
             `;
 
@@ -3236,13 +3236,13 @@ const TutorialSystem = {
                 animation: tutorialSlideIn 0.4s ease-out;
             ">
                 <div style="font-size: 4rem; margin-bottom: 15px; filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.4));">🎓</div>
-                <h2 style="color: #38bdf8; margin: 0 0 10px 0; font-size: 1.5rem;">¡Bienvenido!</h2>
+                <h2 style="color: #38bdf8; margin: 0 0 10px 0; font-size: 1.5rem;">${t('tutorial_welcome_title')}</h2>
                 <p style="color: #94a3b8; margin: 0 0 25px 0; font-size: 0.95rem;">
-                    Tienes 16 años y acabas de terminar la ESO.<br>
-                    Es hora de decidir tu futuro.
+                    ${t('tutorial_age_16')}<br>
+                    ${t('tutorial_decide_future')}
                 </p>
                 <p style="color: #e2e8f0; margin: 0 0 20px 0; font-size: 1rem; font-weight: 600;">
-                    Elige tu formación:
+                    ${t('tutorial_choose_education')}
                 </p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <button id="tutorial-choose-bach" style="
@@ -3255,9 +3255,9 @@ const TutorialSystem = {
                         color: #f8fafc;
                     ">
                         <div style="font-size: 2.5rem; margin-bottom: 10px;">📚</div>
-                        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 5px;">Bachillerato</div>
-                        <div style="font-size: 0.75rem; color: #94a3b8;">18 meses • Gratis</div>
-                        <div style="font-size: 0.7rem; color: #4ade80; margin-top: 5px;">→ Acceso a Universidad</div>
+                        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 5px;">${t('tutorial_bachillerato')}</div>
+                        <div style="font-size: 0.75rem; color: #94a3b8;">18 ${t('months')} • ${t('free')}</div>
+                        <div style="font-size: 0.7rem; color: #4ade80; margin-top: 5px;">${t('tutorial_access_university')}</div>
                     </button>
                     <button id="tutorial-choose-fp" style="
                         background: linear-gradient(145deg, rgba(250, 204, 21, 0.1), rgba(234, 179, 8, 0.05));
@@ -3269,9 +3269,9 @@ const TutorialSystem = {
                         color: #f8fafc;
                     ">
                         <div style="font-size: 2.5rem; margin-bottom: 10px;">🔧</div>
-                        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 5px;">FP Grado Medio</div>
-                        <div style="font-size: 0.75rem; color: #94a3b8;">18 meses • 500€</div>
-                        <div style="font-size: 0.7rem; color: #4ade80; margin-top: 5px;">→ Empleo rápido</div>
+                        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 5px;">${t('tutorial_fp_medio')}</div>
+                        <div style="font-size: 0.75rem; color: #94a3b8;">18 ${t('months')} • 500€</div>
+                        <div style="font-size: 0.7rem; color: #4ade80; margin-top: 5px;">${t('tutorial_quick_job')}</div>
                     </button>
                 </div>
             </div>
@@ -3344,12 +3344,12 @@ const TutorialSystem = {
                     animation: tutorialSlideIn 0.3s ease-out;
                 ">
                     <div style="font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));">💼</div>
-                    <h2 style="color: #38bdf8; margin: 0 0 15px 0; font-size: 1.3rem;">¡Ya estás matriculado!</h2>
+                    <h2 style="color: #38bdf8; margin: 0 0 15px 0; font-size: 1.3rem;">${t('tutorial_enrolled')}</h2>
                     <p style="color: #e2e8f0; margin: 0 0 20px 0; font-size: 0.95rem; line-height: 1.5;">
-                        Mientras estudias, puedes ganar dinero con <strong style="color: #4ade80;">trabajos temporales</strong>.
+                        ${t('tutorial_earn_money_studying')}
                     </p>
                     <p style="color: #94a3b8; margin: 0 0 25px 0; font-size: 0.85rem;">
-                        ¡Busca tu primer trabajo para empezar a ahorrar!
+                        ${t('tutorial_find_first_job')}
                     </p>
                     <button id="tutorial-go-work" style="
                         background: linear-gradient(135deg, #38bdf8, #0ea5e9);
@@ -3363,7 +3363,7 @@ const TutorialSystem = {
                         width: 100%;
                         transition: all 0.2s;
                         box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-                    ">💼 Ir a Trabajo</button>
+                    ">💼 ${t('go_to_work')}</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -3396,22 +3396,22 @@ const TutorialSystem = {
         const tutorialMsg = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66);">${icon}</div>
-                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800;">Trabajos Temporales</h3>
+                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800;">${t('tutorial_temp_jobs_title')}</h3>
             </div>
 
             <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 20px; margin-bottom: 20px;">
                 <p style="color: #e2e8f0; margin: 0 0 15px 0; font-size: 0.95rem; line-height: 1.6; text-align: center;">
-                    Sin titulación, solo tienes acceso a <strong style="color: ${themeColor};">trabajos temporales</strong>.
+                    ${t('tutorial_temp_jobs_msg')}
                 </p>
                 
                 <div style="background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 15px;">
-                    <div style="color: #4ade80; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px;">💡 Consejo</div>
-                    <div style="color: #cbd5e1; font-size: 0.9rem;">Acepta uno de los trabajos disponibles para ganar dinero mientras estudias.</div>
+                    <div style="color: #4ade80; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px;">💡 ${t('tutorial_tip')}</div>
+                    <div style="color: #cbd5e1; font-size: 0.9rem;">${t('tutorial_tip_accept_job')}</div>
                 </div>
                 
                 <div style="background: rgba(129, 140, 248, 0.1); border: 1px solid rgba(129, 140, 248, 0.3); border-radius: 12px; padding: 12px;">
-                    <div style="color: #818cf8; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px;">🎓 A futuro</div>
-                    <div style="color: #cbd5e1; font-size: 0.9rem;">Cuando termines tu formación, desbloquearás <strong>empleos fijos</strong> con mejores salarios.</div>
+                    <div style="color: #818cf8; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px;">🎓 ${t('tutorial_future')}</div>
+                    <div style="color: #cbd5e1; font-size: 0.9rem;">${t('tutorial_future_msg')}</div>
                 </div>
             </div>
         `;
@@ -3420,7 +3420,7 @@ const TutorialSystem = {
             ' ',
             tutorialMsg,
             [{
-                text: '✅ Entendido',
+                text: `✅ ${t('understood')}`,
                 style: 'primary',
                 fn: () => {
                     // BLOCK everything except the gig section
@@ -3454,17 +3454,17 @@ const TutorialSystem = {
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Trabajo Temporal</div>
-                    <div style="font-size: 0.9rem; color: #cbd5e1;">Generarás ingresos mientras estudias.</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">${t('gig_jobs')}</div>
+                    <div style="font-size: 0.9rem; color: #cbd5e1;">${t('tutorial_earning_while_studying')}</div>
                 </div>
 
                 <p style="text-align: center; color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    El tutorial continúa en <strong>Modo Libre</strong>. Avanza el tiempo con "Siguiente Mes" hasta terminar tu formación.
+                    ${t('tutorial_free_mode_msg')}
                 </p>
             `;
 
             UI.showModal(' ', welcomeMsg, [{
-                text: '🚀 ¡Entendido!',
+                text: `🚀 ${t('understood')}`,
                 style: 'success',
                 fn: () => {
                     // 1. Setup Focus
@@ -3477,9 +3477,9 @@ const TutorialSystem = {
                     setTimeout(() => {
                         TutorialSystem.showTooltip(
                             '#next-turn-btn',
-                            '⏳ Mecánica de Turnos',
-                            'El tiempo no avanza solo.<br><br>Pulsa <strong>Siguiente Mes</strong> para cobrar, pagar gastos y avanzar en tus estudios.',
-                            'Entendido',
+                            `⏳ ${t('tutorial_turns_mechanic')}`,
+                            t('tutorial_turns_msg'),
+                            t('understood'),
                             () => {
                                 TutorialSystem.hideTooltip();
                                 // Overlay and Highlight remain until user clicks the button (handled in nextTurn)
@@ -3514,17 +3514,17 @@ const TutorialSystem = {
         let successMsg = `
         <div style="text-align: center; margin-bottom: 20px;">
             <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${finalTheme}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-            <h3 style="color: ${finalTheme}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${finalTheme}4d; font-weight: 800; letter-spacing: 1px;">¡ENHORABUENA!</h3>
+            <h3 style="color: ${finalTheme}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${finalTheme}4d; font-weight: 800; letter-spacing: 1px;">${t('tutorial_well_done')}</h3>
         </div>
 
         <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${finalTheme}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Formación Finalizada</div>
-            <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${degreeName}</div>
+            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('tutorial_education_complete')}</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${getCourseTranslation(degreeName)}</div>
             
             <div style="text-align: left; background: ${finalTheme}1a; border-radius: 12px; padding: 15px; margin-top: 15px; border: 1px solid ${finalTheme}33;">
-                <div style="margin-bottom: 8px; font-size: 0.95rem; color: #e2e8f0;">✅ Acceso a empleos fijos</div>
-                <div style="margin-bottom: 8px; font-size: 0.95rem; color: #e2e8f0;">✅ Mejores salarios disponibles</div>
-                <div style="font-size: 0.95rem; color: #e2e8f0;">✅ Posibilidad de ascender</div>
+                <div style="margin-bottom: 8px; font-size: 0.95rem; color: #e2e8f0;">✅ ${t('tutorial_perm_jobs_access')}</div>
+                <div style="margin-bottom: 8px; font-size: 0.95rem; color: #e2e8f0;">✅ ${t('tutorial_better_salaries')}</div>
+                <div style="font-size: 0.95rem; color: #e2e8f0;">✅ ${t('tutorial_promotions_available')}</div>
             </div>
         </div>
     `;
@@ -3533,7 +3533,7 @@ const TutorialSystem = {
             ' ',
             successMsg,
             [{
-                text: '🔍 Buscar Empleo',
+                text: `🔍 ${t('find_job')}`,
                 style: 'primary',
                 fn: () => {
                     GameState.tutorialFlags.wentToWorkAfterDegree = true;
@@ -3558,11 +3558,9 @@ const TutorialSystem = {
 
         // Show explanation modal with visual style restored + blocking behavior
         showGameAlert(
-            'Ahora que tienes tu título, puedes acceder a <strong>empleos fijos</strong>.<br><br>' +
-            '💼 Los empleos fijos pagan mejor y te permiten <strong>ascender</strong>.<br><br>' +
-            '👆 Elige un empleo de la sección "Mercado Laboral" para continuar.',
+            t('tutorial_jobs_unlocked_msg'),
             'success',
-            '🎉 ¡Empleos Desbloqueados!',
+            `🎉 ${t('tutorial_jobs_unlocked')}`,
             () => {
                 // BLOCK everything except the market section
                 this.showOverlay();
@@ -3603,43 +3601,43 @@ const TutorialSystem = {
         const content = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));">💼</div>
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">Tu Primer Empleo Fijo</div>
+                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">${t('tutorial_first_real_job')}</div>
             </div>
             
             <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: center;">
-                <div style="font-size: 1.2rem; color: #4ade80; font-weight: 700;">${jobTitle}</div>
+                <div style="font-size: 1.2rem; color: #4ade80; font-weight: 700;">${getJobTranslation(jobTitle)}</div>
             </div>
             
             <div style="display: grid; gap: 12px;">
                 <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
                         <span style="font-size: 1.2rem;">📈</span>
-                        <span style="color: #38bdf8; font-weight: 600;">Ascensos</span>
+                        <span style="color: #38bdf8; font-weight: 600;">${t('tutorial_promotions')}</span>
                     </div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">Pide aumentos cuando lleves tiempo. La educación superior desbloquea carreras mejores.</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">${t('tutorial_promotions_msg')}</div>
                 </div>
                 <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
                         <span style="font-size: 1.2rem;">💰</span>
-                        <span style="color: #38bdf8; font-weight: 600;">Salario</span>
+                        <span style="color: #38bdf8; font-weight: 600;">${t('salary')}</span>
                     </div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">Cobras cada mes automáticamente. Aparece en tu Dashboard.</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">${t('tutorial_salary_msg')}</div>
                 </div>
                 <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
                         <span style="font-size: 1.2rem;">🔄</span>
-                        <span style="color: #38bdf8; font-weight: 600;">Cambiar</span>
+                        <span style="color: #38bdf8; font-weight: 600;">${t('tutorial_change_job')}</span>
                     </div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">Puedes aplicar a otros empleos cuando quieras. Algunos requieren títulos.</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">${t('tutorial_change_job_msg')}</div>
                 </div>
             </div>
         `;
 
         UI.showModal(
-            '🎉 ¡Felicidades!',
+            `🎉 ${t('congratulations')}`,
             content,
             [{
-                text: '¡A trabajar! 💪', style: 'primary', fn: () => {
+                text: `${t('tutorial_lets_work')} 💪`, style: 'primary', fn: () => {
                     GameState.tutorialStep = 8;
                     GameState.tutorialFlags.tutorialComplete = true;
                     PersistenceModule.saveGame();
@@ -3676,14 +3674,14 @@ const TutorialSystem = {
                 animation: tutorialSlideIn 0.4s ease-out;
             ">
                 <div style="font-size: 4rem; margin-bottom: 15px; filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.4)); animation: tutorialShake 0.5s infinite;">🏠</div>
-                <h2 style="color: #f43f5e; margin: 0 0 15px 0; font-size: 1.6rem; text-shadow: 0 0 20px rgba(244, 63, 94, 0.3);">¡Te Echan de Casa!</h2>
+                <h2 style="color: #f43f5e; margin: 0 0 15px 0; font-size: 1.6rem; text-shadow: 0 0 20px rgba(244, 63, 94, 0.3);">${t('tutorial_kicked_out')}</h2>
                 
                 <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: left; font-style: italic; color: #cbd5e1;">
-                    "Hijo, ya vas siendo mayor. Cómprate algo bonito con estos 300€, pero espabila porque mañana usamos tu habitación para el gimnasio."
+                    "${t('tutorial_mom_quote')}"
                 </div>
 
                 <p style="color: #e2e8f0; margin: 0 0 25px 0; font-size: 1rem;">
-                    😱 <strong>¡Emergencia!</strong> Necesitas un techo bajo el que dormir hoy mismo.
+                    😱 <strong>${t('emergency')}</strong> ${t('tutorial_need_housing')}
                 </p>
 
                 <button id="tutorial-go-housing-btn" style="
@@ -3698,7 +3696,7 @@ const TutorialSystem = {
                     width: 100%;
                     transition: all 0.2s;
                     box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4);
-                ">📦 Buscar Vivienda</button>
+                ">📦 ${t('find_housing')}</button>
             </div>
             <style>
                 @keyframes tutorialShake {
@@ -3820,21 +3818,20 @@ const TutorialSystem = {
         let indepMsg = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡INDEPENDENCIA!</h3>
+                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('tutorial_independence')}</h3>
             </div>
 
             <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Nueva Etapa Desbloqueada</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">Control Financiero Total</div>
+                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('tutorial_new_stage')}</div>
+                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">${t('tutorial_financial_control')}</div>
                 
                 <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Estado: Emancipado</span>
+                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('tutorial_emancipated')}</span>
                 </div>
             </div>
 
             <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                ¡Enhorabuena! Te has independizado (aunque sea a un sofá).<br>
-                Ahora eres responsable de tus propias finanzas. Vamos a ver cómo van.
+                ${t('tutorial_independence_msg')}
             </p>
         `;
 
@@ -3842,7 +3839,7 @@ const TutorialSystem = {
             ' ',
             indepMsg,
             [{
-                text: '🏠 Ver mis Finanzas',
+                text: `🏠 ${t('view_finances')}`,
                 style: 'success',
                 fn: () => {
                     // Scroll to top immediately to ensure header is visible
@@ -4409,9 +4406,9 @@ const TutorialSystem = {
 
             this.showTooltip(
                 '.metric-card.net-worth',
-                '🏛️ Patrimonio Neto',
-                'Esto es lo que realmente vales. <br><br>Es la suma de todo tu dinero y propiedades, menos tus deudas. ¡Haz que crezca!',
-                'Siguiente',
+                `🏛️ ${t('net_worth')}`,
+                t('tutorial_net_worth_msg'),
+                t('next'),
                 () => {
                     this.removeHighlights();
                     this.hideTooltip();
@@ -4426,9 +4423,9 @@ const TutorialSystem = {
 
                         this.showTooltip(
                             '.metric-card.cash',
-                            '💵 Caja (Efectivo)',
-                            'El dinero líquido que tienes para gastar o invertir. ¡Si llega a cero, game over!',
-                            'Siguiente',
+                            `💵 ${t('cash')}`,
+                            t('tutorial_cash_msg'),
+                            t('next'),
                             () => {
                                 this.removeHighlights();
                                 this.hideTooltip();
@@ -4443,9 +4440,9 @@ const TutorialSystem = {
 
                                     this.showTooltip(
                                         '.metric-card.monthly-flow',
-                                        '📉 Flujo Mensual',
-                                        'Es la diferencia entre tus ingresos y gastos. Mantenlo positivo para acumular riqueza cada mes.',
-                                        'Entendido',
+                                        `📉 ${t('monthly_flow')}`,
+                                        t('tutorial_flow_msg'),
+                                        t('understood'),
                                         () => {
                                             this.removeHighlights();
                                             this.hideTooltip();
@@ -4455,11 +4452,11 @@ const TutorialSystem = {
                                             // Final message
                                             setTimeout(() => {
                                                 showGameAlert(
-                                                    '🎉 <strong>¡Tutorial Finalizado!</strong><br><br>' +
-                                                    'Ya conoces lo básico. Trabaja, invierte y hazte millonario.<br><br>' +
-                                                    'Suerte en la vida real...',
+                                                    `🎉 <strong>${t('tutorial_finished')}</strong><br><br>` +
+                                                    t('tutorial_basic_complete') + '<br><br>' +
+                                                    t('tutorial_good_luck'),
                                                     'success',
-                                                    '🎓 Graduado'
+                                                    '🎓 ' + t('graduated')
                                                 );
                                                 GameState.tutorialFlags.tutorialComplete = true;
                                                 PersistenceModule.saveGame();
@@ -4483,21 +4480,20 @@ const TutorialSystem = {
         let unlockMsg = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡BOLSA DESBLOQUEADA!</h3>
+                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('tutorial_stock_unlocked')}</h3>
             </div>
 
             <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Hito Alcanzado</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">Patrimonio de 30.000€</div>
+                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('milestone_reached')}</div>
+                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">${t('tutorial_net_worth_30k')}</div>
                 
                 <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Acceso a Mercado de Valores</span>
+                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('tutorial_stock_access')}</span>
                 </div>
             </div>
 
             <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                ¡Enhorabuena! Has acumulado suficiente capital para invertir en bolsa.<br>
-                Vamos a ver cómo funciona.
+                ${t('tutorial_stock_congrats')}
             </p>
         `;
 
@@ -4505,7 +4501,7 @@ const TutorialSystem = {
             ' ',
             unlockMsg,
             [{
-                text: '📈 Ir a Bolsa',
+                text: `📈 ${t('go_to_stock')}`,
                 style: 'success',
                 fn: () => {
                     UI.showView('market');
@@ -4518,25 +4514,25 @@ const TutorialSystem = {
                     setTimeout(() => {
                         // Step 1: Chart explanation
                         showGameAlert(
-                            '📈 <strong>Mercado de Valores</strong><br><br>Aquí puedes invertir en acciones de empresas reales y ficticias.<br><br>El precio de cada acción fluctúa con el tiempo. ¡Elige bien!',
+                            t('tutorial_stock_step1'),
                             'info',
-                            '📈 Tutorial Bolsa (1/3)',
+                            `📈 ${t('tutorial_stock')} (1/3)`,
                             () => {
                                 // Step 2: Stock List
                                 setTimeout(() => {
                                     showGameAlert(
-                                        '📋 <strong>Lista de Acciones</strong><br><br>En el apartado Cotizaciones tienes todas las acciones disponibles.<br><br>Selecciona una para ver su gráfico y poder comprarla.',
+                                        t('tutorial_stock_step2'),
                                         'info',
-                                        '📈 Tutorial Bolsa (2/3)',
+                                        `📈 ${t('tutorial_stock')} (2/3)`,
                                         () => {
                                             // Step 3: Buy/Sell
                                             setTimeout(() => {
                                                 showGameAlert(
-                                                    '📊 <strong>Mis Posiciones</strong><br><br>Abajo en el apartado Mis Posiciones verás las acciones que tienes compradas, el precio medio de compra y la ganancia/pérdida actual.<br><br>💡 <em>Consejo: Mantén un ojo en tus posiciones para decidir cuándo vender.</em>',
+                                                    t('tutorial_stock_step3'),
                                                     'success',
-                                                    '📈 Tutorial Bolsa (3/3)',
+                                                    `📈 ${t('tutorial_stock')} (3/3)`,
                                                     () => {
-                                                        UI.showToast('📈 Tutorial Bolsa', '¡Ya sabes lo básico! Buena suerte invirtiendo.', 'success');
+                                                        UI.showToast(`📈 ${t('tutorial_stock')}`, t('tutorial_stock_complete'), 'success');
                                                     },
                                                     true
                                                 );
@@ -4562,21 +4558,20 @@ const TutorialSystem = {
         let unlockMsg = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡BANCO DESBLOQUEADO!</h3>
+                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('tutorial_bank_unlocked')}</h3>
             </div>
 
             <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Nueva Funcionalidad</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">Acceso a Servicios Bancarios</div>
+                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('new_feature')}</div>
+                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">${t('tutorial_bank_access')}</div>
                 
                 <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Préstamos y Financiación</span>
+                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('tutorial_loans_financing')}</span>
                 </div>
             </div>
 
             <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                ¡Ya puedes solicitar préstamos!<br>
-                Vamos a ver cómo funciona.
+                ${t('tutorial_bank_congrats')}
             </p>
         `;
 
@@ -4584,7 +4579,7 @@ const TutorialSystem = {
             ' ',
             unlockMsg,
             [{
-                text: '🏦 Ir al Banco',
+                text: `🏦 ${t('go_to_bank')}`,
                 style: 'success',
                 fn: () => {
                     UI.showView('bank');
@@ -4597,25 +4592,25 @@ const TutorialSystem = {
                     setTimeout(() => {
                         // Step 1: Bank intro
                         showGameAlert(
-                            '🏦 <strong>Servicios Bancarios</strong><br><br>Aquí puedes solicitar préstamos personales para financiar tus inversiones.<br><br>El banco evaluará tu perfil antes de concederte un crédito.',
+                            t('tutorial_bank_step1'),
                             'info',
-                            '🏦 Tutorial Banco (1/3)',
+                            `🏦 ${t('tutorial_bank')} (1/3)`,
                             () => {
                                 // Step 2: Credit limit
                                 setTimeout(() => {
                                     showGameAlert(
-                                        '💳 <strong>Límite de Crédito</strong><br><br>Tu límite de crédito depende de tu salario mensual.<br><br>Cuanto mayor sea tu sueldo, más dinero podrás pedir prestado.',
+                                        t('tutorial_bank_step2'),
                                         'info',
-                                        '🏦 Tutorial Banco (2/3)',
+                                        `🏦 ${t('tutorial_bank')} (2/3)`,
                                         () => {
                                             // Step 3: Encourage real estate
                                             setTimeout(() => {
                                                 showGameAlert(
-                                                    '🏠 <strong>¡Invierte en Inmuebles!</strong><br><br>Los préstamos son perfectos para comprar propiedades inmobiliarias que generen rentas mensuales.<br><br>💡 <em>Consejo: Un buen inmueble puede pagarse solo con los alquileres.</em>',
+                                                    t('tutorial_bank_step3'),
                                                     'success',
-                                                    '🏦 Tutorial Banco (3/3)',
+                                                    `🏦 ${t('tutorial_bank')} (3/3)`,
                                                     () => {
-                                                        UI.showToast('🏦 Tutorial Banco', '¡Ya conoces el banco! Considera pedir un préstamo.', 'success');
+                                                        UI.showToast(`🏦 ${t('tutorial_bank')}`, t('tutorial_bank_complete'), 'success');
                                                     },
                                                     true
                                                 );
@@ -5674,25 +5669,25 @@ const UI = {
         container.innerHTML = `
                     <div class="dashboard-container">
                          <div class="section-header">
-                            <h2>Banco Central</h2>
-                            <span style="color:#94a3b8; font-size:0.9rem;">Servicios Financieros</span>
+                            <h2>${t('bank_title')}</h2>
+                            <span style="color:#94a3b8; font-size:0.9rem;">${t('financial_services')}</span>
                         </div>
 
                         <!-- BANK HERO STATS -->
                         <div class="bank-stats-container" style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
                             <div class="bank-stat-card" style="flex:1; min-width: 140px; background: linear-gradient(145deg, rgba(250, 204, 21, 0.1), rgba(251, 191, 36, 0.05)); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));">💸</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Pago Mensual</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('monthly_payment')}</span>
                                 <span style="font-size:1.3rem; font-weight:800; color:#facc15; text-shadow: 0 0 15px rgba(250, 204, 21, 0.3);">-${formatCurrency(totalMonthlyPayment)}</span>
                             </div>
                             <div class="bank-stat-card" style="flex:1; min-width: 140px; background: linear-gradient(145deg, rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.4));">📊</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Deuda Total</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('total_debt')}</span>
                                 <span style="font-size:1.3rem; font-weight:800; color:#f87171; text-shadow: 0 0 15px rgba(248, 113, 113, 0.3);">-${formatCurrency(totalDebt)}</span>
                             </div>
                             <div class="bank-stat-card metric-card cash" style="flex:1; min-width: 140px; background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.4));">💳</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Crédito Disponible</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('available_credit')}</span>
                                 <span style="font-size:1.3rem; font-weight:800; color:#4ade80; text-shadow: 0 0 15px rgba(74, 222, 128, 0.3);">${formatCurrency(remainingLimit)}</span>
                             </div>
                         </div>
@@ -7248,6 +7243,8 @@ const UI = {
         let heroHTML = '';
         if (current) {
             const progress = ((current.duration - current.remainingMonths) / current.duration) * 100;
+            const currentTr = getCourseTranslation(current.id);
+            const currentCourseName = currentTr.name || current.name;
             heroHTML = `
                     <div class="edu-hero" style="background: linear-gradient(145deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 20px; padding: 25px; position: relative; overflow: hidden;">
                         <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #a855f7, #8b5cf6);"></div>
@@ -7257,7 +7254,7 @@ const UI = {
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                     <span style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1)); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(168, 85, 247, 0.3); text-transform: uppercase; letter-spacing: 1px;">${t('in_progress')}</span>
                                 </div>
-                                <h2 style="margin: 0 0 8px 0; font-size: 1.4rem; color: #fff; font-weight: 800;">${current.name}</h2>
+                                <h2 style="margin: 0 0 8px 0; font-size: 1.4rem; color: #fff; font-weight: 800;">${currentCourseName}</h2>
                                 <p style="color: #94a3b8; margin: 0 0 15px 0; font-size: 0.9rem;">⏱️ ${t('time_remaining')}: <span style="color: #a855f7; font-weight: 700;">${current.remainingMonths} ${t('months')}</span></p>
                                 <div style="background: #1e293b; border-radius: 8px; height: 12px; overflow: hidden;">
                                     <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, #a855f7, #8b5cf6); border-radius: 8px; transition: width 0.3s;"></div>
@@ -7404,13 +7401,18 @@ const UI = {
 
             const courseIcon = getCourseIcon(course.id);
 
+            // Get translated course name and description
+            const courseTr = getCourseTranslation(course.id);
+            const courseName = courseTr.name || course.name;
+            const courseDesc = courseTr.desc || course.desc;
+
             card.innerHTML = `
                         <div class="course-icon">${courseIcon}</div>
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                            <h4 style="margin:0; ${isLocked ? 'color:#cbd5e1' : 'color:#facc15'}">${course.name}</h4>
+                            <h4 style="margin:0; ${isLocked ? 'color:#cbd5e1' : 'color:#facc15'}">${courseName}</h4>
                             ${statusBadge}
                         </div>
-                        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:10px;">${course.desc}</p>
+                        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:10px;">${courseDesc}</p>
                         <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
                             <span class="tag">⏱ ${course.duration} ${t('months')}</span>
                             ${course.cost > 0 ? `<span class="tag">💰 ${formatCurrency(course.cost)}</span>` : `<span class="tag">${t('free')}</span>`}
@@ -7509,7 +7511,7 @@ const UI = {
                     </div>
                 `;
         const actionBox = overlay.querySelector('.modal-actions');
-        if (actions.length === 0 && !skipDefaultAction) actions.push({ text: 'Entendido', style: 'primary', fn: null });
+        if (actions.length === 0 && !skipDefaultAction) actions.push({ text: t('tutorial_understood'), style: 'primary', fn: null });
 
         actions.forEach(a => {
             const btn = document.createElement('button');
@@ -7787,7 +7789,7 @@ const UI = {
                         <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 15px;">
                             <div style="font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));">${jobIcon}</div>
                             <div>
-                                <h2 class="hero-title" style="margin-bottom: 5px;">${GameState.jobTitle}</h2>
+                                <h2 class="hero-title" style="margin-bottom: 5px;">${getJobTranslation(GameState.jobTitle)}</h2>
                                 <div class="career-path" style="margin-bottom: 0;">📍 ${UI.getLabel(JobSys.currentCareerPath)}</div>
                             </div>
                         </div>
@@ -7828,9 +7830,9 @@ const UI = {
                     } else {
                         // Unemployed message
                         goalCard.innerHTML = `
-                                <div class="card-header"><span class="badge-secondary">BUSCA TRABAJO</span></div>
-                                <h3 class="goal-title">Estás Desempleado</h3>
-                                <p style="color:#94a3b8; margin-top:10px;">Revisa las ofertas de abajo y aplica a un puesto para empezar a ganar dinero.</p>
+                                <div class="card-header"><span class="badge-secondary">${t('look_for_work')}</span></div>
+                                <h3 class="goal-title">${t('you_are_unemployed')}</h3>
+                                <p style="color:#94a3b8; margin-top:10px;">${t('unemployed_message')}</p>
                             `;
                     }
                     dashboardGrid.appendChild(goalCard);
@@ -7968,14 +7970,14 @@ const UI = {
                                 
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                     <div>
-                                        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#cbd5e1; margin-bottom:4px;">PRÓXIMO OBJETIVO</div>
+                                        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#cbd5e1; margin-bottom:4px;">${t('next_objective')}</div>
                                         <div style="font-size:1.25rem; font-weight:700; color:#f8fafc; display:flex; align-items:center; gap:10px;">
-                                            <span>${nextJobInPath.title}</span>
-                                            ${isReady ? '<span style="font-size:0.8rem; background:rgba(16, 185, 129, 0.2); color:#34d399; padding:2px 8px; border-radius:12px; border:1px solid rgba(16, 185, 129, 0.3);">LISTO</span>' : ''}
+                                            <span>${getJobTranslation(nextJobInPath.title)}</span>
+                                            ${isReady ? `<span style="font-size:0.8rem; background:rgba(16, 185, 129, 0.2); color:#34d399; padding:2px 8px; border-radius:12px; border:1px solid rgba(16, 185, 129, 0.3);">${t('ready')}</span>` : ''}
                                         </div>
                                     </div>
                                     <div style="text-align:right;">
-                                        <div style="font-size:0.8rem; color:#94a3b8;">Incremento Salarial</div>
+                                        <div style="font-size:0.8rem; color:#94a3b8;">${t('salary_increase')}</div>
                                         <div style="font-size:1.1rem; font-weight:700; color:#fbbf24; text-shadow:0 0 10px rgba(251, 191, 36, 0.2);">+${formatCurrency(nextJobInPath.salary - GameState.salary)}</div>
                                     </div>
                                 </div>
@@ -8205,15 +8207,15 @@ const UI = {
                     card.className = 'market-card';
                     card.innerHTML = `
                                 <div class="market-card-top">
-                                    <h4>${vac.title}</h4>
-                                    <span class="market-path">Trabajo Temporal</span>
+                                    <h4>${getJobTranslation(vac.title)}</h4>
+                                    <span class="market-path">${t('gig_jobs')}</span>
                                 </div>
                                 <div class="market-tags">
-                                    <span class="tag" style="background:rgba(234, 179, 8, 0.2); color:#facc15; border:1px solid #facc15;">⏱ ${vac.duration} meses</span>
+                                    <span class="tag" style="background:rgba(234, 179, 8, 0.2); color:#facc15; border:1px solid #facc15;">⏱ ${vac.duration} ${t('months')}</span>
                                 </div>
                                 <div class="market-footer">
                                     <div class="market-salary">${formatCurrency(vac.salary)}</div>
-                                    <button class="btn-apply-small">Aplicar</button>
+                                    <button class="btn-apply-small">${t('apply')}</button>
                                 </div>
                             `;
                     card.querySelector('.btn-apply-small').onclick = () => {
@@ -8246,7 +8248,7 @@ const UI = {
 
                                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                                     <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Trabajo Temporal</div>
-                                    <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${vac.title}</div>
+                                    <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${getJobTranslation(vac.title)}</div>
                                     
                                     <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
                                         <span style="color: ${themeColor}; font-weight: 700; font-size: 1.2rem;">${formatCurrency(vac.salary)}/mes</span>
@@ -8254,11 +8256,11 @@ const UI = {
                                 </div>
 
                                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                                    Has aceptado un trabajo temporal. Ganarás dinero mientras dure el contrato.
+                                    ${t('gig_accepted_msg')}
                                 </p>
                             `;
 
-                                UI.showModal(' ', gigMsg, [{ text: '🚀 ¡Empezar!', style: 'primary', fn: () => UI.updateJob(JobSys) }], true);
+                                UI.showModal(' ', gigMsg, [{ text: `🚀 ${t('lets_start')}`, style: 'primary', fn: () => UI.updateJob(JobSys) }], true);
                                 UI.updateHeader();
                                 UI.updateDashboard();
                             } else {
@@ -8335,11 +8337,11 @@ const UI = {
                     card.innerHTML = `
                             <div class="job-icon">${jobIcon}</div>
                             <div class="market-card-top">
-                                <h4>${vac.title}</h4>
+                                <h4>${getJobTranslation(vac.title)}</h4>
                                 <span class="market-path">${pathName}</span>
                             </div>
                             <div class="market-tags">
-                                <span class="tag">Nivel Inicial</span>
+                                <span class="tag">${t('entry_level')}</span>
                                 ${vac.type === 'gig' ? `<span class="tag" style="background:rgba(234, 179, 8, 0.2); color:#facc15; border:1px solid #facc15;">⏱ ${vac.duration} meses</span>` : ''}
                                 ${eduText ? `<span class="tag tag-edu">${eduText}</span>` : ''}
                             </div>
@@ -8384,7 +8386,7 @@ const UI = {
 
                                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                                     <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${subTitle}</div>
-                                    <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${vac.title}</div>
+                                    <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${getJobTranslation(vac.title)}</div>
                                     
                                     <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
                                         <span style="color: ${themeColor}; font-weight: 700; font-size: 1.2rem;">${formatCurrency(vac.salary)}/mes</span>
@@ -8392,7 +8394,7 @@ const UI = {
                                 </div>
 
                                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                                    ${isGig ? 'Has aceptado un trabajo temporal. Ganarás dinero mientras dure el contrato.' : '¡Bienvenido al equipo! Has dado un gran paso en tu carrera profesional. Tu primer sueldo llegará a final de mes.'}
+                                    ${isGig ? t('gig_accepted_msg') : t('career_accepted_msg')}
                                 </p>
                             `;
 
@@ -8401,7 +8403,7 @@ const UI = {
                                 }
 
                                 if (!res.tutorialHandled) {
-                                    UI.showModal(' ', welcomeMsg, [{ text: '🚀 ¡Empezar!', style: 'primary', fn: () => UI.updateJob(JobSys) }], true);
+                                    UI.showModal(' ', welcomeMsg, [{ text: `🚀 ${t('lets_start')}`, style: 'primary', fn: () => UI.updateJob(JobSys) }], true);
                                 } else {
                                     // If tutorial handled it, just update header/dashboard silently in background
                                     UI.updateJob(JobSys);
@@ -8518,11 +8520,11 @@ const UI = {
                         card.innerHTML = `
                                 <div class="job-icon" style="opacity:0.5;">${jobIcon}</div>
                                 <div class="market-card-top">
-                                    <h4 style="color:#cbd5e1">${vac.title}</h4>
+                                    <h4 style="color:#cbd5e1">${getJobTranslation(vac.title)}</h4>
                                     <span class="market-path">${pathName}</span>
                                 </div>
                                 <div class="market-tags">
-                                    <span class="tag">Nivel Inicial</span>
+                                    <span class="tag">${t('entry_level')}</span>
                                     ${eduText ? `<span class="tag tag-edu" style="background:rgba(239, 68, 68, 0.1); border:1px solid #ef4444; color:#ef4444;">🔒 ${eduText}</span>` : ''}
                                 </div>
                                 <div class="market-footer">
@@ -10063,18 +10065,18 @@ function nextTurn() {
             let taxMsg = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">HACIENDA SOMOS TODOS</h3>
+                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('tax_authority')}</h3>
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                     <p style="text-align: center; color: #e2e8f0; font-size: 1rem; margin-bottom: 20px;">
-                        A partir de ahora, cada <strong>Mes 5</strong> deberás presentar la Declaración de la Renta.
+                        ${t('tax_intro')}
                     </p>
                     
                     <div style="background: rgba(15, 23, 42, 0.5); border-radius: 12px; overflow: hidden; border: 1px solid #334155;">
                         <div style="display: grid; grid-template-columns: 1fr 100px; padding: 10px 15px; background: rgba(59, 130, 246, 0.1); border-bottom: 1px solid #334155; font-weight: 700; color: #93c5fd; font-size: 0.9rem;">
-                            <span>Tramo de Ingresos</span>
-                            <span style="text-align: right;">Tipo</span>
+                            <span>${t('income_bracket')}</span>
+                            <span style="text-align: right;">${t('tax_rate')}</span>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 100px; padding: 8px 15px; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1;">
                             <span>&lt; 10.000€</span>
@@ -10100,14 +10102,14 @@ function nextTurn() {
                 </div>
 
                 <p style="text-align: center; color: #94a3b8; font-size: 0.9rem; margin: 0; font-style: italic;">
-                    "No olvides reservar liquidez..." 
+                    "${t('tax_reminder')}" 
                 </p>
             `;
 
             UI.showModal(
                 ' ',
                 taxMsg,
-                [{ text: 'Entendido', style: 'primary', fn: null }],
+                [{ text: t('understood'), style: 'primary', fn: null }],
                 true
             );
         }, 800);
