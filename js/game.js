@@ -2400,7 +2400,7 @@ const CompanyModule = {
         }
 
         if (co.cash < -10000) {
-            co.events.push("⛔ ¡PELIGRO! Caja muy negativa.");
+            co.events.push(t('danger_negative_cash'));
         }
 
         return { revenue: co.revenueLastMonth, profit: co.profitLastMonth };
@@ -2472,7 +2472,7 @@ TOTAL OPERACIÓN: ${formatCurrency(totalExit)}
         GameState.salary = 0;
         JobSystem.currentCareerPath = 'none';
 
-        return { success: true, message: `¡EXITO! Empresa vendida por ${formatCurrency(totalExit)}.` };
+        return { success: true, message: t('company_sold_success').replace('{amount}', formatCurrency(totalExit)) };
     }
 };
 
@@ -2728,17 +2728,17 @@ const JobSystem = {
                 const expiryMsg = `
                     <div style="text-align: center; margin-bottom: 20px;">
                         <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.4)); animation: bounceIn 0.6s;">🏁</div>
-                        <h3 style="color: #f43f5e; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px rgba(244, 63, 94, 0.3);">Contrato Finalizado</h3>
+                        <h3 style="color: #f43f5e; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px rgba(244, 63, 94, 0.3);">${t('contract_ended')}</h3>
                     </div>
 
                     <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                        <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Estado Laboral</div>
-                        <div style="font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 10px;">Desempleado</div>
-                        <div style="font-size: 0.9rem; color: #cbd5e1;">Tu trabajo temporal ha concluido.</div>
+                        <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">${t('job_status')}</div>
+                        <div style="font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 10px;">${t('unemployed')}</div>
+                        <div style="font-size: 0.9rem; color: #cbd5e1;">${t('temp_job_ended_msg')}</div>
                     </div>
 
                     <p style="text-align: center; color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin: 0;">
-                        Es hora de buscar nuevas oportunidades en la sección de <strong>Trabajo</strong>.
+                        ${t('find_new_opportunities')}
                     </p>
                 `;
 
@@ -2814,42 +2814,10 @@ const JobSystem = {
             // Reset counter
             this.monthsSinceLastRaise = 0;
 
-            // Array of comic excuses
-            const excuses = [
-                "Tu jefa dice que... primero tendrías que vender más mochilas. Por cierto, ¿puedes trabajar el sábado?",
-                "Tu jefa dice que... arréglate esa barba. Pareces un vagabundo, no un empleado.",
-                "Tu jefa dice que... si quieres más dinero, vende tu riñón. Por cierto, ¿puedes trabajar el domingo?",
-                "Tu jefa dice que... ¿aumento? ¡Pero si ya tienes un trabajo!",
-                "Tu jefa dice que... la empresa está en crisis mientras ella se va de crucero.",
-                "Tu jefa dice que... el año que viene seguro, confía en mí. Por cierto, ¿puedes trabajar el sábado?",
-                "Tu jefa dice que... ¿has probado buscar monedas en la calle?",
-                "Tu jefa dice que... con tu rendimiento deberías PAGAR por trabajar aquí. ¿Y ese día que te pusiste malo? Eso nos costó dinero.",
-                "Tu jefa dice que... primero aprende a llegar puntual.",
-                "Tu jefa dice que... ¿aumento? ¡Qué gracioso eres! Por cierto, ¿puedes trabajar el domingo?",
-                "Tu jefa dice que... yo te lo daría, pero los de arriba no me dejan. Ya sabes cómo son.",
-                "Tu jefa dice que... estás ganando experiencia, ¿no te basta? Y esas vacaciones que pediste en verano, ¿te parecen poco?",
-                "Tu jefa dice que... te pagaremos en exposición y buen rollo.",
-                "Tu jefa dice que... ya puedes entrenar sin pagar en el gimnasio, ¿qué más quieres?",
-                "Tu jefa dice que... si tanto lo necesitas, vende cosas en Wallapop. Por cierto, ¿puedes trabajar el sábado?",
-                "Tu jefa dice que... el café gratis es tu aumento.",
-                "Tu jefa dice que... ¿aumento? No veo que vendas más que Pedro. Y encima te pones malo cada dos por tres.",
-                "Tu jefa dice que... estamos esperando a que la economía mejore. Por cierto, ¿puedes trabajar el domingo?",
-                "Tu jefa dice que... con 850€ vives como un rey en 1985.",
-                "Tu jefa dice que... primero demuestra que mereces lo que ya ganas. ¿Y ese día de baja el mes pasado?",
-                "Tu jefa dice que... agradece que no te hemos bajado el sueldo.",
-                "Tu jefa dice que... ¿sabes cuánta gente querría tu puesto? Y tú cogiendo vacaciones...",
-                "Tu jefa dice que... el trabajo en equipo no se paga, se siente. Por cierto, ¿puedes trabajar el sábado?",
-                "Tu jefa dice que... hemos decidido invertir en un nuevo logo en vez de salarios. Ah, y necesitamos que vengas el domingo.",
-                "Tu jefa dice que... ¿otra vez con lo mismo? La semana pasada te fuiste 'malo' y ahora quieres aumento.",
-                "Tu jefa dice que... las vacaciones son un privilegio, no un derecho. Y menos si quieres más dinero.",
-                "Tu jefa dice que... llevas mal puesto el uniforme. Así no puedo subirte el sueldo.",
-                "Tu jefa dice que... ¿con esos pendientes? Primero quítatelos y luego hablamos de dinero.",
-                "Tu jefa dice que... ese peinado no es adecuado para la empresa. Arréglate primero.",
-                "Tu jefa dice que... el uniforme tiene que estar impecable. Ven mañana bien vestido y lo hablamos."
-            ];
-
-            const randomExcuse = excuses[Math.floor(Math.random() * excuses.length)];
-            return { success: false, message: randomExcuse };
+            // Boss excuses - using i18n keys for translation
+            const excuseKeys = Array.from({ length: 30 }, (_, i) => `boss_excuse_${i + 1}`);
+            const randomKey = excuseKeys[Math.floor(Math.random() * excuseKeys.length)];
+            return { success: false, message: t(randomKey) };
         }
 
 
@@ -2881,7 +2849,7 @@ const JobSystem = {
         // Reset notification flag
         GameState.promotionNotified = false;
 
-        return { success: true, message: `¡Ascendido a ${nextJob.title}! Nuevo salario base: ${nextJob.salary}€` };
+        return { success: true, message: t('promoted_to').replace('{job}', nextJob.title).replace('{salary}', nextJob.salary) };
     },
 
     checkAvailablePromotion() {
@@ -2910,7 +2878,7 @@ const JobSystem = {
             let msg = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡ASCENSO DISPONIBLE!</h3>
+                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('promotion_available')}</h3>
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -3042,7 +3010,7 @@ const JobSystem = {
             TutorialSystem.onRealJobAccepted(targetJob.title);
         }
 
-        return { success: true, message: `¡Contratado como ${targetJob.title}!`, tutorialHandled: tutorialHandled };
+        return { success: true, message: t('hired_as').replace('{job}', targetJob.title), tutorialHandled: tutorialHandled };
     },
 
     switchJobEnhanced(pathKey, jobObj) {
@@ -3767,7 +3735,7 @@ const TutorialSystem = {
 
     // STEP 8: Force Housing (Mom kicks you out)
     step8_ForceHousing() {
-        console.log('DEBUG: step8_ForceHousing Triggered');
+        // console.log('DEBUG: step8_ForceHousing Triggered');
         if (GameState.tutorialState.forceHousing) return;
         GameState.tutorialStep = 8;
         GameState.tutorialState.forceHousing = true;
@@ -7066,7 +7034,7 @@ const UI = {
     },
 
     showView(targetView) {
-        console.log('DEBUG: showView called with', targetView);
+        // console.log('DEBUG: showView called with', targetView);
 
         // LOCKED VIEW CHECKS
         if (targetView === 'lifestyle' && !GameState.expensesUnlocked) {
@@ -8091,9 +8059,9 @@ const UI = {
                     if (hasGigs) {
                         // Temporary job message
                         goalCard.innerHTML = `
-                                <div class="card-header"><span class="badge-secondary">TRABAJO TEMPORAL</span></div>
-                                <h3 class="goal-title">Trabajo Temporal</h3>
-                                <p style="color:#94a3b8; margin-top:10px;">Esto es un trabajo temporal, no durará mucho.</p>
+                                <div class="card-header"><span class="badge-secondary">${t('temp_job_badge')}</span></div>
+                                <h3 class="goal-title">${t('temp_job_title')}</h3>
+                                <p style="color:#94a3b8; margin-top:10px;">${t('temp_job_desc')}</p>
                             `;
                     } else {
                         // Unemployed message
@@ -8272,7 +8240,7 @@ const UI = {
                                                 <div style="font-size:1.2rem;">${isEduOk ? '🎓' : '📚'}</div>
                                                 <div style="display:flex; flex-direction:column;">
                                                     <span style="font-size:0.7rem; color:${isEduOk ? '#34d399' : '#f87171'}">${isEduOk ? t('job_fulfilled') : t('job_missing_edu')}</span>
-                                                    <span style="font-size:0.8rem; font-weight:600; color:#e2e8f0;">${UI.getLabel(nextJobInPath.reqEdu)}</span>
+                                                    <span style="font-size:0.8rem; font-weight:600; color:#e2e8f0;">${Array.isArray(nextJobInPath.reqEdu) ? nextJobInPath.reqEdu.map(id => UI.getLabel('course_' + id)).join(' / ') : UI.getLabel('course_' + nextJobInPath.reqEdu)}</span>
                                                 </div>
                                             </div>
                                         ` : ''}
@@ -8459,7 +8427,13 @@ const UI = {
 
                 // Split Gigs vs Regular
                 const gigs = vacancyList.filter(v => v.path === 'temporary');
-                const regular = vacancyList.filter(v => v.path !== 'temporary');
+                const regular = vacancyList.filter(v => {
+                    // Hide DJ career until Year 1, Month 10 (invisible lock)
+                    if (v.path === 'dj' && (GameState.year < 1 || (GameState.year === 1 && GameState.month < 10))) {
+                        return false;
+                    }
+                    return v.path !== 'temporary';
+                });
 
                 // --- SECTION: GIGS ---
                 const gigSection = document.createElement('div');
@@ -8511,11 +8485,11 @@ const UI = {
                                 let gigMsg = `
                                 <div style="text-align: center; margin-bottom: 20px;">
                                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡TRABAJO TEMPORAL!</h3>
+                                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('temp_job_accepted')}</h3>
                                 </div>
 
                                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Trabajo Temporal</div>
+                                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('temp_job_title')}</div>
                                     <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${getJobTranslation(vac.title)}</div>
                                     
                                     <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
@@ -8563,9 +8537,9 @@ const UI = {
                     let eduText = null;
                     if (vac.reqEdu) {
                         if (Array.isArray(vac.reqEdu)) {
-                            eduText = vac.reqEdu.map(id => UI.getLabel(id)).join(' o ');
+                            eduText = vac.reqEdu.map(id => UI.getLabel('course_' + id)).join(' o ');
                         } else {
-                            eduText = UI.getLabel(vac.reqEdu);
+                            eduText = UI.getLabel('course_' + vac.reqEdu);
                         }
                     }
 
@@ -8642,8 +8616,8 @@ const UI = {
                                 // Use Blue/Cyan for Permanent Jobs to be distinct from Green (Success)
                                 const themeColor = isGig ? '#facc15' : '#0ea5e9'; // Yellow vs Sky Blue
                                 const icon = isGig ? '⚡' : '👔';
-                                const title = isGig ? '¡TRABAJO TEMPORAL!' : '¡CONTRATO FIRMADO!';
-                                const subTitle = isGig ? 'Trabajo Temporal' : 'Nueva Trayectoria Profesional';
+                                const title = isGig ? t('temp_job_accepted') : t('contract_signed');
+                                const subTitle = isGig ? t('temp_job_title') : t('new_career_path');
 
                                 // PREMIUM WELCOME MESSAGE
                                 let welcomeMsg = `
@@ -8746,9 +8720,9 @@ const UI = {
                         let eduText = null;
                         if (vac.reqEdu) {
                             if (Array.isArray(vac.reqEdu)) {
-                                eduText = vac.reqEdu.map(id => UI.getLabel(id)).join(' o ');
+                                eduText = vac.reqEdu.map(id => UI.getLabel('course_' + id)).join(' o ');
                             } else {
-                                eduText = UI.getLabel(vac.reqEdu);
+                                eduText = UI.getLabel('course_' + vac.reqEdu);
                             }
                         }
 
@@ -10129,7 +10103,7 @@ const UI = {
     },
 
     checkStoryEvents() {
-        console.log(`DEBUG: Checking Story Events. Year: ${GameState.year}, Month: ${GameState.month}`);
+        // console.log(`DEBUG: Checking Story Events. Year: ${GameState.year}, Month: ${GameState.month}`);
 
         // EVENT 1: Year 1, Month 4
         if (GameState.year === 1 && GameState.month === 4) {
@@ -10161,8 +10135,8 @@ const UI = {
             UI.playCoinSound();
         }
 
-        // EVENT 2A: Year 2, Month 3 - Silent Unlock
-        if (GameState.year === 2 && GameState.month === 3) {
+        // EVENT 2A: Year 2, Month 4 - Silent Unlock (delayed by 1 month)
+        if (GameState.year === 2 && GameState.month === 4) {
             GameState.expensesUnlocked = true;
             // Notification removed as requested
         }
@@ -10548,7 +10522,7 @@ function nextTurn() {
     // Auto-save every 3 months (more frequent to prevent data loss)
     if (GameState.month % 3 === 0) {
         const saveRes = PersistenceModule.saveGame();
-        console.log("Auto-Save:", saveRes.message);
+        // console.log("Auto-Save:", saveRes.message);
     }
 
     // Regenerate real estate listings every 6 months
@@ -10578,10 +10552,10 @@ function nextTurn() {
         GameState.stockUnlocked = false;
     }
 
-    console.log('DEBUG Stock Unlock Check:', { nw, stockUnlocked: GameState.stockUnlocked, shouldTrigger: nw >= 30000 && !GameState.stockUnlocked });
+    // console.log('DEBUG Stock Unlock Check:', { nw, stockUnlocked: GameState.stockUnlocked, shouldTrigger: nw >= 30000 && !GameState.stockUnlocked });
 
     if (nw >= 30000 && !GameState.stockUnlocked) {
-        console.log('DEBUG: Triggering Stock Unlock!');
+        // console.log('DEBUG: Triggering Stock Unlock!');
         GameState.stockUnlocked = true;
         // Trigger celebration and tutorial after a short delay
         setTimeout(() => {
@@ -10743,7 +10717,7 @@ function showBankruptcyModal() {
 
 // INIT
 try {
-    console.log('Juego iniciado (Script Try Block Start)');
+    // console.log('Juego iniciado (Script Try Block Start)');
     const setupEventListeners = () => {
         // Next Turn Buttons (Header and Dashboard)
         const nextBtns = document.querySelectorAll('#next-turn-btn, #dashboard-next-btn');
@@ -10837,9 +10811,11 @@ try {
     };
 
     const initGame = () => {
+        document.getElementById('app').style.display = 'block';
         StockMarket.init();
         UI.render();
         UI.setupLanguageSwitcher();
+        UI.updateStaticTranslations(); // Fix: Translate static texts (game title, nav labels) on game start
         setupEventListeners();
 
         // Sync Bottom Nav
