@@ -7255,15 +7255,15 @@ const UI = {
                             <div style="font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));">📚</div>
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <span style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1)); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(168, 85, 247, 0.3); text-transform: uppercase; letter-spacing: 1px;">En Curso</span>
+                                    <span style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1)); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(168, 85, 247, 0.3); text-transform: uppercase; letter-spacing: 1px;">${t('in_progress')}</span>
                                 </div>
                                 <h2 style="margin: 0 0 8px 0; font-size: 1.4rem; color: #fff; font-weight: 800;">${current.name}</h2>
-                                <p style="color: #94a3b8; margin: 0 0 15px 0; font-size: 0.9rem;">⏱️ Tiempo restante: <span style="color: #a855f7; font-weight: 700;">${current.remainingMonths} meses</span></p>
+                                <p style="color: #94a3b8; margin: 0 0 15px 0; font-size: 0.9rem;">⏱️ ${t('time_remaining')}: <span style="color: #a855f7; font-weight: 700;">${current.remainingMonths} ${t('months')}</span></p>
                                 <div style="background: #1e293b; border-radius: 8px; height: 12px; overflow: hidden;">
                                     <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, #a855f7, #8b5cf6); border-radius: 8px; transition: width 0.3s;"></div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.8rem; color: #64748b;">
-                                    <span>Progreso</span>
+                                    <span>${t('progress')}</span>
                                     <span style="color: #a855f7; font-weight: 700;">${progress.toFixed(0)}%</span>
                                 </div>
                             </div>
@@ -7273,7 +7273,7 @@ const UI = {
 
         } else {
             const highestId = myEdu[myEdu.length - 1];
-            const highest = highestId ? UI.getLabel(highestId) : 'Sin Estudios';
+            const highest = highestId ? UI.getLabel(highestId) : t('no_studies');
 
             // Get education icon based on level
             const getEduIcon = (eduId) => {
@@ -7292,11 +7292,11 @@ const UI = {
                         <div style="display: flex; align-items: center; gap: 20px;">
                             <div style="font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));">${eduIcon}</div>
                             <div style="flex: 1;">
-                                <span style="display: inline-block; background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1)); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(168, 85, 247, 0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Formación Actual</span>
-                                <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Máximo Grado</p>
+                                <span style="display: inline-block; background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1)); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(168, 85, 247, 0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">${t('current_education')}</span>
+                                <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('highest_degree')}</p>
                                 <h2 style="margin: 0 0 12px 0; font-size: 1.6rem; color: #a855f7; font-weight: 800;">${highest}</h2>
 
-                                <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">💡 Inscríbete en un curso para mejorar tus perspectivas laborales.</p>
+                                <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">💡 ${t('enroll_tip')}</p>
                             </div>
                         </div>
                     </div>
@@ -7412,8 +7412,8 @@ const UI = {
                         </div>
                         <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:10px;">${course.desc}</p>
                         <div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
-                            <span class="tag">⏱ ${course.duration} meses</span>
-                            ${course.cost > 0 ? `<span class="tag">💰 ${formatCurrency(course.cost)}</span>` : '<span class="tag">Gratis</span>'}
+                            <span class="tag">⏱ ${course.duration} ${t('months')}</span>
+                            ${course.cost > 0 ? `<span class="tag">💰 ${formatCurrency(course.cost)}</span>` : `<span class="tag">${t('free')}</span>`}
                             ${missingReqText ? `<span class="tag" style="background:#450a0a; color:#fca5a5; border-color:#7f1d1d;">🔒 ${missingReqText}</span>` : ''}
                             ${ageText ? `<span class="tag" style="background:#450a0a; color:#fca5a5; border-color:#7f1d1d;">🔞 ${ageText}</span>` : ''}
                         </div>
@@ -7426,7 +7426,7 @@ const UI = {
                 btn.onclick = () => {
                     const res = EduModule.startCourse(course.id);
                     if (res.success) {
-                        UI.showModal('¡Matriculado!', res.message, [{ text: 'A estudiar', style: 'success', fn: () => UI.updateEducation(EduModule) }]);
+                        UI.showModal(t('enrolled_msg'), res.message, [{ text: t('start_studying'), style: 'success', fn: () => UI.updateEducation(EduModule) }]);
                         UI.updateHeader();
                         UI.updateDashboard();
                     } else {
@@ -7614,7 +7614,7 @@ const UI = {
                 holdingSection.innerHTML = `
                     <div style="background: linear-gradient(90deg, #1e293b, transparent); border-left: 4px solid #f59e0b; padding: 10px 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0;">
                         <h3 style="margin:0; font-size: 1.2rem; color: #fbbf24; font-weight:800; display:flex; align-items:center; gap:8px;">
-                            👑 Holding Empresarial <span style="font-size:0.8rem; color:#94a3b8; font-weight:400; margin-left:auto;">${GameState.ownedCompanies.length} Activos</span>
+                            👑 ${t('holding_companies')} <span style="font-size:0.8rem; color:#94a3b8; font-weight:400; margin-left:auto;">${GameState.ownedCompanies.length} ${t('assets')}</span>
                         </h3>
                     </div>
                 `;
@@ -7661,14 +7661,14 @@ const UI = {
                         </div>
 
                         <div style="flex: 1; min-width: 140px; text-align:right;">
-                            <div style="font-size:0.75rem; color:#64748b; text-transform:uppercase; font-weight:600;">Beneficio Actual</div>
+                            <div style="font-size:0.75rem; color:#64748b; text-transform:uppercase; font-weight:600;">${t('current_profit')}</div>
                             <div style="font-size:1.2rem; color:${varColor}; font-weight:800;">+${formatCurrency(co.profitLastMonth)}</div>
                             <div style="font-size:0.8rem; color:${varColor}; font-weight:600;">${varSign}${pctVar.toFixed(1)}% vs Base</div>
                         </div>
 
                         <div style="flex: 0 0 auto; text-align:right;">
                              <button class="btn-sell-passive" data-idx="${idx}" style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; padding:8px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer; font-weight:700; transition:all 0.1s;">
-                                VENDER
+                                ${t('sell').toUpperCase()}
                              </button>
                         </div>
                     `;
@@ -7741,10 +7741,10 @@ const UI = {
 
                 const nextJob = JobSys.getAvailablePromotions();
                 let expPercent = 0;
-                let expText = "Nivel Máximo";
+                let expText = t('max_level');
                 if (nextJob) {
                     expPercent = Math.min(100, (JobSys.monthsInCurrentJob / nextJob.reqMonths) * 100);
-                    expText = `${JobSys.monthsInCurrentJob.toFixed(1)} / ${nextJob.reqMonths} meses`;
+                    expText = `${JobSys.monthsInCurrentJob.toFixed(1)} / ${nextJob.reqMonths} ${t('months')}`;
                 }
 
                 // Get job icon based on career path
@@ -7781,8 +7781,8 @@ const UI = {
 
                 heroCard.innerHTML = `
                         <div class="card-header">
-                            <span class="badge-primary">PUESTO ACTUAL</span>
-                            <span class="salary-badge">${formatCurrency(GameState.salary)}/mes</span>
+                            <span class="badge-primary">${t('current_position').toUpperCase()}</span>
+                            <span class="salary-badge">${formatCurrency(GameState.salary)}/${t('month')}</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 15px;">
                             <div style="font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));">${jobIcon}</div>
@@ -7794,7 +7794,7 @@ const UI = {
                         
                         <div class="progress-section" style="background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-top: 10px;">
                             <div class="progress-label" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="color: #94a3b8; font-size: 0.85rem;">⏱️ Experiencia</span>
+                                <span style="color: #94a3b8; font-size: 0.85rem;">⏱️ ${t('experience')}</span>
                                 <span style="color: #38bdf8; font-weight: 700;">${expText}</span>
                             </div>
                             <div class="progress-track" style="background: #1e293b; height: 10px; border-radius: 5px; overflow: hidden;">
@@ -10950,9 +10950,9 @@ try {
                         
                         <!-- Language Selector -->
                         <div id="welcome-lang-selector" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
-                            <button onclick="I18n.setLanguage('es'); updateWelcomeScreen();" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇪🇸</button>
-                            <button onclick="I18n.setLanguage('en'); updateWelcomeScreen();" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇬🇧</button>
-                            <button onclick="I18n.setLanguage('de'); updateWelcomeScreen();" class="lang-btn" data-lang="de" title="Deutsch" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇩🇪</button>
+                            <button onclick="I18n.setLanguage('es'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇪🇸</button>
+                            <button onclick="I18n.setLanguage('en'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇬🇧</button>
+                            <button onclick="I18n.setLanguage('de'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="de" title="Deutsch" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇩🇪</button>
                         </div>
                         
                         <div class="profile-features">
