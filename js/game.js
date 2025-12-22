@@ -1,6 +1,7 @@
 /*******************************************************
  * ENDGAME SYSTEM (YEAR 50)
  *******************************************************/
+
 function showEndgameModal() {
     const stats = GameState.lifetimeStats;
 
@@ -15,51 +16,51 @@ function showEndgameModal() {
     const summary = `
                 <div style="text-align: center; padding: 15px; max-height: 75vh; overflow-y: auto;">
                     <div style="font-size: 2.5rem; margin-bottom: 5px;">☠️</div>
-                    <h2 style="color: #f87171; margin: 0 0 3px 0; font-size: 1.4rem;">Has Muerto - Año 50</h2>
+                    <h2 style="color: #f87171; margin: 0 0 3px 0; font-size: 1.4rem;">${t('endgame_death_title')}</h2>
                     <p style="color: #4ade80; margin: 5px 0; font-size: 1rem; font-weight: 600;">
-                        Has llegado a tener un patrimonio de ${formatCurrency(GameState.netWorth)}
+                        ${t('milestone_message', { amount: formatCurrency(GameState.netWorth) })}
                     </p>
                     <p style="color: #38bdf8; margin: 0 0 12px 0; font-size: 0.95rem; font-weight: bold;">
-                        ¡ENHORABUENA!
+                        ${t('endgame_congrats')}
                     </p>
                     <p style="color: #94a3b8; margin: 0 0 12px 0; font-size: 0.85rem;">
-                        Gracias por jugar, pero seguro que podrías haberlo hecho mejor...
+                        ${t('endgame_thanks_msg')}
                     </p>
                     
                     <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 10px; margin: 8px auto; max-width: 400px;">
-                        <h3 style="color: #4ade80; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">💰 Ingresos Totales de tu Vida</h3>
+                        <h3 style="color: #4ade80; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">💰 ${t('endgame_income_title')}</h3>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>💼 Salarios:</span>
+                            <span>💼 ${t('tax_src_salary')}:</span>
                             <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.salary)}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🏠 Alquileres:</span>
+                            <span>🏠 ${t('tax_src_rental')}:</span>
                             <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.rental)}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>📈 Bolsa:</span>
+                            <span>📈 ${t('tax_src_stocks')}:</span>
                             <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.stocks)}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🏢 Empresas:</span>
+                            <span>🏢 ${t('tax_src_company')}:</span>
                             <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.company)}</strong>
                         </div>
                         ${(stats.realEstate && stats.realEstate.propertiesSold > 0) ? `
                         <div style="margin: 8px 0; padding: 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px;">
                             <div style="font-size: 0.75rem; color: #38bdf8; font-weight: 600; margin-bottom: 4px;">
-                                🏘️ Operaciones Inmobiliarias (${stats.realEstate.propertiesSold} inmuebles)
+                                🏘️ ${t('endgame_op_real_estate')} (${stats.realEstate.propertiesSold})
                             </div>
                             <div style="display: flex; justify-content: space-between; margin: 2px 0; font-size: 0.75rem; color: #94a3b8;">
-                                <span>Precio Compra:</span>
+                                <span>${t('re_buy_price')}:</span>
                                 <span>${formatCurrency(stats.realEstate.totalPurchases || 0)}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin: 2px 0; font-size: 0.75rem; color: #94a3b8;">
-                                <span>Precio Venta:</span>
+                                <span>${t('re_sell_price')}:</span>
                                 <span>${formatCurrency(stats.realEstate.totalSales || 0)}</span>
                             </div>
                             <div style="height: 1px; background: rgba(56, 189, 248, 0.3); margin: 4px 0;"></div>
                             <div style="display: flex; justify-content: space-between; margin: 2px 0; font-size: 0.8rem; font-weight: 600;">
-                                <span style="color: #38bdf8;">Beneficio Neto:</span>
+                                <span style="color: #38bdf8;">${t('re_net_profit')}:</span>
                                 <strong style="color: ${realEstateProfit >= 0 ? '#4ade80' : '#f87171'};">
                                     ${formatCurrency(realEstateProfit)} 
                                     ${stats.realEstate.totalPurchases > 0 ? `(${((realEstateProfit / stats.realEstate.totalPurchases) * 100).toFixed(1)}%)` : ''}
@@ -69,68 +70,68 @@ function showEndgameModal() {
                         ` : ''}
                         <div style="height: 1px; background: #334155; margin: 6px 0;"></div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.9rem; font-weight: 600;">
-                            <span>Total Ingresos:</span>
+                            <span>${t('gross_income')}:</span>
                             <strong style="color: #4ade80;">${formatCurrency(totalIncome)}</strong>
                         </div>
                     </div>
                     
                     <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 10px; margin: 8px auto; max-width: 400px;">
-                        <h3 style="color: #f87171; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">💸 Gastos Totales de tu Vida</h3>
+                        <h3 style="color: #f87171; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">💸 ${t('total_life_expenses')}</h3>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🛍️ Estilo de Vida:</span>
+                            <span>🛍️ ${t('lifestyle')}:</span>
                             <strong style="color: #f87171;">${formatCurrency(stats.totalExpenses.lifestyle)}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🏠 Vivienda:</span>
+                            <span>🏠 ${t('housing')}:</span>
                             <strong style="color: #f87171;">${formatCurrency(stats.totalExpenses.housing)}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🎓 Formación:</span>
+                            <span>🎓 ${t('education_label')}:</span>
                             <strong style="color: #f87171;">${formatCurrency(stats.totalExpenses.education)}</strong>
                         </div>
                         <div style="height: 1px; background: #334155; margin: 6px 0;"></div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.9rem; font-weight: 600;">
-                            <span>Total Gastos:</span>
+                            <span>${t('total_expenses_label')}:</span>
                             <strong style="color: #f87171;">${formatCurrency(totalExpenses)}</strong>
                         </div>
                     </div>
                     
                     <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 10px; margin: 8px auto; max-width: 400px;">
-                        <h3 style="color: #fbbf24; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">📋 Impuestos Pagados</h3>
+                        <h3 style="color: #fbbf24; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">📋 ${t('taxes_paid_title')}</h3>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.9rem; font-weight: 600;">
-                            <span>Total Pagado al Estado:</span>
+                            <span>${t('total_paid_state')}:</span>
                             <strong style="color: #fbbf24;">${formatCurrency(stats.totalTaxesPaid)}</strong>
                         </div>
                     </div>
                     
                     <p style="color: #38bdf8; margin: 12px 0 0 0; font-size: 0.9rem;">
-                        ¿Por qué no lo intentas de nuevo tomando otras decisiones?
+                        ${t('endgame_retry')}
                     </p>
                 </div>
             `;
 
     UI.showModal(
-        '🎮 Fin del Juego',
+        t('endgame_death_title'),
         summary,
-        [{ text: '🔄 Reiniciar Juego', style: 'primary', fn: resetGame }],
+        [{ text: `🔄 ${t('endgame_reset_title')}`, style: 'primary', fn: resetGame }],
         true
     );
 }
 
 function resetGame() {
-    UI.showModal('⚠️ Reiniciar Juego',
+    UI.showModal(`⚠️ ${t('endgame_reset_title')}`,
         `<div style="text-align:center;">
             <div style="font-size:3rem; margin-bottom:10px;">🤯</div>
-            <p style="color:#cbd5e1; margin-bottom:15px; font-size:1.1rem;">¿Estás seguro de que quieres reiniciar?</p>
+            <p style="color:#cbd5e1; margin-bottom:15px; font-size:1.1rem;">${t('endgame_reset_msg')}</p>
             <div style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); padding:15px; border-radius:10px;">
-                <p style="color:#ef4444; font-weight:800; margin:0; text-transform:uppercase;">⛔ SE PERDERÁN TODOS LOS DATOS</p>
+                <p style="color:#ef4444; font-weight:800; margin:0; text-transform:uppercase;">⛔ ${t('msg_irreversible_action')}</p>
             </div>
         </div>
         `,
         [
-            { text: 'Cancelar', style: 'secondary', fn: null },
+            { text: t('cancel'), style: 'secondary', fn: null },
             {
-                text: 'SÍ, BORRAR TODO', style: 'danger', fn: () => {
+                text: t('endgame_reset_confirm'), style: 'danger', fn: () => {
                     localStorage.removeItem('gameState');
                     localStorage.removeItem('playerName');
                     location.reload();
@@ -138,6 +139,56 @@ function resetGame() {
             }
         ], true
     );
+}
+
+
+
+// Helper for dynamic translations
+function getJobTranslation(jobTitle) {
+    if (!jobTitle) return '';
+
+    // Handle Unemployed
+    if (jobTitle === 'Desempleado' || jobTitle === 'Unemployed') {
+        return t('unemployed');
+    }
+
+    // Handle CEO / Company founder special names
+    if (jobTitle.includes('CEO de')) {
+        return jobTitle.replace('CEO de', t('ceo_of') || 'CEO of');
+    }
+
+    if (jobTitle.includes('Ex-Fundador')) {
+        return t('ex_founder_unemployed') || jobTitle;
+    }
+
+    // Try mapping from i18n.js
+    if (typeof JOB_TRANSLATION_MAP !== 'undefined') {
+        const key = JOB_TRANSLATION_MAP[jobTitle];
+        if (key) {
+            const translated = t(key);
+            if (translated !== key) return translated;
+        }
+    }
+
+    return jobTitle;
+}
+
+function getCourseTranslation(courseId) {
+    if (!courseId) return { name: '', desc: '' };
+    // Try to translate if keys exist (course_ID), otherwise fallback
+    const nameKey = `course_${courseId}`;
+    const descKey = `course_${courseId}_desc`;
+
+    // Check if translation exists (simple check if it returns key)
+    const name = t(nameKey);
+    const desc = t(descKey);
+
+    const hasName = name !== nameKey;
+
+    return {
+        name: hasName ? name : null, // null will trigger fallback to course.name
+        desc: hasName ? desc : null
+    };
 }
 
 /*******************************************************
@@ -506,7 +557,11 @@ const PersistenceModule = {
     // Save to specific slot
     saveToSlot(slotKey) {
         try {
-            const dataToSave = { ...GameState, savedAt: new Date().toISOString() };
+            const dataToSave = {
+                ...GameState,
+                savedAt: new Date().toISOString(),
+                language: I18n.currentLang // Save language preference
+            };
             const data = JSON.stringify(dataToSave);
             localStorage.setItem(slotKey, data);
             return { success: true, message: 'Partida guardada correctamente.' };
@@ -521,6 +576,14 @@ const PersistenceModule = {
             const data = localStorage.getItem(slotKey);
             if (!data) return { success: false, message: 'No hay partida en este slot.' };
             const loadedState = JSON.parse(data);
+
+            // Restore language if saved
+            if (loadedState.language) {
+                I18n.setLanguage(loadedState.language);
+                // We also update the welcome screen if it happens to be visible (edge case)
+                if (window.updateWelcomeScreen) window.updateWelcomeScreen();
+            }
+
             Object.assign(GameState, loadedState);
             return { success: true, message: `Bienvenido de nuevo, ${GameState.playerName}` };
         } catch (e) {
@@ -568,14 +631,14 @@ const PersistenceModule = {
                     <div class="save-slot-card" data-key="${key}">
                         <div class="slot-header">
                             <span class="slot-name">${name}</span>
-                            <span class="slot-date">${slot.savedAt ? new Date(slot.savedAt).toLocaleString('es-ES') : 'Sin fecha'}</span>
+                            <span class="slot-date">${slot.savedAt ? new Date(slot.savedAt).toLocaleString('es-ES') : t('no_date')}</span>
                         </div>
                         <div class="slot-info">
                             <span>🎮 ${slot.playerName}</span>
                             <span>💰 ${formatCurrency(slot.cash)}</span>
-                            <span>📅 Año ${slot.year}, Mes ${slot.month}</span>
+                            <span>📅 ${t('year')} ${slot.year}, ${t('month')} ${slot.month}</span>
                         </div>
-                        <button class="btn-save-slot" onclick="PersistenceModule.confirmSaveToSlot('${key}')">💾 Sobrescribir</button>
+                        <button class="btn-save-slot" onclick="PersistenceModule.confirmSaveToSlot('${key}')">💾 ${t('save_overwrite_btn')}</button>
                     </div>
                 `;
             } else {
@@ -583,9 +646,9 @@ const PersistenceModule = {
                     <div class="save-slot-card empty" data-key="${key}">
                         <div class="slot-header">
                             <span class="slot-name">${name}</span>
-                            <span class="slot-empty">Vacío</span>
+                            <span class="slot-empty">${t('save_empty')}</span>
                         </div>
-                        <button class="btn-save-slot" onclick="PersistenceModule.saveAndNotify('${key}')">💾 Guardar Aquí</button>
+                        <button class="btn-save-slot" onclick="PersistenceModule.saveAndNotify('${key}')">💾 ${t('save_here')}</button>
                     </div>
                 `;
             }
@@ -647,31 +710,34 @@ const PersistenceModule = {
                 }
             </style>
             <div class="save-slots-container">
-                ${formatSlot(slot1, this.SAVE_KEY_SLOT1, 'Slot 1')}
-                ${formatSlot(slot2, this.SAVE_KEY_SLOT2, 'Slot 2')}
+                ${formatSlot(slot1, this.SAVE_KEY_SLOT1, t('save_slot_1'))}
+                ${formatSlot(slot2, this.SAVE_KEY_SLOT2, t('save_slot_2'))}
             </div>
         `;
 
-        UI.showModal('💾 Guardar Partida', msg, [
-            { text: 'Cerrar', style: 'secondary', fn: null }
+        UI.showModal(t('msg_save_title'), msg, [
+            { text: t('close'), style: 'secondary', fn: null }
         ]);
     },
 
     confirmSaveToSlot(slotKey) {
-        UI.showModal('Sobrescribir Partida', `
+        UI.showModal(t('msg_overwrite_title'), `
             <div style="text-align:center;">
                 <div style="font-size:3rem; margin-bottom:10px;">💾</div>
-                <p style="color:#cbd5e1; margin-bottom:15px;">¿Seguro que quieres sobrescribir este espacio?</p>
-                <p style="color:#94a3b8; font-size:0.85rem;">La partida anterior se perderá para siempre.</p>
+                <p style="color:#cbd5e1; margin-bottom:15px;">${t('save_overwrite_msg')}</p>
+                <p style="color:#94a3b8; font-size:0.85rem;">${t('save_overwrite_warning')}</p>
             </div>
         `, [
-            { text: 'Cancelar', style: 'secondary', fn: null },
-            { text: 'SOBRESCRIBIR', style: 'primary', fn: () => this.saveAndNotify(slotKey) }
+            { text: t('cancel'), style: 'secondary', fn: null },
+            { text: t('confirm'), style: 'primary', fn: () => PersistenceModule.saveAndNotify(slotKey) }
         ], true);
     },
 
+
     saveAndNotify(slotKey) {
         const result = this.saveToSlot(slotKey);
+        // Use 'this.saveToSlot' was called above, so we know 'this' refers to PersistenceModule or we can use the global object if context is lost
+        // But since we are inside an object method:
         document.querySelector('.custom-modal-overlay')?.remove();
         UI.showToast(result.success ? '✅ Guardado' : '❌ Error', result.message, result.success ? 'success' : 'error');
     }
@@ -956,7 +1022,7 @@ const StockMarket = {
         } else {
             GameState.inventory.stocks.push({ symbol: symbol, name: stock.name, quantity: qty, avgPrice: stock.price });
         }
-        return { success: true, message: `Compradas ${qty} acciones de ${symbol} por ${formatCurrency(cost)}` };
+        return { success: true, message: t('stock_buy_detail', { qty: qty, symbol: symbol, price: formatCurrency(cost) }) };
     },
 
     sellStock(symbol, qty) {
@@ -993,12 +1059,11 @@ const StockMarket = {
             }
             GameState.lifetimeStats.totalIncome.stocks += profit;
         }
-
         pItem.quantity -= qty;
         if (pItem.quantity <= 0) {
             GameState.inventory.stocks = GameState.inventory.stocks.filter(s => s.symbol !== symbol);
         }
-        return { success: true, message: `Vendidas ${qty} acciones de ${symbol} por ${formatCurrency(saleValue)}` };
+        return { success: true, message: t('stock_sell_detail', { qty: qty, symbol: symbol, price: formatCurrency(saleValue) }) };
     }
 };
 
@@ -1023,9 +1088,9 @@ const Portfolio = {
                     avgPrice: stock.price
                 });
             }
-            return { success: true, message: `Has comprado ${quantity} acciones de ${stock.name}` };
+            return { success: true, message: t('stock_buy_success', { qty: quantity, name: stock.name }) };
         }
-        return { success: false, message: 'Dinero insuficiente' };
+        return { success: false, message: t('not_enough_money') };
     },
     sell(stockSymbol, quantity, gameState) {
         const existing = gameState.inventory.stocks.find(s => s.symbol === stockSymbol);
@@ -1067,9 +1132,9 @@ const Portfolio = {
             if (existing.quantity === 0) {
                 gameState.inventory.stocks = gameState.inventory.stocks.filter(s => s.symbol !== stockSymbol);
             }
-            return { success: true, message: `Has vendido ${quantity} acciones de ${stock.name}` };
+            return { success: true, message: t('stock_sell_success', { qty: quantity, name: stock.name }) };
         }
-        return { success: false, message: 'No tienes suficientes acciones' };
+        return { success: false, message: t('stock_not_enough') };
     }
 };
 
@@ -1136,7 +1201,7 @@ const Bank = {
         const max = this.getMaxLoanAmount();
         // Exclude mortgages from personal credit limit check
         const currentDebt = GameState.loans
-            .filter(l => !l.type.includes('Hipotecario'))
+            .filter(l => !l.isMortgage)
             .reduce((sum, l) => sum + l.remainingBalance, 0);
 
         const available = Math.max(0, max - currentDebt);
@@ -1193,7 +1258,7 @@ const Bank = {
                 totalPaid += loan.monthlyPayment;
 
                 // LIFETIME HOUSING EXPENSE TRACKING (mortgages only)
-                if (loan.type && loan.type.includes('Hipotecario')) {
+                if (loan.isMortgage) {
                     if (!GameState.lifetimeStats) {
                         GameState.lifetimeStats = {
                             totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
@@ -1233,47 +1298,47 @@ const Bank = {
 const RealEstate = {
     availableProperties: [],
     PROPERTY_TYPES: {
-        'Residencial': [
-            { name: 'Estudio urbano compacto', minM2: 25, maxM2: 35, minPrice: 1500, maxPrice: 3500, icon: '🏢' },
-            { name: 'Piso pequeño 1 dormitorio', minM2: 40, maxM2: 55, minPrice: 1500, maxPrice: 3000, icon: '🏢' },
-            { name: 'Piso mediano 2-3 dormitorios', minM2: 70, maxM2: 90, minPrice: 1500, maxPrice: 3000, icon: '🏢' },
-            { name: 'Piso grande familiar', minM2: 100, maxM2: 130, minPrice: 1400, maxPrice: 2800, icon: '🏢' },
-            { name: 'Ático con terraza', minM2: 70, maxM2: 120, minPrice: 2000, maxPrice: 4500, icon: '🏠' }
+        're_cat_residential': [
+            { name: 'prop_res_studio', minM2: 25, maxM2: 35, minPrice: 1500, maxPrice: 3500, icon: '🏢' },
+            { name: 'prop_res_1bed', minM2: 40, maxM2: 55, minPrice: 1500, maxPrice: 3000, icon: '🏢' },
+            { name: 'prop_res_2bed', minM2: 70, maxM2: 90, minPrice: 1500, maxPrice: 3000, icon: '🏢' },
+            { name: 'prop_res_family', minM2: 100, maxM2: 130, minPrice: 1400, maxPrice: 2800, icon: '🏢' },
+            { name: 'prop_res_penthouse', minM2: 70, maxM2: 120, minPrice: 2000, maxPrice: 4500, icon: '🏠' }
         ],
-        'Turistico': [
-            { name: 'Apto. turístico estudio', minM2: 25, maxM2: 35, minPrice: 2000, maxPrice: 5000, icon: '🏖️' },
-            { name: 'Apto. turístico 1-2 hab', minM2: 45, maxM2: 70, minPrice: 2000, maxPrice: 5000, icon: '🏖️' },
-            { name: 'Edificio aptos. turísticos', minM2: 250, maxM2: 400, minPrice: 1800, maxPrice: 4000, icon: '🏨' },
-            { name: 'Coliving optimizado', minM2: 90, maxM2: 140, minPrice: 1600, maxPrice: 3200, icon: '🛏️' },
-            { name: 'Hotel urbano pequeño', minM2: 800, maxM2: 1500, minPrice: 1500, maxPrice: 4000, icon: '🏨' }
+        're_cat_touristic': [
+            { name: 'prop_tour_studio', minM2: 25, maxM2: 35, minPrice: 2000, maxPrice: 5000, icon: '🏖️' },
+            { name: 'prop_tour_1bed', minM2: 45, maxM2: 70, minPrice: 2000, maxPrice: 5000, icon: '🏖️' },
+            { name: 'prop_tour_building', minM2: 250, maxM2: 400, minPrice: 1800, maxPrice: 4000, icon: '🏨' },
+            { name: 'prop_tour_coliving', minM2: 90, maxM2: 140, minPrice: 1600, maxPrice: 3200, icon: '🛏️' },
+            { name: 'prop_tour_hotel', minM2: 800, maxM2: 1500, minPrice: 1500, maxPrice: 4000, icon: '🏨' }
         ],
-        'Garajes': [
-            { name: 'Garaje pequeño', minM2: 5, maxM2: 10, minPrice: 800, maxPrice: 2000, icon: '🚗' },
-            { name: 'Garaje mediano', minM2: 10, maxM2: 15, minPrice: 800, maxM2: 2000, icon: '🚗' },
-            { name: 'Garaje grande', minM2: 15, maxM2: 25, minPrice: 800, maxPrice: 2000, icon: '🚗' },
-            { name: 'Trastero pequeño', minM2: 1, maxM2: 3, minPrice: 600, maxPrice: 1800, icon: '📦' },
-            { name: 'Box self-storage', minM2: 8, maxM2: 15, minPrice: 700, maxPrice: 2000, icon: '📦' }
+        're_cat_garages': [
+            { name: 'prop_garage_s', minM2: 5, maxM2: 10, minPrice: 800, maxPrice: 2000, icon: '🚗' },
+            { name: 'prop_garage_m', minM2: 10, maxM2: 15, minPrice: 800, maxPrice: 2000, icon: '🚗' },
+            { name: 'prop_garage_l', minM2: 15, maxM2: 25, minPrice: 800, maxPrice: 2000, icon: '🚗' },
+            { name: 'prop_storage_s', minM2: 1, maxM2: 3, minPrice: 600, maxPrice: 1800, icon: '📦' },
+            { name: 'prop_storage_box', minM2: 8, maxM2: 15, minPrice: 700, maxPrice: 2000, icon: '📦' }
         ],
-        'Comercial': [
-            { name: 'Local comercial pequeño', minM2: 30, maxM2: 60, minPrice: 1000, maxPrice: 4000, icon: '🏪' },
-            { name: 'Local comercial mediano', minM2: 80, maxM2: 150, minPrice: 1500, maxPrice: 6000, icon: '🏪' },
-            { name: 'Oficina edificio', minM2: 80, maxM2: 200, minPrice: 1500, maxPrice: 4000, icon: '💼' },
-            { name: 'Nave industrial pequeña', minM2: 300, maxM2: 600, minPrice: 400, maxPrice: 1200, icon: '🏭' }
+        're_cat_commercial': [
+            { name: 'prop_retail_s', minM2: 30, maxM2: 60, minPrice: 1000, maxPrice: 4000, icon: '🏪' },
+            { name: 'prop_retail_m', minM2: 80, maxM2: 150, minPrice: 1500, maxPrice: 6000, icon: '🏪' },
+            { name: 'prop_office', minM2: 80, maxM2: 200, minPrice: 1500, maxPrice: 4000, icon: '💼' },
+            { name: 'prop_warehouse_s', minM2: 300, maxM2: 600, minPrice: 400, maxPrice: 1200, icon: '🏭' }
         ],
-        'Suelo': [
-            { name: 'Solar urbano edificable', minM2: 400, maxM2: 800, minPrice: 300, maxPrice: 1500, icon: '🏗️' }
+        're_cat_land': [
+            { name: 'prop_land_urban', minM2: 400, maxM2: 800, minPrice: 300, maxPrice: 1500, icon: '🏗️' }
         ],
-        'Lujo': [
-            { name: 'Piso de Lujo Prime', minM2: 120, maxM2: 200, minPrice: 8000, maxPrice: 15000, icon: '💎' },
-            { name: 'Ático Dúplex Lujo', minM2: 150, maxM2: 250, minPrice: 9000, maxPrice: 18000, icon: '💎' },
-            { name: 'Villa de Lujo Prime', minM2: 400, maxM2: 800, minPrice: 6000, maxPrice: 12000, icon: '🏰' },
-            { name: 'Mansión Súper Lujo', minM2: 800, maxM2: 1500, minPrice: 8000, maxPrice: 20000, icon: '🏰' },
-            { name: 'Apto. Lujo Playa', minM2: 120, maxM2: 220, minPrice: 6000, maxPrice: 20000, icon: '🏖️' },
-            { name: 'Villa Lujo Mar', minM2: 300, maxM2: 700, minPrice: 8000, maxPrice: 25000, icon: '🏰' },
-            { name: 'Piso Ultra High-End', minM2: 200, maxM2: 400, minPrice: 12000, maxM2: 25000, icon: '💎' },
-            { name: 'Penthouse Vistas 360', minM2: 250, maxM2: 500, minPrice: 15000, maxPrice: 30000, icon: '💎' },
-            { name: 'Casa Histórica Lujo', minM2: 300, maxM2: 700, minPrice: 7000, maxPrice: 18000, icon: '🏛️' },
-            { name: 'Residencial Boutique', minM2: 800, maxM2: 2000, minPrice: 7000, maxPrice: 16000, icon: '💎' }
+        're_cat_luxury': [
+            { name: 'prop_luxury_flat', minM2: 120, maxM2: 200, minPrice: 8000, maxPrice: 15000, icon: '💎' },
+            { name: 'prop_luxury_duplex', minM2: 150, maxM2: 250, minPrice: 9000, maxPrice: 18000, icon: '💎' },
+            { name: 'prop_luxury_villa', minM2: 400, maxM2: 800, minPrice: 6000, maxPrice: 12000, icon: '🏰' },
+            { name: 'prop_luxury_mansion', minM2: 800, maxM2: 1500, minPrice: 8000, maxPrice: 20000, icon: '🏰' },
+            { name: 'prop_luxury_apt_beach', minM2: 120, maxM2: 220, minPrice: 6000, maxPrice: 20000, icon: '🏖️' },
+            { name: 'prop_luxury_villa_sea', minM2: 300, maxM2: 700, minPrice: 8000, maxPrice: 25000, icon: '🏰' },
+            { name: 'prop_luxury_ultra', minM2: 200, maxM2: 400, minPrice: 12000, maxPrice: 25000, icon: '💎' },
+            { name: 'prop_luxury_penthouse', minM2: 250, maxM2: 500, minPrice: 15000, maxPrice: 30000, icon: '💎' },
+            { name: 'prop_luxury_historic', minM2: 300, maxM2: 700, minPrice: 7000, maxPrice: 18000, icon: '🏛️' },
+            { name: 'prop_luxury_boutique', minM2: 800, maxM2: 2000, minPrice: 7000, maxPrice: 16000, icon: '💎' }
         ]
     },
     availableProperties: [],
@@ -1293,10 +1358,10 @@ const RealEstate = {
         const zoneAvgPrice = Math.floor(finalPricePerM2 * (1 + ((Math.random() * 0.2) - 0.1)));
 
         let baseYield = 0.045;
-        if (cat === 'Garajes') baseYield = 0.055;
-        if (cat === 'Turistico') baseYield = 0.06;
-        if (cat === 'Lujo') baseYield = 0.03;
-        if (cat === 'Suelo') baseYield = 0.01;
+        if (cat === 're_cat_garages') baseYield = 0.055;
+        if (cat === 're_cat_touristic') baseYield = 0.06;
+        if (cat === 're_cat_luxury') baseYield = 0.03;
+        if (cat === 're_cat_land') baseYield = 0.01;
 
         const actualYield = baseYield + ((Math.random() * 0.02) - 0.01);
         const monthlyRent = Math.floor((price * actualYield) / 12);
@@ -1344,13 +1409,13 @@ const RealEstate = {
 
     buyProperty(propertyId, useMortgage = true, termYears = 30) {
         const propertyIndex = this.availableProperties.findIndex(p => p.id === propertyId);
-        if (propertyIndex === -1) return { success: false, message: 'Propiedad no encontrada' };
+        if (propertyIndex === -1) return { success: false, message: t('re_prop_not_found') };
 
         // CHECK REAL ESTATE CAP (Game Balance)
         const limits = GameBalance.getLimits();
         const ownedCount = GameState.inventory.realEstate.length;
         if (ownedCount >= limits.reCap) {
-            return { success: false, message: `Has alcanzado el límite de propiedades (${limits.reCap}).<br>Banco: "Tu vivienda actual no justifica un patrimonio mayor. Múdate a algo mejor."` };
+            return { success: false, message: t('re_limit_msg', { limit: limits.reCap }) + '<br>' + t('re_bank_limit_msg') };
         }
 
         const property = this.availableProperties[propertyIndex];
@@ -1358,7 +1423,7 @@ const RealEstate = {
         const loanAmount = property.price - downPayment;
 
         if (GameState.cash < downPayment) {
-            return { success: false, message: 'Necesitas más dinero para la entrada' };
+            return { success: false, message: t('re_need_down_payment') };
         }
 
         if (useMortgage && loanAmount > 0) {
@@ -1369,7 +1434,8 @@ const RealEstate = {
 
             GameState.loans.push({
                 id: mortgageId,
-                type: `Hipotecario (${termYears} años)`,
+                isMortgage: true,
+                type: t('mortgage_label', { years: termYears }),
                 principal: loanAmount,
                 termMonths: n,
                 remainingMonths: n,
@@ -1385,12 +1451,12 @@ const RealEstate = {
         property.purchasePrice = property.price;
         GameState.inventory.realEstate.push(property);
         this.availableProperties.splice(propertyIndex, 1);
-        return { success: true, message: `¡Has comprado: ${property.name}!` };
+        return { success: true, message: t('re_bought_success', { name: t(property.name) }) };
     },
 
     sellProperty(propertyId) {
         const propIndex = GameState.inventory.realEstate.findIndex(p => p.id === propertyId);
-        if (propIndex === -1) return { success: false, message: 'No posees esta propiedad.' };
+        if (propIndex === -1) return { success: false, message: t('re_prop_not_found') };
 
         const property = GameState.inventory.realEstate[propIndex];
         const marketValue = property.price;
@@ -1435,7 +1501,14 @@ const RealEstate = {
         GameState.lifetimeStats.realEstate.propertiesSold += 1;
 
         GameState.inventory.realEstate.splice(propIndex, 1);
-        return { success: true, message: `Propiedad vendida por ${formatCurrency(marketValue)}. Hipoteca cancelada: ${formatCurrency(mortgageCost)}. Neto: ${formatCurrency(netProfit)}` };
+        return {
+            success: true,
+            message: t('re_sold_success', {
+                amount: formatCurrency(marketValue),
+                mortgage: formatCurrency(mortgageCost),
+                net: formatCurrency(netProfit)
+            })
+        };
     }
 };
 RealEstate.generateListings();
@@ -1446,88 +1519,88 @@ RealEstate.generateListings();
 const LifestyleModule = {
     categories: {
         housing: {
-            label: 'Vivienda',
+            label: 'cat_housing',
             items: [
-                { id: 'parents', name: 'Casa de los Padres', cost: 0, deposit: 0, desc: 'Ahorro máximo. Cero privacidad.' },
-                { id: 'sofa', name: 'Sofá de un amigo', cost: 150, deposit: 0, desc: 'Temporal e incómodo. Mejor que la calle.' },
-                { id: 'pension', name: 'Pensión Mala Muerte', cost: 200, deposit: 400, desc: 'Ruidoso y sucio.' },
-                { id: 'room_cheap', name: 'Habitación Interior', cost: 250, deposit: 1000, desc: 'Sin ventanas, solo para dormir.' },
-                { id: 'room', name: 'Habitación Compartida', cost: 300, deposit: 1200, desc: 'El estándar de estudiante.' },
-                { id: 'room_suit', name: 'Habitación con Baño', cost: 450, deposit: 1800, desc: 'Un poco más de dignidad.' },
-                { id: 'basement', name: 'Sótano / Loft', cost: 600, deposit: 2400, desc: 'Espacioso pero oscuro.' },
-                { id: 'studio', name: 'Estudio Privado', cost: 900, deposit: 3600, desc: 'Tu propio espacio. Pequeño.' },
-                { id: 'apt_out', name: 'Piso en las Afueras', cost: 1100, deposit: 4400, desc: 'Grande pero lejos.' },
-                { id: 'apartment', name: 'Apartamento Céntrico', cost: 1500, deposit: 6000, desc: 'Buena zona, 2 habitaciones.' },
-                { id: 'loft', name: 'Loft de Diseño', cost: 2500, deposit: 10000, desc: 'Techos altos, ladrillo visto.' },
-                { id: 'penthouse', name: 'Ático de Lujo', cost: 5000, deposit: 20000, desc: 'Mejores vistas de la ciudad.' },
-                { id: 'mansion', name: 'Mansión Privada', cost: 15000, deposit: 60000, desc: 'Seguridad privada, piscina, todo.' }
+                { id: 'parents', cost: 0, deposit: 0 },
+                { id: 'sofa', cost: 150, deposit: 0 },
+                { id: 'pension', cost: 200, deposit: 400 },
+                { id: 'room_cheap', cost: 250, deposit: 1000 },
+                { id: 'room', cost: 300, deposit: 1200 },
+                { id: 'room_suit', cost: 450, deposit: 1800 },
+                { id: 'basement', cost: 600, deposit: 2400 },
+                { id: 'studio', cost: 900, deposit: 3600 },
+                { id: 'apt_out', cost: 1100, deposit: 4400 },
+                { id: 'apartment', cost: 1500, deposit: 6000 },
+                { id: 'loft', cost: 2500, deposit: 10000 },
+                { id: 'penthouse', cost: 5000, deposit: 20000 },
+                { id: 'mansion', cost: 15000, deposit: 60000 }
             ]
         },
         food: {
-            label: 'Alimentación',
+            label: 'cat_food',
             items: [
-                { id: 'scraps', name: 'Comida de la Mamá', cost: 0, desc: 'Tuppers y cariño. Supervivencia.' },
-                { id: 'noodles', name: 'Ramen Instantáneo', cost: 100, desc: 'Mucha sal, poco precio.' },
-                { id: 'junk', name: 'Comida Rápida / Básica', cost: 200, desc: 'Grasientiento pero barato.' },
-                { id: 'cooking_basic', name: 'Cocina Simple', cost: 250, desc: 'Ingredientes marca blanca.' },
-                { id: 'cooking', name: 'Cocina Variada', cost: 300, desc: 'Carne, pescado y verduras.' },
-                { id: 'menu', name: 'Menú del Día', cost: 450, desc: 'Comer fuera a diario (barato).' },
-                { id: 'bio', name: 'Supermercado Bio', cost: 600, desc: 'Todo orgánico y caro.' },
-                { id: 'delivery', name: 'Delivery Diario', cost: 900, desc: 'Glovo/Uber Eats para todo.' },
-                { id: 'rest_nice', name: 'Restaurantes Buenos', cost: 1500, desc: 'Sitios de moda y calidad.' },
-                { id: 'chef', name: 'Chef Privado', cost: 3000, desc: 'Te cocinan en casa.' },
-                { id: 'michelin', name: 'Ruta Michelin', cost: 10000, desc: 'Solo lo mejor del mundo.' }
+                { id: 'scraps', cost: 0 },
+                { id: 'noodles', cost: 100 },
+                { id: 'junk', cost: 200 },
+                { id: 'cooking_basic', cost: 250 },
+                { id: 'cooking', cost: 300 },
+                { id: 'menu', cost: 450 },
+                { id: 'bio', cost: 600 },
+                { id: 'delivery', cost: 900 },
+                { id: 'rest_nice', cost: 1500 },
+                { id: 'chef', cost: 3000 },
+                { id: 'michelin', cost: 10000 }
             ]
         },
         transport: {
-            label: 'Transporte',
+            label: 'cat_transport',
             items: [
-                { id: 'walk', name: 'Andando', cost: 0, purchaseCost: 0, desc: 'Gratis. Cansa y tarda.' },
-                { id: 'skate', name: 'Skate / Patines', cost: 0, purchaseCost: 100, desc: 'Rápido en distancias cortas.' },
-                { id: 'bike', name: 'Bicicleta', cost: 10, purchaseCost: 150, desc: 'Sano y ecológico.' },
-                { id: 'scooter_el', name: 'Patinete Eléctrico', cost: 20, purchaseCost: 400, desc: 'El rey de la ciudad.' },
-                { id: 'public', name: 'Transporte Público', cost: 50, purchaseCost: 0, desc: 'Metro y Bus. Fiable.' },
-                { id: 'moto_125', name: 'Moto 125cc', cost: 100, purchaseCost: 2500, desc: 'Aparcas donde quieres.' },
-                { id: 'moto_big', name: 'Moto Gran Cilindrada', cost: 200, purchaseCost: 9000, desc: 'Potencia y ruido.' },
-                { id: 'car_old', name: 'Coche 2ª Mano', cost: 250, purchaseCost: 8000, desc: 'Te lleva y te trae.' },
-                { id: 'car_new', name: 'Coche Nuevo', cost: 400, purchaseCost: 22000, desc: 'Olor a nuevo, sin problemas.' },
-                { id: 'car_premium', name: 'Berlina Premium', cost: 600, purchaseCost: 50000, desc: 'Comodidad alemana.' },
-                { id: 'car_sport', name: 'Deportivo', cost: 1000, purchaseCost: 90000, desc: 'Miradas en cada semáforo.' },
-                { id: 'supercar', name: 'Superdeportivo', cost: 3000, purchaseCost: 250000, desc: 'Una bestia italiana.' },
-                { id: 'chofer', name: 'Chófer Privado', cost: 5000, purchaseCost: 0, desc: 'No conduces nunca más.' }
+                { id: 'walk', cost: 0, purchaseCost: 0 },
+                { id: 'skate', cost: 0, purchaseCost: 100 },
+                { id: 'bike', cost: 10, purchaseCost: 150 },
+                { id: 'scooter_el', cost: 20, purchaseCost: 400 },
+                { id: 'public', cost: 50, purchaseCost: 0 },
+                { id: 'moto_125', cost: 100, purchaseCost: 2500 },
+                { id: 'moto_big', cost: 200, purchaseCost: 9000 },
+                { id: 'car_old', cost: 250, purchaseCost: 8000 },
+                { id: 'car_new', cost: 400, purchaseCost: 22000 },
+                { id: 'car_premium', cost: 600, purchaseCost: 50000 },
+                { id: 'car_sport', cost: 1000, purchaseCost: 90000 },
+                { id: 'supercar', cost: 3000, purchaseCost: 250000 },
+                { id: 'chofer', cost: 5000, purchaseCost: 0 }
             ]
         },
         leisure: {
-            label: 'Ocio',
+            label: 'cat_leisure',
             items: [
-                { id: 'free', name: 'Parque y Sol', cost: 0, desc: 'Aire libre y gratis.' },
-                { id: 'library', name: 'Libros y Biblioteca', cost: 20, desc: 'Cultura barata.' },
-                { id: 'internet', name: 'Internet y Juegos', cost: 50, desc: 'Ocio digital casero.' },
-                { id: 'basic', name: 'Ocio Básico', cost: 100, desc: 'Netflix y alguna caña.' },
-                { id: 'hobbies', name: 'Hobbies Caseros', cost: 200, desc: 'Maquetas, pintura, cursos.' },
-                { id: 'active', name: 'Vida Activa', cost: 300, desc: 'Gimnasio, cine y cenas.' },
-                { id: 'clubbing', name: 'Fiesta y Copas', cost: 500, desc: 'Cerrar discotecas.' },
-                { id: 'weekend', name: 'Escapadas Fin de Semana', cost: 800, desc: 'Turismo nacional frecuente.' },
-                { id: 'vip', name: 'Reservados VIP', cost: 1500, desc: 'Botellas y zonas exclusivas.' },
-                { id: 'travel', name: 'Viajes Internacionales', cost: 3000, desc: 'Japón, NY, Maldivas.' },
-                { id: 'exclusive', name: 'Clubes Privados', cost: 6000, desc: 'Networking de alto nivel.' },
-                { id: 'yacht', name: 'Fiestas en Yate', cost: 15000, desc: 'El Lobo de Wall Street.' }
+                { id: 'free', cost: 0 },
+                { id: 'library', cost: 20 },
+                { id: 'internet', cost: 50 },
+                { id: 'basic', cost: 100 },
+                { id: 'hobbies', cost: 200 },
+                { id: 'active', cost: 300 },
+                { id: 'clubbing', cost: 500 },
+                { id: 'weekend', cost: 800 },
+                { id: 'vip', cost: 1500 },
+                { id: 'travel', cost: 3000 },
+                { id: 'exclusive', cost: 6000 },
+                { id: 'yacht', cost: 15000 }
             ]
         },
         clothes: {
-            label: 'Ropa',
+            label: 'cat_clothes',
             items: [
-                { id: 'donations', name: 'Ropa Donada', cost: 0, desc: 'Lo que te dan.' },
-                { id: 'second_hand', name: 'Segunda Mano', cost: 30, desc: 'Wallapop y Humana.' },
-                { id: 'low_cost', name: 'Mercadillo', cost: 60, desc: 'Barato y funcional.' },
-                { id: 'basic', name: 'Moda Básica', cost: 100, desc: 'Basicos sin marca.' },
-                { id: 'fast_fashion', name: 'Fast Fashion', cost: 200, desc: 'Zara, Mango, H&M.' },
-                { id: 'sport', name: 'Marcas Deportivas', cost: 300, desc: 'Nike, Adidas. Comodidad.' },
-                { id: 'boutique', name: 'Boutique Local', cost: 500, desc: 'Ropa con personalidad.' },
-                { id: 'tech', name: 'Techwear / Gadgets', cost: 800, desc: 'Estilo funcional caro.' },
-                { id: 'suits', name: 'Trajes a Medida', cost: 1500, desc: 'Sastrería clásica.' },
-                { id: 'designer', name: 'Firmas de Lujo', cost: 3000, desc: 'Gucci, Prada, LV.' },
-                { id: 'collector', name: 'Coleccionista', cost: 10000, desc: 'Piezas únicas de pasarela.' }
+                { id: 'donations', cost: 0 },
+                { id: 'second_hand', cost: 30 },
+                { id: 'low_cost', cost: 60 },
+                { id: 'basic', cost: 100 },
+                { id: 'fast_fashion', cost: 200 },
+                { id: 'sport', cost: 300 },
+                { id: 'boutique', cost: 500 },
+                { id: 'tech', cost: 800 },
+                { id: 'suits', cost: 1500 },
+                { id: 'designer', cost: 3000 },
+                { id: 'collector', cost: 10000 }
             ]
         }
     },
@@ -1553,10 +1626,10 @@ const LifestyleModule = {
         if (!GameState.lifestyle) return { success: false };
 
         // Check if already selected
-        if (GameState.lifestyle[category] === id) return { success: false, message: 'Ya tienes este nivel.' };
+        if (GameState.lifestyle[category] === id) return { success: false, message: t('lifestyle_already_selected') };
 
         const item = this.getItem(category, id);
-        if (!item) return { success: false, message: 'Opción inválida.' };
+        if (!item) return { success: false, message: t('lifestyle_invalid_option') };
 
         // UPFRONT COST LOGIC
         let upfront = 0;
@@ -1564,7 +1637,7 @@ const LifestyleModule = {
         if (item.purchaseCost) upfront += item.purchaseCost;
 
         if (GameState.cash < upfront) {
-            return { success: false, message: `Fondos insuficientes. Necesitas ${formatCurrency(upfront)} para el pago inicial (Fianza/Compra).` };
+            return { success: false, message: `${t('msg_not_enough_cash')}. ${t('upfront_payment')}: ${formatCurrency(upfront)}` };
         }
 
         // DEDUCT & SET
@@ -1577,7 +1650,8 @@ const LifestyleModule = {
             TutorialSystem.step9_Independence();
         }
 
-        return { success: true, message: `¡Has contratado: ${item.name}` };
+        const itemName = t(`lifestyle_${category}_${id}_name`) || id;
+        return { success: true, message: t('lifestyle_upgrade_success_msg', { name: itemName }) };
     }
 };
 const EducationModule = {
@@ -1648,7 +1722,9 @@ const EducationModule = {
             remainingMonths: course.duration
         };
 
-        return { success: true, message: `Has empezado: ${course.name}` };
+        const courseTr = getCourseTranslation(course.id);
+        const courseName = courseTr.name || course.name;
+        return { success: true, message: t('edu_start_success', { name: courseName }) };
     },
 
     nextTurn() {
@@ -1670,7 +1746,8 @@ const EducationModule = {
 
         // Trigger tutorial step 5 if this is the first degree
         if (!GameState.tutorialFlags.completedFirstDegree) {
-            TutorialSystem.onDegreeCompleted(course.name);
+            const tr = getCourseTranslation(course.id);
+            TutorialSystem.onDegreeCompleted(tr.name || course.name);
             return; // Tutorial handles the modal
         }
 
@@ -1681,26 +1758,26 @@ const EducationModule = {
         let finishMsg = `
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡FORMACIÓN COMPLETADA!</h3>
+                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('edu_complete_title')}</h3>
             </div>
 
             <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Título Obtenido</div>
+                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('edu_degree_obtained')}</div>
                 <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${course.name}</div>
                 
                 <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Cualificación ++</span>
+                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('edu_qualification_up')}</span>
                 </div>
             </div>
 
             <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                Has finalizado tus estudios. Ahora puedes acceder a puestos de mayor responsabilidad y salario.
+                ${t('edu_complete_msg')}
             </p>
         `;
 
         UI.showModal(' ', finishMsg, [
             {
-                text: 'Ir a Trabajo', style: 'success', fn: () => {
+                text: `${t('nav_job')}`, style: 'success', fn: () => {
                     // Switch to Job View
                     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
                     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1757,8 +1834,8 @@ const CompanyModule = {
     createCompany(name, typeKey, locKey) {
         const type = this.businessTypes[typeKey];
         const loc = this.locations[locKey];
-        if (!type || !loc) return { success: false, message: 'Configuración inválida.' };
-        if (GameState.cash < type.cost) return { success: false, message: `Necesitas ${formatCurrency(type.cost)}.` };
+        if (!type || !loc) return { success: false, message: t('comp_create_invalid') };
+        if (GameState.cash < type.cost) return { success: false, message: t('msg_not_enough_money_cost', { cost: formatCurrency(type.cost) }) };
 
         GameState.cash -= type.cost;
 
@@ -1806,7 +1883,7 @@ const CompanyModule = {
         GameState.salary = 0;
         JobSystem.currentCareerPath = 'entrepreneur';
 
-        return { success: true, message: `Has fundado ${name}.` };
+        return { success: true, message: t('you_founded_name', { name: name }) };
     },
 
     hireStaff(role, salary, skill, name) {
@@ -1814,7 +1891,7 @@ const CompanyModule = {
         const co = GameState.company;
 
         if (co.staff.length >= co.maxStaff) {
-            return { success: false, message: `Límite de personal alcanzado (${co.maxStaff}). Mejora tu oficina.` };
+            return { success: false, message: t('staff_limit_reached', { max: co.maxStaff }) };
         }
 
         const newEmp = {
@@ -1833,14 +1910,14 @@ const CompanyModule = {
         newEmp.requiredWage = Math.floor(newEmp.startWage * (1 + increasePct));
 
         co.staff.push(newEmp);
-        return { success: true, message: `¡${name || role} contratado!` };
+        return { success: true, message: t('hired_name', { name: name || role }) };
     },
 
     fireStaff(index) {
         if (!GameState.company) return;
         GameState.company.staff.splice(index, 1);
         GameState.company.staff.forEach(s => s.morale = Math.max(0, s.morale - 0.1));
-        return { success: true, message: 'Empleado despedido.' };
+        return { success: true, message: t('employee_fired') };
     },
 
     upgradeOffice() {
@@ -1851,11 +1928,11 @@ const CompanyModule = {
 
         // Check if already at location max
         if (co.maxStaff >= locationMaxStaff) {
-            return { success: false, message: `Ya tienes el máximo de oficina para ${co.locationName} (${locationMaxStaff} empleados).` };
+            return { success: false, message: t('office_max_location', { loc: t('loc_' + co.locationId), max: locationMaxStaff }) };
         }
 
         if (co.staff.length < co.maxStaff) {
-            return { success: false, message: `Debes llenar tu oficina actual (${co.staff.length}/${co.maxStaff}) antes de ampliar.` };
+            return { success: false, message: t('office_must_fill', { current: co.staff.length, max: co.maxStaff }) };
         }
 
         let nextLimit = 0;
@@ -1864,22 +1941,22 @@ const CompanyModule = {
         if (co.maxStaff === 5) { nextLimit = 10; baseCost = 15000; }
         else if (co.maxStaff === 10) { nextLimit = 15; baseCost = 30000; }
         else if (co.maxStaff === 15) { nextLimit = 20; baseCost = 60000; }
-        else return { success: false, message: 'Ya tienes la oficina máxima.' };
+        else return { success: false, message: t('office_is_max') };
 
         // Ensure next limit doesn't exceed location max
         if (nextLimit > locationMaxStaff) {
-            return { success: false, message: `La ubicación ${co.locationName} permite máximo ${locationMaxStaff} empleados.` };
+            return { success: false, message: t('location_limit_staff', { loc: t('loc_' + co.locationId), max: locationMaxStaff }) };
         }
 
         const profitCalc = Math.max(0, co.profitLastMonth) * 3;
         const finalCost = Math.max(baseCost, profitCalc);
 
-        if (co.cash < finalCost) return { success: false, message: `Faltan fondos. Coste: ${formatCurrency(finalCost)}` };
+        if (co.cash < finalCost) return { success: false, message: t('msg_not_enough_money_cost', { cost: formatCurrency(finalCost) }) };
 
         co.cash -= finalCost;
         co.maxStaff = nextLimit;
 
-        return { success: true, message: `¡Oficina ampliada! Nuevo límite: ${nextLimit} empleados.` };
+        return { success: true, message: t('office_expanded_limit', { limit: nextLimit }) };
     },
 
     buyUpgrade(upgradeId) {
@@ -1887,13 +1964,13 @@ const CompanyModule = {
         const co = GameState.company;
 
         if (upgradeId === 'autoPayroll') {
-            if (co.upgrades && co.upgrades.autoPayroll) return { success: false, message: 'Ya tienes esta mejora.' };
+            if (co.upgrades && co.upgrades.autoPayroll) return { success: false, message: t('upgrade_owned') };
 
             // Req: Office Level > 1 (Implies maxStaff > 5 for standard tiers)
-            if (co.maxStaff <= 5) return { success: false, message: 'Requisito: Negocio Nivel 2+.' };
+            if (co.maxStaff <= 5) return { success: false, message: t('req_business_level_2') };
 
             const cost = 25000;
-            if (co.cash < cost) return { success: false, message: `Faltan fondos. Coste: ${formatCurrency(cost)}` };
+            if (co.cash < cost) return { success: false, message: t('msg_not_enough_money_cost', { cost: formatCurrency(cost) }) };
 
             co.cash -= cost;
             if (!co.upgrades) co.upgrades = {};
@@ -1902,17 +1979,17 @@ const CompanyModule = {
             const successHtml = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">📋</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡RRHH ACTIVADO!</h3>
+                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('hr_activated_title')}</h3>
                 </div>
                 
                 <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                     <p style="color: #fff; font-size: 1.1rem; line-height: 1.5; margin: 0; font-weight: 600;">
-                        "¡Ya no se preocupe por el salario de los empleados, el departamento de RRHH se encargará!"
+                        ${t('hr_activated_msg')}
                     </p>
                 </div>
 
                 <p style="text-align: center; color: #94a3b8; font-size: 0.9rem; margin: 0;">
-                    Las subidas salariales ahora son automáticas.
+                    ${t('hr_activated_sub')}
                 </p>
             `;
             return { success: true, message: successHtml };
@@ -1933,28 +2010,28 @@ const CompanyModule = {
         let currentLevel = 1;
         let name = '';
 
-        if (type === 'product_dev') { currentLevel = co.productLevel; name = "Desarrollo Producto"; }
-        if (type === 'marketing_infra') { currentLevel = co.marketingLevel; name = "Infraestructura Mkt"; }
+        if (type === 'product_dev') { currentLevel = co.productLevel; name = t('product'); }
+        if (type === 'marketing_infra') { currentLevel = co.marketingLevel; name = t('marketing'); }
 
         if (currentLevel >= co.staff.length) {
-            return { success: false, message: `Límite alcanzado: Necesitas más empleados (${co.staff.length}) para mejorar esto.` };
+            return { success: false, message: t('invest_limit_employees', { req: co.staff.length }) };
         }
 
         const cost = 5000 * currentLevel;
 
-        if (co.cash < cost) return { success: false, message: `Necesitas ${formatCurrency(cost)} para mejorar ${name}.` };
+        if (co.cash < cost) return { success: false, message: t('msg_not_enough_money_cost', { cost: formatCurrency(cost) }) };
 
         co.cash -= cost;
 
         if (type === 'product_dev') co.productLevel++;
         if (type === 'marketing_infra') co.marketingLevel++;
 
-        return { success: true, message: `¡Mejora completada! ${name} ahora es Nivel ${currentLevel + 1}` };
+        return { success: true, message: t('upgrade_completed_level', { name: name, level: currentLevel + 1 }) };
     },
 
     sellPassiveCompany(index) {
         const co = GameState.ownedCompanies[index];
-        if (!co) return { success: false, message: 'Empresa no encontrada.' };
+        if (!co) return { success: false, message: t('company_not_found') };
 
         const valuation = Math.floor(co.baselineProfit * 12 * 5); // 5x Annual Profit
         const taxRate = 0.25;
@@ -1968,7 +2045,11 @@ const CompanyModule = {
         // Returning detailed message for the user.
         return {
             success: true,
-            message: `✅ Venta realizada: ${formatCurrency(valuation)}\n<span style="color:#ef4444">🏛️ Impuestos (Estado 25%): -${formatCurrency(taxes)}</span>\n💰 Ingreso Neto: ${formatCurrency(netAmount)}`
+            message: t('company_sold_msg', {
+                val: formatCurrency(valuation),
+                taxes: formatCurrency(taxes),
+                net: formatCurrency(netAmount)
+            })
         };
     },
 
@@ -1987,10 +2068,11 @@ const CompanyModule = {
                         <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 10px; margin-bottom: 8px; text-align: left; border-left: 3px solid #ef4444;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                                 <span style="font-weight: 700; color: #f8fafc;">${d.name}</span>
+                                <span style="font-weight: 700; color: #f8fafc;">${d.name}</span>
                                 <span style="font-size: 0.8rem; color: #94a3b8;">${d.role}</span>
                             </div>
                             <div style="font-size: 0.9rem; color: #cbd5e1;">
-                                Pide: <strong style="color: #ef4444;">${formatCurrency(d.required)}</strong> <span style="font-size: 0.8rem;">(Actual: ${formatCurrency(d.current)})</span>
+                                ${t('demands_amount', { amount: formatCurrency(d.required) })} <span style="font-size: 0.8rem;">(Actual: ${formatCurrency(d.current)})</span>
                             </div>
                         </div>
                     `;
@@ -2018,7 +2100,7 @@ const CompanyModule = {
                     modalTitle,
                     modalMsg,
                     [{
-                        text: 'Ir a RRHH',
+                        text: t('try_again_btn'),
                         style: 'primary',
                         fn: () => {
                             // 1. Navigate to Company View
@@ -2034,7 +2116,7 @@ const CompanyModule = {
                             }, 200);
                         }
                     },
-                    { text: 'Ignorar por ahora', style: 'secondary', fn: null }],
+                    { text: t('demand_ignore'), style: 'secondary', fn: null }],
                     true // isHTML
                 );
             }
@@ -2122,7 +2204,7 @@ const CompanyModule = {
                 emp.morale = Math.min(1.0, emp.morale + 0.05);
             } else {
                 emp.morale = Math.max(0.0, emp.morale - 0.10);
-                co.events.push(`⚠️ Empleado descontento: Exige ${formatCurrency(emp.requiredWage)}`);
+                co.events.push(t('news_unhappy_employee', { amount: formatCurrency(emp.requiredWage) }));
                 // Collect for modal
                 co.tempSalaryDemands.push({
                     name: emp.name,
@@ -2165,9 +2247,9 @@ const CompanyModule = {
         if (demand > capacity) {
             const locationMaxStaff = loc?.maxStaff || 15;
             if (co.staff.length >= co.maxStaff && co.maxStaff >= locationMaxStaff) {
-                co.events.push(`⚠️ Has llegado al límite de empleados.`);
+                co.events.push(t('news_limit_staff'));
             } else {
-                co.events.push(`⚠️ Necesitas más empleados.`);
+                co.events.push(t('news_need_staff'));
             }
         }
 
@@ -2350,7 +2432,7 @@ TOTAL OPERACIÓN: ${formatCurrency(totalExit)}
 
 ¿Vender empresa y salir?`;
 
-        const confirmed = await showGameConfirm(message, '💰 Oferta de Compra', 'Vender', 'Cancelar');
+        const confirmed = await showGameConfirm(message, '💰 Oferta de Compra', t('sell'), t('cancel'));
         if (!confirmed) return { success: false, message: 'Operación cancelada' };
 
         GameState.cash += totalExit;
@@ -3307,7 +3389,7 @@ const TutorialSystem = {
                 EducationModule.startCourse('fp_medio');
             } else {
                 EducationModule.startCourse('bachillerato');
-                showGameAlert('No tienes 500€ para FP. Te has matriculado en Bachillerato (gratis).', 'info');
+                showGameAlert(t('education_fail_msg'), 'info');
             }
             GameState.tutorialFlags.educationChosen = true;
             this.step2_GoToWork();
@@ -3450,7 +3532,7 @@ const TutorialSystem = {
             const welcomeMsg = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.4)); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">⚡</div>
-                    <h3 style="color: #facc15; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);">¡Trabajo Aceptado!</h3>
+                    <h3 style="color: #facc15; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);">${t('job_accepted')}</h3>
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -3514,12 +3596,12 @@ const TutorialSystem = {
         let successMsg = `
         <div style="text-align: center; margin-bottom: 20px;">
             <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${finalTheme}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-            <h3 style="color: ${finalTheme}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${finalTheme}4d; font-weight: 800; letter-spacing: 1px;">${t('tutorial_well_done')}</h3>
+            <h3 style="color: ${finalTheme}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${finalTheme}4d; font-weight: 800; letter-spacing: 1px;">${t('edu_complete_title')}</h3>
         </div>
 
         <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${finalTheme}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('tutorial_education_complete')}</div>
-            <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${getCourseTranslation(degreeName)}</div>
+            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('edu_degree_obtained')}</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${degreeName}</div>
             
             <div style="text-align: left; background: ${finalTheme}1a; border-radius: 12px; padding: 15px; margin-top: 15px; border: 1px solid ${finalTheme}33;">
                 <div style="margin-bottom: 8px; font-size: 0.95rem; color: #e2e8f0;">✅ ${t('tutorial_perm_jobs_access')}</div>
@@ -3767,18 +3849,18 @@ const TutorialSystem = {
                     this.addHighlight(sofaBtn);
                     this.showTooltip(
                         sofaBtn, // Pass element directly if possible, or selector string
-                        'Opción de Emergencia',
-                        'Es cutre, pero es barato. ¡Alquila el sofá de tu amigo por ahora!',
-                        'Vale',
+                        t('tutorial_emergency_title'),
+                        t('tutorial_emergency_msg'),
+                        t('understood'),
                         null
                     );
                 } else {
                     // Fallback if button not found
                     this.showTooltip(
                         '#housing-options',
-                        'Busca Casa',
-                        'Selecciona "Sofá de un amigo" para no dormir en la calle.',
-                        'Ok',
+                        t('tutorial_find_housing_title'),
+                        t('tutorial_find_housing_msg'),
+                        t('understood'),
                         null
                     );
                 }
@@ -3911,9 +3993,9 @@ const TutorialSystem = {
 
                     this.showTooltip(
                         grid,
-                        'Salud Financiera',
-                        'Lo vital es que tus <strong>Ventas</strong> superen a tus <strong>Gastos Totales</strong>. <br><br>Si gastas más de lo que ingresas, quemarás tu caja y quebrarás.',
-                        'Siguiente',
+                        t('financial_health'),
+                        t('tutorial_profit_rule'),
+                        t('next'),
                         () => {
                             this.removeHighlights();
                             this.hideTooltip();
@@ -3927,9 +4009,9 @@ const TutorialSystem = {
 
                                     this.showTooltip(
                                         newsCard,
-                                        'Novedades',
-                                        'Mantente al día. <br><br>Aquí verás <strong>quejas de empleados</strong>. <br><br>Será tu señal para <strong>contratar más personal</strong> o <strong>subirles el sueldo</strong>.',
-                                        'Siguiente',
+                                        t('news'),
+                                        t('tutorial_news_msg'),
+                                        t('next'),
                                         () => {
                                             this.removeHighlights();
                                             this.hideTooltip();
@@ -3942,10 +4024,9 @@ const TutorialSystem = {
                                                     statusCard.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                                     this.showTooltip(
-                                                        statusCard,
-                                                        'Estado General',
-                                                        'Aquí controlas tu <strong>Reputación</strong> y la capacidad de atender clientes.<br><br>Una buena reputación atrae más ventas, pero necesitas capacidad para atenderlas.',
-                                                        'Ir a Finanzas',
+                                                        t('tutorial_general_status'),
+                                                        t('tutorial_general_status_msg'),
+                                                        t('go_to_finance'),
                                                         () => {
                                                             this.removeHighlights();
                                                             this.hideOverlay();
@@ -3974,10 +4055,9 @@ const TutorialSystem = {
                                             statusCard.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                             this.showTooltip(
-                                                statusCard,
-                                                'Estado General',
-                                                'Aquí controlas tu <strong>Reputación</strong> y la capacidad de atender clientes.<br><br>Una buena reputación atrae más ventas, pero necesitas capacidad para atenderlas.',
-                                                'Ir a Finanzas',
+                                                t('tutorial_general_status'),
+                                                t('tutorial_general_status_msg'),
+                                                t('go_to_finance'),
                                                 () => {
                                                     this.removeHighlights();
                                                     this.hideOverlay();
@@ -4036,9 +4116,9 @@ const TutorialSystem = {
 
                 this.showTooltip(
                     hireTab,
-                    'Hacer Crecer el Equipo',
-                    'Contratar empleados aumenta tu capacidad. <br><br>¡Elige bien! Cada empleado cuesta un salario mensual.<br><br><strong style="color: #ef4444;">IMPORTANTE: NO CONTRATES MÁS EMPLEADOS HASTA QUE SUBA LA DEMANDA O PERDERÁS DINERO</strong>',
-                    'Entendido',
+                    t('tutorial_grow_team'),
+                    t('tutorial_grow_team_msg'),
+                    t('understood'),
                     () => {
                         this.removeHighlights();
                         this.hideOverlay();
@@ -4080,9 +4160,9 @@ const TutorialSystem = {
 
                 this.showTooltip(
                     target,
-                    '1. Desarrollo de Producto',
-                    '¡La calidad es clave! <br><br>Invierte en <strong>I+D</strong> para subir de nivel. A mayor nivel, más satisfechos estarán tus clientes.',
-                    'Siguiente',
+                    t('tutorial_product_dev'),
+                    t('tutorial_product_dev_msg'),
+                    t('next'),
                     () => {
                         this.removeHighlights();
                         this.hideTooltip();
@@ -4096,9 +4176,9 @@ const TutorialSystem = {
 
                                 this.showTooltip(
                                     pricing,
-                                    '2. Estrategia de Precio',
-                                    'El precio debe ser justo. <br><br>Si cobras más de lo que tu reputación permite, <strong>perderás ventas</strong>. Busca el equilibrio.',
-                                    'Siguiente',
+                                    t('tutorial_pricing_strat'),
+                                    t('tutorial_pricing_strat_msg'),
+                                    t('next'),
                                     () => {
                                         this.removeHighlights();
                                         this.hideTooltip();
@@ -4112,9 +4192,9 @@ const TutorialSystem = {
 
                                                 this.showTooltip(
                                                     rep,
-                                                    '3. Tu Reputación',
-                                                    'Aquí ves si tus clientes están felices o enfadados.<br><br>Mantén la ✅ <strong>Calidad Real</strong> por encima de la <strong>Exigencia</strong>.',
-                                                    'Siguiente',
+                                                    t('tutorial_your_reputation'),
+                                                    t('tutorial_your_reputation_msg'),
+                                                    t('next'),
                                                     () => {
                                                         this.removeHighlights();
                                                         this.hideTooltip();
@@ -4128,9 +4208,9 @@ const TutorialSystem = {
 
                                                                 this.showTooltip(
                                                                     prov,
-                                                                    '4. Proveedores',
-                                                                    'Tus ingredientes importan. <br><br>Mejores proveedores suben la calidad, pero aumentan tus costes. ¡Tú decides!',
-                                                                    'Entendido',
+                                                                    t('tutorial_providers'),
+                                                                    t('tutorial_providers_msg'),
+                                                                    t('understood'),
                                                                     () => {
                                                                         this.removeHighlights();
                                                                         this.hideOverlay();
@@ -4230,10 +4310,9 @@ const TutorialSystem = {
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                 this.showTooltip(
-                    target,
-                    '1. Movimientos de Caja',
-                    'Aquí mueves dinero entre tu empresa y tu bolsillo. <br><br>Puedes <strong>inyectar capital</strong> si falta liquidez o <strong>retirar beneficios</strong> cuando sobren.',
-                    'Siguiente',
+                    t('tutorial_finance_movements'),
+                    t('tutorial_finance_movements_msg'),
+                    t('next'),
                     () => {
                         this.removeHighlights();
                         this.hideTooltip();
@@ -4246,10 +4325,9 @@ const TutorialSystem = {
                                 salary.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                 this.showTooltip(
-                                    salary,
-                                    '2. Tu Salario',
-                                    'Ponte un sueldo de <strong>1500€</strong> para cubrir tus gastos personales sin desangrar la empresa al principio.',
-                                    'Siguiente',
+                                    t('tutorial_finance_salary'),
+                                    t('tutorial_finance_salary_msg'),
+                                    t('next'),
                                     () => {
                                         this.removeHighlights();
                                         this.hideTooltip();
@@ -4262,10 +4340,9 @@ const TutorialSystem = {
                                                 danger.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                                 this.showTooltip(
-                                                    danger,
-                                                    '3. Zona de Peligro',
-                                                    '¿Te has cansado de esta empresa? <br><br>Aquí puedes <strong>VENDERLA (EXIT)</strong> y llevarte el dinero líquido a tu cuenta personal.',
-                                                    'Entendido',
+                                                    t('tutorial_finance_danger'),
+                                                    t('tutorial_finance_danger_msg'),
+                                                    t('understood'),
                                                     () => {
                                                         this.removeHighlights();
                                                         this.hideOverlay();
@@ -4323,10 +4400,9 @@ const TutorialSystem = {
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                 this.showTooltip(
-                    target,
-                    '1. Infraestructura',
-                    'Invierte en tu equipo de marketing. <br><br>Mayor nivel = <strong>Más eficacia</strong> en tus campañas (más clientes por euro invertido).',
-                    'Siguiente',
+                    t('tutorial_mkt_infra'),
+                    t('tutorial_mkt_infra_msg'),
+                    t('next'),
                     () => {
                         this.removeHighlights();
                         this.hideTooltip();
@@ -4339,10 +4415,9 @@ const TutorialSystem = {
                                 channels.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                 this.showTooltip(
-                                    channels,
-                                    '2. Canales',
-                                    '¿Dónde están tus clientes? <br><br>Cada canal tiene un coste y un impacto diferente. ¡Combínalos para maximizar tu alcance!',
-                                    'Siguiente',
+                                    t('tutorial_mkt_channels'),
+                                    t('tutorial_mkt_channels_msg'),
+                                    t('next'),
                                     () => {
                                         this.removeHighlights();
                                         this.hideTooltip();
@@ -4355,10 +4430,9 @@ const TutorialSystem = {
                                                 analysis.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                                 this.showTooltip(
-                                                    analysis,
-                                                    '3. Análisis de Demanda',
-                                                    'Aquí ves de dónde vienen tus clientes.<br><br>Tu crecimiento depende de tu Tráfico, Marketing, Reputación y el factor Orgánico (boca a boca).',
-                                                    'Entendido',
+                                                    t('tutorial_mkt_analysis'),
+                                                    t('tutorial_mkt_analysis_msg'),
+                                                    t('understood'),
                                                     () => {
                                                         this.removeHighlights();
                                                         this.hideOverlay();
@@ -4823,6 +4897,11 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
  * @returns {Promise<boolean>}
  */
 function showGameConfirm(message, title = '¿Confirmar?', confirmText = 'Confirmar', cancelText = 'Cancelar') {
+    // We can't access t() in default params easily if it's not global or initialized. 
+    // Assuming t() is available globally.
+    // If not, we should handle inside:
+    confirmText = confirmText === 'Confirmar' ? t('confirm') : confirmText;
+    cancelText = cancelText === 'Cancelar' ? t('cancel') : cancelText;
     return new Promise((resolve) => {
         // Remove existing confirm modal if any
         const existing = document.querySelector('.game-confirm-overlay');
@@ -5005,6 +5084,160 @@ const UI = {
         window.requestAnimationFrame(step);
     },
 
+    setupLanguageSwitcher() {
+        const btn = document.getElementById('lang-switch-btn');
+        if (!btn) return;
+
+        const flags = { es: '🇪🇸', en: '🇬🇧', de: '🇩🇪' };
+        const labels = { es: 'ES', en: 'EN', de: 'DE' };
+
+        const updateBtn = () => {
+            const lang = I18n.currentLang;
+            const spanFlag = btn.querySelector('span:nth-child(1)');
+            const spanText = btn.querySelector('span:nth-child(2)');
+            if (spanFlag) spanFlag.textContent = flags[lang] || '🌐';
+            if (spanText) spanText.textContent = labels[lang] || lang.toUpperCase();
+        };
+
+        // Initialize state
+        updateBtn();
+
+        // Click handler
+        btn.onclick = () => {
+            const current = I18n.currentLang;
+            let next = 'es';
+            if (current === 'es') next = 'en';
+            else if (current === 'en') next = 'de';
+            else if (current === 'de') next = 'es';
+
+            I18n.setLanguage(next);
+            updateBtn();
+
+            // Refresh UI
+            this.updateStaticTranslations();
+            this.updateHeader();
+
+            // Re-render current view to apply translations
+            const currentView = document.querySelector('.view.active');
+            if (currentView) {
+                const viewName = currentView.id.replace('-view', '');
+                document.querySelector(`.nav-btn[data-view="${viewName}"]`)?.click();
+            }
+        };
+    },
+
+    updateStaticTranslations() {
+        const setT = (id, key, prefix = '', suffix = '') => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = prefix + t(key) + suffix;
+        };
+
+        setT('header-game-title', 'game_title', '🎮 ', ' 🎮');
+        setT('label-save-desktop', 'save_game');
+        setT('label-save-mobile', 'save_game');
+        setT('label-next-month', 'next_month', '⚡ ', ' →');
+
+        // Navigation labels (Mobile)
+        setT('nav-label-education', 'nav_education');
+        setT('nav-label-market', 'nav_market');
+        setT('nav-label-lifestyle', 'nav_lifestyle');
+        setT('nav-label-job', 'nav_job');
+        setT('nav-label-dashboard', 'nav_dashboard');
+        setT('nav-label-holdings', 'nav_holdings');
+        setT('nav-label-real-estate', 'nav_real_estate');
+
+        // Navigation labels (Desktop)
+        setT('d-nav-label-dashboard', 'nav_dashboard', '📊 ');
+        setT('d-nav-label-education', 'nav_education', '🎓 ');
+        setT('d-nav-label-lifestyle', 'nav_lifestyle', '🏘️ '); // Using lifestyle as Housing
+        setT('d-nav-label-job', 'nav_job', '💼 ');
+        setT('d-nav-label-bank', 'nav_bank', '🏦 ');
+        setT('d-nav-label-real-estate', 'nav_real_estate', '🏘️ ');
+        setT('d-nav-label-market', 'nav_market', '📈 ');
+
+        // Dashboard
+        setT('dashboard-title', 'nav_dashboard');
+        setT('label-net-worth', 'net_worth');
+        setT('label-monthly-income', 'monthly_income');
+        setT('label-monthly-expenses', 'monthly_expenses');
+        setT('label-age', 'age');
+
+        // Stock Modal Fundamentals
+        setT('label-stock-eps', 'stock_fund_eps');
+        setT('label-stock-vol', 'stock_fund_vol');
+        setT('label-stock-per', 'stock_fund_per');
+        setT('label-stock-trend', 'stock_fund_trend');
+
+        // Company Wizard
+        setT('wiz-main-title', 'wiz_main_title');
+        setT('wiz-main-subtitle', 'wiz_main_subtitle');
+        setT('wiz-step-label-1', 'wiz_step_1_label');
+        setT('wiz-step-label-2', 'wiz_step_2_label');
+        setT('wiz-step-1-header', 'wiz_step_1_header');
+        setT('wiz-name-label', 'wiz_name_label');
+        setT('wiz-select-vehicle', 'wiz_select_vehicle');
+        setT('wiz-step-2-header', 'wiz_step_2_header');
+        setT('wiz-select-location', 'wiz_select_location');
+        setT('wiz-sidebar-title', 'wiz_sidebar_title');
+        setT('wiz-cash-label', 'wiz_cash_available');
+        setT('wiz-label-setup', 'wiz_setup_cost', '🏢 ');
+        setT('wiz-label-rent', 'wiz_rent_cost', '🏠 ');
+        setT('wiz-label-total', 'wiz_total_investment', '💸 ');
+
+        const wizError = document.getElementById('wiz-error-msg');
+        if (wizError) wizError.textContent = t('wiz_insufficient_capital');
+
+        // Bank View
+        setT('view-bank-title', 'bank_title');
+        setT('label-bank-loans', 'bank_active_loans_title');
+        setT('label-bank-request', 'bank_request_loan_title');
+        setT('label-bank-limit', 'bank_limit_label');
+        setT('label-bank-amt', 'bank_amount_label');
+        setT('label-bank-term', 'bank_term_label');
+        setT('label-bank-int', 'bank_interest_label');
+        setT('label-bank-quota', 'bank_monthly_quota_label');
+        setT('btn-request-loan', 'bank_request_btn');
+
+        // Market View
+        setT('market-title', 'market_view_title');
+        setT('label-market-available', 'market_available_stocks');
+        setT('label-market-portfolio', 'market_your_portfolio');
+        setT('label-market-trade', 'market_trade_title');
+        setT('btn-buy', 'market_buy_btn');
+        setT('btn-sell', 'market_sell_btn');
+
+        // Real Estate View
+        setT('view-re-title', 're_view_title');
+        setT('label-re-market', 're_market_opportunities');
+        setT('label-re-my', 're_my_properties_title');
+
+        // Job View
+        setT('view-job-title', 'job_view_title');
+        setT('label-job-current', 'job_current_title');
+        setT('label-job-market', 'job_market_title');
+
+        // Education View
+        setT('view-edu-title', 'edu_view_title');
+        setT('label-edu-current', 'edu_current_title');
+        setT('label-edu-available', 'edu_available_title');
+
+        // Wizard Navigation
+        setT('btn-wiz-back-mobile', 'wiz_back', '← ');
+        setT('btn-wiz-next-mobile', 'wiz_next', '', ' ➡️');
+        setT('btn-wiz-back', 'wiz_back', '← ');
+        setT('btn-wiz-next', 'wiz_next', '', ' ➡️');
+
+        // Empty states and other polish
+        setT('market-empty-msg', 'market_empty_msg');
+        setT('re-empty-msg', 're_empty_msg');
+        setT('label-job-promotion-title', 'job_promotion_label');
+        setT('label-edu-bachillerato', 'edu_bachillerato');
+        setT('label-net-worth-chart', 'label_net_worth_chart');
+        setT('btn-promote', 'job_btn_promote');
+        setT('next-job-info', 'loading');
+    }
+    ,
+
     updateHeader() {
         const cashDisplay = document.getElementById('money-display');
         const netWorthDisplay = document.getElementById('net-worth-display');
@@ -5032,14 +5265,14 @@ const UI = {
             }
         }
 
-        document.getElementById('date-display').textContent = `Mes: ${GameState.month} | Año: ${GameState.year}`;
+        document.getElementById('date-display').textContent = `${t('month')}: ${GameState.month} | ${t('year')}: ${GameState.year}`;
         const pName = document.getElementById('header-player-name');
         if (pName) {
-            pName.textContent = GameState.playerName || 'Jugador';
+            pName.textContent = GameState.playerName || t('player_placeholder');
         }
         const pNameDesktop = document.getElementById('header-player-name-desktop');
         if (pNameDesktop) {
-            pNameDesktop.textContent = GameState.playerName || 'Jugador';
+            pNameDesktop.textContent = GameState.playerName || t('player_placeholder');
         }
     },
 
@@ -5128,7 +5361,7 @@ const UI = {
         let reMortgage = 0;
         GameState.inventory.realEstate.forEach(p => reValue += p.price);
         GameState.loans.forEach(l => {
-            if (l.type === 'Hipotecario') reMortgage += l.remainingBalance;
+            if (l.isMortgage) reMortgage += l.remainingBalance;
         });
         let reEquity = reValue - reMortgage;
 
@@ -5251,8 +5484,8 @@ const UI = {
                     <div style="border-top:1px solid #334155; padding-top:15px; background: linear-gradient(145deg, rgba(34, 197, 94, 0.05), transparent); margin: -5px -20px -20px -20px; padding: 15px 20px; border-radius: 0 0 16px 16px;">
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div>
-                                <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">💰 Beneficio Empresas</div>
-                                <div style="font-size:1.1rem; font-weight:800; color:${holdingIncome >= 0 ? '#4ade80' : '#f87171'}">${holdingIncome >= 0 ? '+' : ''}${formatCurrency(holdingIncome)}/mes</div>
+                                <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">💰 ${t('holding_profit')}</div>
+                                <div style="font-size:1.1rem; font-weight:800; color:${holdingIncome >= 0 ? '#4ade80' : '#f87171'}">${holdingIncome >= 0 ? '+' : ''}${formatCurrency(holdingIncome)}/${t('month')}</div>
                             </div>
                             <div style="font-size: 2rem; opacity: 0.5;">🏦</div>
                         </div>
@@ -5391,23 +5624,23 @@ const UI = {
                                             <div style="font-weight:bold; font-size:1.1rem; color:white;">${p.symbol}</div>
                                             <div style="font-size:0.8rem; color:#94a3b8;">${s.name}</div>
                                         </div>
-                                        <button onclick="UI.openStockModal(StockMarket.getStock('${p.symbol}'))" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.85rem; font-weight:600;">VENDER</button>
+                                        <button onclick="UI.openStockModal(StockMarket.getStock('${p.symbol}'))" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.85rem; font-weight:600;">${t('stock_btn_sell')}</button>
                                     </div>
                                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
                                         <div>
-                                            <div style="color:#94a3b8; font-size:0.75rem;">Cantidad</div>
+                                            <div style="color:#94a3b8; font-size:0.75rem;">${t('stock_pos_qty')}</div>
                                             <div style="color:white; font-weight:600;">${p.quantity}</div>
                                         </div>
                                         <div>
-                                            <div style="color:#94a3b8; font-size:0.75rem;">Precio Medio</div>
+                                            <div style="color:#94a3b8; font-size:0.75rem;">${t('stock_pos_avg')}</div>
                                             <div style="color:white; font-weight:600;">${formatCurrency(p.avgPrice)}</div>
                                         </div>
                                         <div>
-                                            <div style="color:#94a3b8; font-size:0.75rem;">Valor Actual</div>
+                                            <div style="color:#94a3b8; font-size:0.75rem;">${t('stock_pos_val')}</div>
                                             <div style="color:white; font-weight:600;">${formatCurrency(val)}</div>
                                         </div>
                                         <div>
-                                            <div style="color:#94a3b8; font-size:0.75rem;">Ganancia/Pérdida</div>
+                                            <div style="color:#94a3b8; font-size:0.75rem;">${t('stock_pos_pl')}</div>
                                             <div style="color:${plColor}; font-weight:bold;">${plSign}${formatCurrency(pl)} <span style="font-size:0.9rem;">(${plSign}${plPercent}%)</span></div>
                                         </div>
                                     </div>
@@ -5479,7 +5712,7 @@ const UI = {
                             <!-- Chart Container -->
                             <div style="background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 12px; padding: 0; margin-bottom: 15px; border: 1px solid #334155; position: relative; overflow: hidden;">
                                 <div style="padding: 10px 15px; border-bottom: 1px solid rgba(51, 65, 85, 0.5); font-size: 0.8rem; color: #94a3b8; background: rgba(15, 23, 42, 0.3);">
-                                    Rendimiento: <span id="chart-roi-display" style="color: white; font-weight: bold;">--</span>
+                                    ${t('stock_modal_yield')}: <span id="chart-roi-display" style="color: white; font-weight: bold;">--</span>
                                 </div>
                                 <div style="height:180px; width:100%; padding: 10px;">
                                     <canvas id="stock-modal-chart"></canvas>
@@ -5488,9 +5721,9 @@ const UI = {
 
                             <!-- Timeframe Selectors -->
                             <div class="timeframe-segmented" style="display:flex; background:#0f172a; padding:5px; border-radius:10px; margin-bottom:15px; border: 1px solid #334155;">
-                                <button class="btn-seg" data-tf="6" onclick="UI.changeTimeframe(6)" style="flex:1; background:transparent; border:none; color:#94a3b8; padding:10px; border-radius:8px; font-weight: 600; font-size: 0.85rem;">6 Meses</button>
-                                <button class="btn-seg active" data-tf="24" onclick="UI.changeTimeframe(24)" style="flex:1; background: linear-gradient(135deg, #38bdf8, #0ea5e9); border:none; color:white; padding:10px; border-radius:8px; font-weight: 700; font-size: 0.85rem;">2 Años</button>
-                                <button class="btn-seg" data-tf="999" onclick="UI.changeTimeframe(999)" style="flex:1; background:transparent; border:none; color:#94a3b8; padding:10px; border-radius:8px; font-weight: 600; font-size: 0.85rem;">Todo</button>
+                                <button class="btn-seg" data-tf="6" onclick="UI.changeTimeframe(6)" style="flex:1; background:transparent; border:none; color:#94a3b8; padding:10px; border-radius:8px; font-weight: 600; font-size: 0.85rem;">${t('stock_time_6m')}</button>
+                                <button class="btn-seg active" data-tf="24" onclick="UI.changeTimeframe(24)" style="flex:1; background: linear-gradient(135deg, #38bdf8, #0ea5e9); border:none; color:white; padding:10px; border-radius:8px; font-weight: 700; font-size: 0.85rem;">${t('stock_time_2y')}</button>
+                                <button class="btn-seg" data-tf="999" onclick="UI.changeTimeframe(999)" style="flex:1; background:transparent; border:none; color:#94a3b8; padding:10px; border-radius:8px; font-weight: 600; font-size: 0.85rem;">${t('stock_time_all')}</button>
                             </div>
 
 
@@ -5502,22 +5735,22 @@ const UI = {
                             <!-- Compact Portfolio Stats -->
                             <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.85rem; color:#cbd5e1; background:rgba(15, 23, 42, 0.5); padding:8px 12px; border-radius:8px; border:1px solid #334155;">
                                 <div>
-                                    <span style="color:#94a3b8;">En Cartera:</span> 
+                                    <span style="color:#94a3b8;">${t('stock_modal_owned')}:</span> 
                                     <strong style="color:#38bdf8;">${owned}</strong>
                                 </div>
                                 <div>
-                                    <span style="color:#94a3b8;">Valor:</span> 
+                                    <span style="color:#94a3b8;">${t('stock_modal_value')}:</span> 
                                     <strong style="color:#facc15;">${formatCurrency(owned * stock.price)}</strong>
                                 </div>
                             </div>
 
                             <div style="margin-bottom:12px;">
-                                <input type="number" id="stock-action-qty" placeholder="Cantidad de Acciones" 
+                                <input type="number" id="stock-action-qty" placeholder="${t('stock_pos_qty')}" 
                                     style="width:100%; padding:14px; background: linear-gradient(145deg, #1e293b, #0f172a); border:1px solid #475569; border-radius:10px; color:white; font-size:1.1rem; text-align:center; font-weight: 600;">
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                                <button id="btn-modal-buy" class="btn-action" style="background: linear-gradient(135deg, #22c55e, #16a34a); color:white; border:none; padding:14px; border-radius:10px; font-weight:700; font-size:1rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;">COMPRAR</button>
-                                <button id="btn-modal-sell" class="btn-action" style="background: linear-gradient(135deg, #ef4444, #dc2626); color:white; border:none; padding:14px; border-radius:10px; font-weight:700; font-size:1rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;">VENDER</button>
+                                <button id="btn-modal-buy" class="btn-action" style="background: linear-gradient(135deg, #22c55e, #16a34a); color:white; border:none; padding:14px; border-radius:10px; font-weight:700; font-size:1rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;">${t('stock_btn_buy')}</button>
+                                <button id="btn-modal-sell" class="btn-action" style="background: linear-gradient(135deg, #ef4444, #dc2626); color:white; border:none; padding:14px; border-radius:10px; font-weight:700; font-size:1rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;">${t('stock_btn_sell')}</button>
                             </div>
                         </div>
 
@@ -5548,7 +5781,7 @@ const UI = {
 
             document.getElementById('btn-modal-buy').onclick = (e) => {
                 const qty = parseInt(document.getElementById('stock-action-qty').value);
-                if (!qty || qty <= 0) return showGameAlert('Cantidad inválida', 'warning');
+                if (!qty || qty <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
                 const res = StockMarket.buyStock(stock.symbol, qty);
                 if (res.success) {
                     // Close the modal first
@@ -5566,8 +5799,8 @@ const UI = {
 
             document.getElementById('btn-modal-sell').onclick = (e) => {
                 const qty = parseInt(document.getElementById('stock-action-qty').value);
-                if (!qty || qty <= 0) return showGameAlert('Cantidad inválida', 'warning');
-                if (owned < qty) return showGameAlert('No tienes suficientes acciones', 'warning');
+                if (!qty || qty <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
+                if (owned < qty) return showGameAlert(t('stock_not_enough'), 'warning');
                 const res = StockMarket.sellStock(stock.symbol, qty);
                 if (res.success) {
                     // Close the modal first
@@ -5660,7 +5893,7 @@ const UI = {
 
         // Calculate eligible debt for limit (excluding mortgages)
         const currentDebtForLimit = loans
-            .filter(l => !l.type.includes('Hipotecario'))
+            .filter(l => !l.isMortgage)
             .reduce((sum, l) => sum + l.remainingBalance, 0);
 
         const remainingLimit = Math.max(0, limit - currentDebtForLimit);
@@ -5696,47 +5929,52 @@ const UI = {
                             <!-- LEFT: CALCULATOR -->
                             <div class="calculator-card">
                                 <h3 style="margin-top:0; color:#facc15; border-bottom:1px solid rgba(250, 204, 21, 0.2); padding-bottom:15px; margin-bottom:25px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                                    <span style="font-size: 1.5rem;">🏦</span> Solicitar Financiación
+                                    <span style="font-size: 1.5rem;">🏦</span> ${t('bank_request_loan')}
                                 </h3>
                                 
                                 <div class="loan-input-group">
-                                    <label>Cantidad a solicitar (€)</label>
+                                    <label>${t('bank_amount_req')}</label>
                                     <input type="number" id="loan-amount-input" class="loan-input" placeholder="Ej. 50000" min="1000" step="1000">
                                 </div>
                                 <div class="loan-input-group">
-                                    <label>Plazo: <span id="loan-years-val" style="color:#facc15; font-weight:bold;">2 años</span></label>
+                                    <label>${t('bank_term_years').replace('{years}', '<span id="loan-years-val" style="color:#facc15; font-weight:bold;">2</span>')}</label>
                                     <input type="range" id="loan-years-input" min="1" max="5" value="2" style="width:100%; accent-color:#facc15; height: 8px;">
                                 </div>
 
                                 <div class="loan-summary">
                                     <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items: center;">
-                                        <span style="color: #94a3b8; font-size: 0.9rem;">🔴 Tipo de Interés</span>
+                                        <span style="color: #94a3b8; font-size: 0.9rem;">${t('bank_interest_rate')}</span>
                                         <span style="color:#f87171; font-weight:700; font-size: 1.1rem;">12.0% TAE</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; font-size:1.2rem; border-top:1px solid #334155; padding-top:12px; margin-top:10px; align-items: center;">
-                                        <span style="color: #94a3b8;">💰 Cuota Mensual</span>
+                                        <span style="color: #94a3b8;">${t('bank_monthly_quota')}</span>
                                         <span id="loan-monthly-preview" style="color:#facc15; font-weight:800; font-size: 1.4rem;">0,00 €</span>
                                     </div>
                                 </div>
 
-                                <button id="btn-request-loan-dynamic" class="btn-action-primary" style="background: linear-gradient(135deg, #facc15, #eab308); color:#0f172a; margin-top:25px; width: 100%; padding: 14px; font-size: 1rem; border-radius: 12px; font-weight: 700;">🚀 Solicitar Préstamo</button>
+                                <button id="btn-request-loan-dynamic" class="btn-action-primary" style="background: linear-gradient(135deg, #facc15, #eab308); color:#0f172a; margin-top:25px; width: 100%; padding: 14px; font-size: 1rem; border-radius: 12px; font-weight: 700;">${t('bank_btn_request')}</button>
                             </div>
 
                             <!-- RIGHT: ACTIVE LOANS -->
                             <div>
                                 <h3 style="margin-top:0; color:#94a3b8; margin-bottom:20px; display: flex; align-items: center; gap: 10px;">
-                                    <span style="font-size: 1.3rem;">📋</span> Préstamos Activos (${loans.length})
+                                    <span style="font-size: 1.3rem;">📋</span> ${t('bank_active_loans', { count: loans.length })}
                                 </h3>
                                 <div id="active-loans-wrapper">
                                     ${loans.length === 0 ?
                 `<div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.05), #0f172a); border:1px solid rgba(74, 222, 128, 0.2); padding:30px; border-radius:16px; text-align:center;">
                                         <div style="font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.3));">🎉</div>
-                                        <p style="color:#4ade80; font-weight: 700; font-size: 1.1rem; margin: 0;">¡Sin deudas!</p>
-                                        <p style="color:#94a3b8; font-size: 0.9rem; margin-top: 8px;">No tienes préstamos activos.</p>
+                                        <p style="color:#4ade80; font-weight: 700; font-size: 1.1rem; margin: 0;">${t('debt_free_title')}</p>
+                                        <p style="color:#94a3b8; font-size: 0.9rem; margin-top: 8px;">${t('debt_free_msg')}</p>
                                     </div>` :
                 loans.map(loan => {
                     const progress = ((loan.termMonths - loan.remainingMonths) / loan.termMonths) * 100;
-                    const loanIcon = loan.type.includes('Hipotecario') ? '🏠' : '💳';
+                    const loanIcon = loan.isMortgage ? '🏠' : '💳';
+                    // Translate loan type if it's dynamic, or leave as is if generated elsewhere.
+                    // Assuming loan.type is already correct or hard to translate retroactively. 
+                    // New mortgages use "Hipotecario...", old ones might differ.
+                    // Ideally we'd store a key, but for now let's leave loan.type.
+
                     return `
                                             <div class="active-loan-card">
                                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -5747,21 +5985,19 @@ const UI = {
                                                     <span style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1)); color:#f87171; padding:6px 12px; border-radius:20px; font-size:0.85rem; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.3);">-${formatCurrency(loan.remainingBalance)}</span>
                                                 </div>
                                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size:0.85rem; color:#cbd5e1; background: rgba(15, 23, 42, 0.5); padding: 12px; border-radius: 10px;">
-                                                    <div><span style="color:#94a3b8;">Cuota:</span> <span style="color: #facc15; font-weight: 600;">${formatCurrency(loan.monthlyPayment)}</span></div>
-                                                    <div><span style="color:#94a3b8;">Restan:</span> <span style="font-weight: 600;">${loan.remainingMonths} meses</span></div>
+                                                    <div><span style="color:#94a3b8;">${t('bank_monthly_quota')}:</span> <span style="color: #facc15; font-weight: 600;">${formatCurrency(loan.monthlyPayment)}</span></div>
+                                                    <div><span style="color:#94a3b8;">${t('remaining')}:</span> <span style="font-weight: 600;">${loan.remainingMonths} ${t('months')}</span></div>
                                                 </div>
-                                                <div class="loan-progress">
-                                                    <div class="loan-bar" style="width:${progress}%"></div>
+                                                <div style="margin-top:10px; background:rgba(255,255,255,0.1); height:4px; border-radius:2px;">
+                                                    <div class="loan-bar" style="width:${progress}%; height:100%; background:#4ade80; border-radius:2px;"></div>
                                                 </div>
-                                                <div style="display: flex; gap: 10px; margin-top: 12px;">
-                                                    <button class="btn-pay-loan" data-id="${loan.id}" style="flex: 1; background: linear-gradient(135deg, #ef4444, #dc2626); color:white; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.85rem; font-weight: 700;">Liquidar</button>
-                                                    <button class="btn-pay-partial" data-id="${loan.id}" style="flex: 1; background: linear-gradient(135deg, #3b82f6, #2563eb); color:white; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.85rem; font-weight: 700;">Amortizar</button>
+                                                <div style="display:flex; gap:10px; margin-top:15px;">
+                                                    <button class="btn-pay-partial" data-id="${loan.id}" style="flex:1; background: linear-gradient(135deg, #3b82f6, #2563eb); color:white; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.85rem; font-weight: 700; transition: transform 0.1s;">📉 ${t('bank_btn_amortize')}</button>
+                                                    <button class="btn-pay-loan" data-id="${loan.id}" style="flex:1; background: linear-gradient(135deg, #ef4444, #dc2626); color:white; border:none; border-radius:8px; padding:10px; cursor:pointer; font-size:0.85rem; font-weight: 700; transition: transform 0.1s;">💥 ${t('bank_btn_liquidate')}</button>
                                                 </div>
-                                                <div style="font-size:0.75rem; color:#64748b; margin-top:10px; text-align: center;">Interés: ${(loan.interestRate * 100).toFixed(2)}% anual</div>
                                             </div>
                                             `;
-                }).join('')
-            }
+                }).join('')}
                                 </div>
                             </div>
                         </div>
@@ -5770,45 +6006,44 @@ const UI = {
 
 
         // EVENTS
-        const amountIn = document.getElementById('loan-amount-input');
-        const yearsIn = document.getElementById('loan-years-input');
+        const amountInput = document.getElementById('loan-amount-input');
+        const rangeInput = document.getElementById('loan-years-input');
         const yearsVal = document.getElementById('loan-years-val');
-        const monthlyPrev = document.getElementById('loan-monthly-preview');
-        const btnReq = document.getElementById('btn-request-loan-dynamic');
+        const monthlyPreview = document.getElementById('loan-monthly-preview');
+        const btnRequest = document.getElementById('btn-request-loan-dynamic');
 
-        const updateCalc = () => {
-            const amount = parseFloat(amountIn.value) || 0;
-            const years = parseInt(yearsIn.value);
-            yearsVal.textContent = `${years} años`;
+        const updatePreview = () => {
+            const amount = parseInt(amountInput.value) || 0;
+            const years = parseInt(rangeInput.value);
+            yearsVal.textContent = `${years} ${t('years')}`;
+
             if (amount > 0) {
-                // Formula copy from Bank.takeLoan logic for preview
-                const r = 0.12 / 12;
+                const r = Bank.INTEREST_RATES.personal / 12;
                 const n = years * 12;
-                const pmt = (amount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-                monthlyPrev.textContent = formatCurrency(pmt);
+                const payment = (amount * r) / (1 - Math.pow(1 + r, -n));
+                monthlyPreview.textContent = formatCurrency(payment);
             } else {
-                monthlyPrev.textContent = "0,00 €";
+                monthlyPreview.textContent = "0,00 €";
             }
         };
 
-        amountIn.addEventListener('input', updateCalc);
-        yearsIn.addEventListener('input', updateCalc);
+        amountInput.oninput = updatePreview;
+        rangeInput.oninput = updatePreview;
 
-        btnReq.addEventListener('click', () => {
-            const amount = parseFloat(amountIn.value);
-            const years = parseInt(yearsIn.value);
-            if (!amount || amount <= 0) return UI.showModal('Error', 'Introduce una cantidad válida.', [{ text: 'Cerrar', style: 'secondary', fn: null }]);
+        btnRequest.onclick = () => {
+            const amount = parseInt(amountInput.value);
+            const years = parseInt(rangeInput.value);
+            if (!amount || amount <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
 
-            const res = BankModule.takeLoan(amount, years);
-            if (res.success) {
-                UI.showModal('Solicitud Aprobada', res.message, [{ text: 'Excelente', style: 'success', fn: null }]);
-                UI.updateHeader();
-                UI.updateDashboard(); // Reflow cash
-                UI.updateBank(BankModule);
+            const result = BankModule.takeLoan(amount, years);
+
+            if (result.success) {
+                showGameAlert(t('loan_approved') + ' ' + t('loan_received_msg', { amount: formatCurrency(amount) }), 'success');
+                UI.updateAll();
             } else {
-                UI.showModal('Solicitud Denegada', res.message, [{ text: 'Entendido', style: 'danger', fn: null }]);
+                showGameAlert(t('loan_denied') + ' ' + result.message, 'error');
             }
-        });
+        };
 
         container.querySelectorAll('.btn-pay-loan').forEach(btn => {
             btn.onclick = (e) => {
@@ -5823,24 +6058,24 @@ const UI = {
                     let freeMsg = `
                         <div style="text-align: center; margin-bottom: 20px;">
                             <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                            <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡LIBRE DE DEUDAS!</h3>
+                            <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('bank_debt_free_title')}</h3>
                         </div>
 
                         <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Préstamo Liquidado</div>
-                            <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">100% Pagado</div>
+                            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('bank_paid_loan_label')}</div>
+                            <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">${t('bank_paid_100')}</div>
                             
                             <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                                <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Libertad +1</span>
+                                <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('bank_liberty_gain')}</span>
                             </div>
                         </div>
 
                         <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                            Has liquidado totalmente este préstamo. Una carga menos en tu camino a la riqueza.
+                            ${t('bank_debt_free_msg')}
                         </p>
                     `;
 
-                    UI.showModal(' ', freeMsg, [{ text: '¡Excelente!', style: 'success', fn: null }], true);
+                    UI.showModal(' ', freeMsg, [{ text: t('bank_excellent'), style: 'success', fn: null }], true);
                     UI.updateHeader();
                     UI.updateDashboard();
                     UI.updateBank(BankModule);
@@ -5855,13 +6090,13 @@ const UI = {
                 const loanId = parseInt(e.target.dataset.id);
 
                 const modalContent = `
-                                <p style="margin-bottom:10px;">Introduce la cantidad a amortizar:</p>
+                                <p style="margin-bottom:10px;">${t('msg_enter_amortization')}</p>
                                 <input type="number" id="amortize-input-${loanId}" placeholder="Ej: 5000" style="width:100%; padding:10px; border-radius:4px; border:1px solid #334155; background:#1e293b; color:white;">
                             `;
 
-                UI.showModal('Amortizar Préstamo', modalContent, [
+                UI.showModal(t('bank_loan_repay'), modalContent, [
                     {
-                        text: 'Confirmar Pago',
+                        text: t('confirm'),
                         style: 'primary',
                         fn: () => {
                             const input = document.getElementById(`amortize-input-${loanId}`);
@@ -5872,7 +6107,7 @@ const UI = {
                                 // Small delay to show error after modal closes, or just alert? 
                                 // Alert is safer here to not break flow if modal closes. 
                                 // Actually re-opening modal is better but complex.
-                                showGameAlert('Cantidad inválida.', 'warning');
+                                showGameAlert(t('msg_amt_invalid'), 'warning');
                                 return;
                             }
 
@@ -5885,32 +6120,32 @@ const UI = {
                                 let amortMsg = `
                                     <div style="text-align: center; margin-bottom: 20px;">
                                         <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                                        <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">AMORTIZACIÓN</h3>
+                                        <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('repay_success_title')}</h3>
                                     </div>
 
                                     <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                        <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Capital Reducido</div>
+                                        <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('repay_reduced_capital')}</div>
                                         <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">-${formatCurrency(val)}</div>
                                         
                                         <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                                            <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Intereses ⬇️</span>
+                                            <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('repay_interests_down')}</span>
                                         </div>
                                     </div>
 
                                     <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                                        Has reducido tu deuda principal. Tus cuotas mensuales bajarán.
+                                        ${t('repay_success_desc')}
                                     </p>
                                 `;
-                                UI.showModal(' ', amortMsg, [{ text: 'Genial', style: 'success', fn: null }], true);
+                                UI.showModal(' ', amortMsg, [{ text: t('accept'), style: 'success', fn: null }], true);
                                 UI.updateBank(BankModule);
                                 UI.updateHeader();
                                 UI.updateDashboard();
                             } else {
-                                UI.showModal('Error', res.message, [{ text: 'Cerrar', style: 'secondary', fn: null }]);
+                                UI.showModal(t('error'), res.message, [{ text: t('close'), style: 'secondary', fn: null }]);
                             }
                         }
                     },
-                    { text: 'Cancelar', style: 'secondary', fn: null }
+                    { text: t('cancel'), style: 'secondary', fn: null }
                 ]);
             };
         });
@@ -5937,7 +6172,7 @@ const UI = {
         // Calculate Equity and Mortgage Payments
         let mortgageDebt = 0;
         GameState.loans.forEach(l => {
-            if (l.type.includes('Hipotecario')) {
+            if (l.isMortgage) {
                 mortgageDebt += l.remainingBalance;
                 totalMortgagePayment += l.monthlyPayment;
             }
@@ -5962,7 +6197,7 @@ const UI = {
                 return `
                             <div style="margin-bottom: 20px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 15px;">
                                 <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
-                                    <span style="color:#94a3b8; font-size:0.85rem;">Límite de Propiedades (Según Vivienda)</span>
+                                    <span style="color:#94a3b8; font-size:0.85rem;">${t('re_limit_title')}</span>
                                     <span style="color:${isLimitReached ? '#f87171' : '#cbd5e1'}; font-weight:700; font-size:0.9rem;">
                                         ${owned.length} / ${limitDisp}
                                     </span>
@@ -5970,7 +6205,7 @@ const UI = {
                                 <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden;">
                                     <div style="width:${limitPct}%; height:100%; background:${isLimitReached ? '#f87171' : '#a855f7'}; transition: width 0.3s;"></div>
                                 </div>
-                                ${isLimitReached ? '<div style="color:#f87171; font-size:0.8rem; margin-top:5px;">⚠️ Has alcanzado tu límite de propiedades. Mejora tu vivienda para expandir tu imperio.</div>' : ''}
+                                ${isLimitReached ? `<div style="color:#f87171; font-size:0.8rem; margin-top:5px;">${t('re_limit_reached')}</div>` : ''}
                             </div>
                             `;
             })()}
@@ -5979,64 +6214,67 @@ const UI = {
                         <div class="re-stats-container" style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
                             <div class="re-stat-card" style="flex:2; min-width: 200px; background: linear-gradient(145deg, rgba(250, 204, 21, 0.1), rgba(251, 191, 36, 0.05)); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 16px; padding: 20px; text-align: center; position: relative; overflow: hidden;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));">🏛️</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Patrimonio Neto</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('net_worth')}</span>
                                 <span style="font-size:1.6rem; font-weight:800; color:#facc15; text-shadow: 0 0 20px rgba(250, 204, 21, 0.3);">${formatCurrency(totalEquity)}</span>
                             </div>
                             <div class="re-stat-card" style="flex:1; min-width: 140px; background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 16px; padding: 20px; text-align: center; position: relative; overflow: hidden;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.4));">💰</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Rentas / mes</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('re_rents_month')}</span>
                                 <span style="font-size:1.3rem; font-weight:800; color:#4ade80; text-shadow: 0 0 15px rgba(74, 222, 128, 0.3);">+${formatCurrency(totalRent)}</span>
                             </div>
                             <div class="re-stat-card" style="flex:1; min-width: 140px; background: linear-gradient(145deg, rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 16px; padding: 20px; text-align: center; position: relative; overflow: hidden;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.4));">🏦</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Hipotecas / mes</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('re_mortgages_month')}</span>
                                 <span style="font-size:1.3rem; font-weight:800; color:#f87171; text-shadow: 0 0 15px rgba(248, 113, 113, 0.3);">-${formatCurrency(totalMortgagePayment)}</span>
                             </div>
                         </div>
 
                         <!-- MARKET -->
+                        <!-- MARKET -->
                         <div class="job-section-spacer">
-                            <h3 style="color:#cbd5e1; margin-bottom:20px;">🏙️ Mercado Inmobiliario</h3>
+                            <h3 style="color:#cbd5e1; margin-bottom:20px;">${t('re_market_title')}</h3>
                             <div class="market-grid">
                                 ${properties.map(prop => {
                 const pricePerM2 = prop.price / prop.sizeM2;
                 const isGoodDeal = pricePerM2 < prop.zoneAvgPrice;
-                const dealText = isGoodDeal ? 'Chollo' : 'Sobreprecio';
+                const dealText = isGoodDeal ? t('re_good_deal') : t('re_bad_deal');
                 const dealClass = isGoodDeal ? 'good-deal' : 'bad-deal';
                 const roi = (prop.monthlyRent * 12) / prop.price;
 
                 return `
                                     <div class="property-card-expert">
-                                        <div class="prop-img" style="display:flex; align-items:center; justify-content:center; background:#1e293b; font-size:4rem;">
+                                        <div class="prop-img" style="display:flex; align-items:center; justify-content:center; background:#1e293b; font-size:4rem; position:relative;">
                                             ${prop.icon || '🏠'}
                                             <span class="deal-badge ${dealClass}">${dealText}</span>
                                         </div>
                                         <div class="prop-content">
-                                            <h4 style="margin:0 0 5px 0; color:#fff;">${prop.name}</h4>
+                                            <h4 style="margin:0 0 5px 0; color:#fff;">${t(prop.name)}</h4>
                                             <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:10px;">
-                                                ${prop.sizeM2}m² | Zona: ${formatCurrency(prop.zoneAvgPrice)}/m²
+                                                ${prop.sizeM2}m² | ${t('re_zone')}: ${formatCurrency(prop.zoneAvgPrice)}/m²
                                             </p>
-                                            <div class="prop-financials">
+                                            
+                                            <div class="prop-financials" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; background:rgba(15,23,42,0.5); padding:10px; border-radius:8px; margin-bottom:15px;">
                                                 <div>
-                                                    <span class="label">Precio</span>
-                                                    <span class="value" style="color:#facc15">${formatCurrency(prop.price)}</span>
+                                                    <span class="label" style="display:block; font-size:0.75rem; color:#94a3b8;">${t('property_price')}</span>
+                                                    <span class="value" style="color:#facc15; font-weight:700;">${formatCurrency(prop.price)}</span>
                                                 </div>
                                                 <div>
-                                                    <span class="label">Alquiler</span>
-                                                    <span class="value" style="color:#4ade80">+${formatCurrency(prop.monthlyRent)}/mes</span>
+                                                    <span class="label" style="display:block; font-size:0.75rem; color:#94a3b8;">${t('re_rent')}</span>
+                                                    <span class="value" style="color:#4ade80; font-weight:700;">+${formatCurrency(prop.monthlyRent)}/m</span>
                                                 </div>
                                                 <div>
-                                                    <span class="label">Entrada (20%)</span>
-                                                    <span class="value">${formatCurrency(prop.price * prop.downPaymentPct)}</span>
+                                                    <span class="label" style="display:block; font-size:0.75rem; color:#94a3b8;">${t('re_btn_entry')} (20%)</span>
+                                                    <span class="value" style="color:#e2e8f0; font-weight:700;">${formatCurrency(prop.price * prop.downPaymentPct)}</span>
                                                 </div>
                                                 <div>
-                                                    <span class="label">Rentab.</span>
-                                                    <span class="value">${((prop.monthlyRent * 12 / prop.price) * 100).toFixed(1)}%</span>
+                                                    <span class="label" style="display:block; font-size:0.75rem; color:#94a3b8;">${t('re_yield')}</span>
+                                                    <span class="value" style="color:#facc15; font-weight:700;">${((prop.monthlyRent * 12 / prop.price) * 100).toFixed(1)}%</span>
                                                 </div>
                                             </div>
-                                            <div style="margin-top:15px; display:flex; gap:10px;">
-                                                <button class="btn-buy-prop-dynamic btn-action-primary" data-id="${prop.id}" data-mortgage="true">Comprar (Hipoteca)</button>
-                                                <button class="btn-buy-prop-dynamic btn-action-primary" data-id="${prop.id}" data-mortgage="false" style="background:#475569; border:1px solid #94a3b8;">Contado</button>
+
+                                            <div style="display:flex; gap:10px;">
+                                                <button class="btn-buy-prop-dynamic btn-action-primary" data-id="${prop.id}" data-mortgage="true" style="flex:1; font-size:0.85rem;">${t('re_buy_mortgage')}</button>
+                                                <button class="btn-buy-prop-dynamic btn-action-primary" data-id="${prop.id}" data-mortgage="false" style="flex:1; background:#475569; border:1px solid #94a3b8; font-size:0.85rem;">${t('re_buy_cash')}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -6046,9 +6284,9 @@ const UI = {
                         </div>
 
                         <!-- OWNED -->
-                        <div class="dashboard-card">
-                            <h3 style="margin-top:0; color:#cbd5e1; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">🔑 Mis Propiedades</h3>
-                             ${owned.length === 0 ? '<p style="color:#64748b;">No tienes propiedades en cartera.</p>' :
+                        <div class="dashboard-card" style="margin-top:25px;">
+                            <h3 style="margin-top:0; color:#cbd5e1; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">🔑 ${t('re_my_properties')}</h3>
+                             ${owned.length === 0 ? `<p style="color:#64748b;">${t('re_no_properties')}</p>` :
                 '<div style="display:grid; gap:10px;">' +
                 owned.map(prop => {
                     const purchasePrice = prop.purchasePrice || prop.price; // Fallback
@@ -6059,21 +6297,21 @@ const UI = {
 
                     const mortgage = GameState.loans.find(l => l.id === prop.mortgageId);
                     const debtHtml = mortgage
-                        ? `<div>Deudas: <span style="color:#f87171">-${formatCurrency(mortgage.monthlyPayment)}/mes</span></div>`
+                        ? `<div>${t('re_debt')}: <span style="color:#f87171">-${formatCurrency(mortgage.monthlyPayment)}/m</span></div>`
                         : '';
 
                     return `
-                                    <div style="background:#0f172a; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="background:#0f172a; padding:15px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; border: 1px solid #334155;">
                                         <div>
-                                            <strong>${prop.name}</strong>
+                                            <strong style="color:#fff;">${t(prop.name)}</strong>
                                             <div style="font-size:0.85rem; color:#94a3b8; margin-top:5px;">
-                                                <div>Compra: ${formatCurrency(purchasePrice)} | Actual: ${formatCurrency(prop.price)}</div>
-                                                <div style="color:${color}; font-weight:bold;">Revalorización: ${sign}${pct}%</div>
-                                                <div>Rentas: <span style="color:#4ade80">+${formatCurrency(prop.monthlyRent)}/mes</span></div>
+                                                <div>${t('re_bought_for')}: ${formatCurrency(purchasePrice)} | ${t('re_current')}: ${formatCurrency(prop.price)}</div>
+                                                <div style="color:${color}; font-weight:bold;">${t('re_appreciation')}: ${sign}${pct}%</div>
+                                                <div>${t('re_rent')}: <span style="color:#4ade80">+${formatCurrency(prop.monthlyRent)}/m</span></div>
                                                 ${debtHtml}
                                             </div>
                                         </div>
-                                        <button class="btn-sell-prop-dynamic" data-id="${prop.id}" style="background:#ef4444; color:white; border:none; padding:5px 15px; border-radius:4px; cursor:pointer;">Vender</button>
+                                        <button class="btn-sell-prop-dynamic" data-id="${prop.id}" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem;">${t('re_sell')}</button>
                                     </div>
                                 `;
                 }).join('') +
@@ -6086,11 +6324,42 @@ const UI = {
         // BIND EVENTS
         container.querySelectorAll('.btn-buy-prop-dynamic').forEach(btn => {
             btn.onclick = (e) => {
-                const id = parseInt(e.target.dataset.id);
+                const target = e.currentTarget;
+                const id = parseInt(target.dataset.id);
                 const prop = REModule.availableProperties.find(p => p.id === id);
                 if (!prop) return;
 
-                const useMortgage = e.target.dataset.mortgage === 'true';
+                const useMortgage = target.dataset.mortgage === 'true';
+
+                // Helper execution
+                const buy = (propId, mortgage, term) => {
+                    const res = REModule.buyProperty(propId, mortgage, term);
+                    if (res.success) {
+                        const purchasedProp = GameState.inventory.realEstate.find(p => p.id === propId);
+                        UI.showModal(t('re_bought_title'), `
+                            <div style="text-align:center;">
+                                <div style="font-size:4rem; margin-bottom:10px; animation: bounceIn 0.8s;">🔑</div>
+                                <h3 style="color:#facc15; font-size:1.5rem; margin:0 0 10px 0; text-shadow:0 0 10px rgba(250, 204, 21, 0.3);">${t('re_acquired_title')}</h3>
+                                <div style="background:rgba(15, 23, 42, 0.6); border:1px solid #facc15; border-radius:12px; padding:20px; margin-bottom:20px;">
+                                    <p style="color:#cbd5e1; font-size:1.1rem; margin-bottom:5px;">${t('re_you_bought')}:</p>
+                                    <div style="font-size:1.4rem; font-weight:800; color:#fff;">${purchasedProp ? t(purchasedProp.name) : t('re_new_property')}</div>
+                                </div>
+                                <p style="color:#94a3b8; font-size:0.9rem;">${t('re_added_to_portfolio')}</p>
+                            </div>
+                        `, [{ text: t('great'), style: 'success', fn: null }], true);
+
+                        const existingModal = document.querySelector('.game-modal-overlay');
+                        if (existingModal) existingModal.remove();
+
+                        UI.updateHeader();
+                        UI.updateDashboard();
+                        UI.updateBank(Bank);
+                        UI.updateRealEstate(REModule);
+                    } else {
+                        UI.showModal(t('error'), res.message, [{ text: t('close'), style: 'secondary', fn: null }]);
+                    }
+                };
+
 
                 if (useMortgage) {
                     const downPayment = prop.price * prop.downPaymentPct;
@@ -6107,42 +6376,42 @@ const UI = {
                     const msg = `
                         <div style="text-align:center;">
                             <div style="font-size:3rem; margin-bottom:10px;">🏠</div>
-                            <h3 style="color:#facc15; margin:0 0 5px 0;">Configurar Hipoteca</h3>
-                            <p style="color:#cbd5e1; font-size:1rem; margin-bottom:20px;">${prop.name}</p>
+                            <h3 style="color:#facc15; margin:0 0 5px 0;">${t('re_config_mortgage')}</h3>
+                            <p style="color:#cbd5e1; font-size:1rem; margin-bottom:20px;">${t(prop.name)}</p>
 
                             <div style="background:rgba(15, 23, 42, 0.6); border-radius:12px; padding:20px; text-align:left; border:1px solid #334155;">
                                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                    <span style="color:#94a3b8;">Valor Propiedad:</span>
+                                    <span style="color:#94a3b8;">${t('re_property_value')}</span>
                                     <span style="color:#e2e8f0; font-weight:700;">${formatCurrency(prop.price)}</span>
                                 </div>
                                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                    <span style="color:#94a3b8;">Entrada (20%):</span>
+                                    <span style="color:#94a3b8;">${t('re_down_payment')}</span>
                                     <span style="color:#ef4444; font-weight:700;">- ${formatCurrency(downPayment)}</span>
                                 </div>
                                 <div style="border-top:1px dashed #475569; margin:10px 0;"></div>
                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                    <span style="color:#f97316; font-weight:600;">PRÉSTAMO:</span>
+                                    <span style="color:#f97316; font-weight:600;">${t('re_loan_amount')}</span>
                                     <span style="color:#f97316; font-weight:800; font-size:1.1rem;">${formatCurrency(loanAmount)}</span>
                                 </div>
                                 <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-                                   <span style="color:#94a3b8;">Interés Anual:</span>
+                                   <span style="color:#94a3b8;">${t('re_annual_interest')}</span>
                                    <span style="color:#fff;">${(rateAnnual * 100).toFixed(2)}%</span>
                                 </div>
                             </div>
                             
-                            <p style="margin-top:20px; font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">Selecciona el plazo de amortización:</p>
+                            <p style="margin-top:20px; font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">${t('re_select_term')}</p>
                             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap:10px;">
                                 <div id="mortgage-10y" class="mortgage-card" style="background:rgba(30, 41, 59, 0.8); border:1px solid #334155; border-radius:10px; padding:15px; cursor:pointer; transition:all 0.2s; text-align:center;">
-                                    <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">10 Años</div>
-                                    <div style="font-size:1.1rem; color:#facc15; font-weight:700;">${formatCurrency(calcPmt(10))}/mes</div>
+                                    <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">10 ${t('years')}</div>
+                                    <div style="font-size:1.1rem; color:#facc15; font-weight:700;">${formatCurrency(calcPmt(10))}/m</div>
                                 </div>
                                 <div id="mortgage-20y" class="mortgage-card" style="background:rgba(30, 41, 59, 0.8); border:1px solid #334155; border-radius:10px; padding:15px; cursor:pointer; transition:all 0.2s; text-align:center;">
-                                 <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">20 Años</div>
-                                    <div style="font-size:1.1rem; color:#facc15; font-weight:700;">${formatCurrency(calcPmt(20))}/mes</div>
+                                    <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">20 ${t('years')}</div>
+                                    <div style="font-size:1.1rem; color:#facc15; font-weight:700;">${formatCurrency(calcPmt(20))}/m</div>
                                 </div>
                                 <div id="mortgage-30y" class="mortgage-card" style="background:rgba(30, 41, 59, 0.8); border:1px solid #334155; border-radius:10px; padding:15px; cursor:pointer; transition:all 0.2s; text-align:center;">
-                                     <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">30 Años</div>
-                                    <div style="font-size:1.1rem; color:#facc15; font-weight:700;">${formatCurrency(calcPmt(30))}/mes</div>
+                                    <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:5px;">30 ${t('years')}</div>
+                                    <div style="font-size:1.1rem; color:#facc15; font-weight:700;">${formatCurrency(calcPmt(30))}/m</div>
                                 </div>
                             </div>
                             <style>
@@ -6155,70 +6424,55 @@ const UI = {
                         </div>
                     `;
 
-                    const overlay = UI.showModal('Configurar Hipoteca', msg, [
-                        { text: 'Cancelar', style: 'secondary', fn: null }
+                    const overlay = UI.showModal(t('re_config_mortgage'), msg, [
+                        { text: t('cancel'), style: 'secondary', fn: null }
                     ]);
 
                     // Attach events manually since we use custom HTML buttons
                     if (overlay) {
-                        overlay.querySelector('#mortgage-10y').onclick = () => { buy(id, true, 10); overlay.remove(); };
-                        overlay.querySelector('#mortgage-20y').onclick = () => { buy(id, true, 20); overlay.remove(); };
-                        overlay.querySelector('#mortgage-30y').onclick = () => { buy(id, true, 30); overlay.remove(); };
+                        const m10 = overlay.querySelector('#mortgage-10y');
+                        const m20 = overlay.querySelector('#mortgage-20y');
+                        const m30 = overlay.querySelector('#mortgage-30y');
+
+                        if (m10) m10.onclick = () => { buy(id, true, 10); overlay.remove(); };
+                        if (m20) m20.onclick = () => { buy(id, true, 20); overlay.remove(); };
+                        if (m30) m30.onclick = () => { buy(id, true, 30); overlay.remove(); };
                     }
 
                 } else {
                     // Cash Buy
-                    UI.showModal('Compra al Contado', `
+                    const modalMsg = `
                         <div style="text-align:center;">
                             <div style="font-size:3rem; margin-bottom:10px;">💎</div>
-                            <h3 style="color:#fff; margin:0 0 5px 0;">${prop.name}</h3>
-                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">Adquisición de propiedad libre de cargas.</p>
+                            <h3 style="color:#fff; margin:0 0 5px 0;">${t(prop.name)}</h3>
+                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">${t('re_prop_acquisition')}</p>
 
                             <div style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); border:1px solid rgba(16, 185, 129, 0.3); border-radius:12px; padding:20px; margin-bottom:20px;">
-                                <div style="font-size:0.85rem; color:#6ee7b7; text-transform:uppercase; margin-bottom:5px;">PRECIO TOTAL</div>
+                                <div style="font-size:0.85rem; color:#6ee7b7; text-transform:uppercase; margin-bottom:5px;">${t('re_total_price')}</div>
                                 <div style="font-size:2rem; font-weight:800; color:#fff; text-shadow:0 0 15px rgba(16, 185, 129, 0.5);">${formatCurrency(prop.price)}</div>
                             </div>
 
                             <div style="display:flex; justify-content:space-between; padding:10px 20px; background:rgba(15, 23, 42, 0.5); border-radius:8px;">
-                                 <span style="color:#94a3b8;">Tu saldo actual:</span>
+                                 <span style="color:#94a3b8;">${t('re_current_balance')}</span>
                                  <span style="color:#cbd5e1;">${formatCurrency(GameState.cash)}</span>
                             </div>
                              <div style="display:flex; justify-content:space-between; padding:10px 20px; background:rgba(30, 41, 59, 0.5); border-radius:8px; margin-top:5px;">
-                                 <span style="color:#94a3b8;">Saldo tras comprar:</span>
+                                 <span style="color:#94a3b8;">${t('re_balance_after')}</span>
                                  <span style="color:${(GameState.cash - prop.price) >= 0 ? '#4ade80' : '#f87171'}; font-weight:700;">${formatCurrency(GameState.cash - prop.price)}</span>
                             </div>
                         </div>
-                    `, [
-                        { text: 'Cancelar', style: 'secondary', fn: null },
-                        { text: 'COMPRAR AL CONTADO', style: 'success', fn: () => buy(id, false, 0) }
-                    ], true);
+                        `;
+
+                    UI.showModal(
+                        t('re_cash_buy'),
+                        modalMsg,
+                        [
+                            { text: t('re_cancel'), style: 'secondary', fn: null },
+                            { text: t('re_buy_cash_btn'), style: 'success', fn: () => buy(id, false, 0) }
+                        ],
+                        true
+                    );
                 }
-
-                // Helper execution
-                const buy = (propId, mortgage, term) => {
-                    const res = REModule.buyProperty(propId, mortgage, term);
-                    if (res.success) {
-                        const purchasedProp = GameState.inventory.realEstate.find(p => p.id === propId);
-                        UI.showModal('¡LLAVES EN MANO!', `
-                            <div style="text-align:center;">
-                                <div style="font-size:4rem; margin-bottom:10px; animation: bounceIn 0.8s;">🔑</div>
-                                <h3 style="color:#facc15; font-size:1.5rem; margin:0 0 10px 0; text-shadow:0 0 10px rgba(250, 204, 21, 0.3);">¡PROPIEDAD ADQUIRIDA!</h3>
-                                <div style="background:rgba(15, 23, 42, 0.6); border:1px solid #facc15; border-radius:12px; padding:20px; margin-bottom:20px;">
-                                    <p style="color:#cbd5e1; font-size:1.1rem; margin-bottom:5px;">Has comprado:</p>
-                                    <div style="font-size:1.4rem; font-weight:800; color:#fff;">${purchasedProp ? purchasedProp.name : 'Nueva Propiedad'}</div>
-                                </div>
-                                <p style="color:#94a3b8; font-size:0.9rem;">Esta propiedad ya forma parte de tu patrimonio. <br>¡Empieza a generar ingresos!</p>
-                            </div>
-                        `, [{ text: '¡Excelente!', style: 'success', fn: null }], true);
-
-                        UI.updateHeader();
-                        UI.updateDashboard();
-                        UI.updateBank(Bank);
-                        UI.updateRealEstate(REModule);
-                    } else {
-                        UI.showModal('Error', res.message, [{ text: 'Cerrar', style: 'secondary', fn: null }]);
-                    }
-                };
             };
         });
 
@@ -6234,34 +6488,34 @@ const UI = {
                 }
                 const netProceeds = prop.price - outstandingMortgage;
 
-                UI.showModal('Vender Propiedad', `
+                UI.showModal(t('re_sell_title'), `
                     <div style="text-align:center;">
                         <div style="font-size:3rem; margin-bottom:10px;">🏷️</div>
-                        <h3 style="color:#fff; margin:0 0 5px 0;">${prop.name}</h3>
-                        <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">¿Confirmas la venta de esta propiedad?</p>
+                        <h3 style="color:#fff; margin:0 0 5px 0;">${t(prop.name)}</h3>
+                        <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">${t('re_confirm_sell')}</p>
 
                         <div style="background:rgba(15, 23, 42, 0.6); border-radius:12px; padding:20px; text-align:left; border:1px solid #334155;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                <span style="color:#94a3b8;">Precio de Mercado:</span>
+                                <span style="color:#94a3b8;">${t('re_market_price')}</span>
                                 <span style="color:#e2e8f0; font-weight:700;">${formatCurrency(prop.price)}</span>
                             </div>
                             ${outstandingMortgage > 0 ? `
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                <span style="color:#f87171;">Cancelación Hipoteca:</span>
+                                <span style="color:#f87171;">${t('re_mortgage_cancel')}</span>
                                 <span style="color:#f87171; font-weight:700;">- ${formatCurrency(outstandingMortgage)}</span>
                             </div>
                             <div style="border-top:1px dashed #475569; margin:10px 0;"></div>
                             ` : ''}
                             <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span style="color:#4ade80; font-weight:600;">NETO A RECIBIR:</span>
+                                <span style="color:#4ade80; font-weight:600;">${t('re_net_receive')}:</span>
                                 <span style="color:#4ade80; font-weight:800; font-size:1.2rem;">${formatCurrency(netProceeds)}</span>
                             </div>
                         </div>
                     </div>
                 `, [
-                    { text: 'Cancelar', style: 'secondary', fn: null },
+                    { text: t('cancel'), style: 'secondary', fn: null },
                     {
-                        text: 'VENDER AHORA',
+                        text: t('sell_now'),
                         style: 'danger',
                         fn: () => {
                             const res = REModule.sellProperty(id);
@@ -6360,7 +6614,7 @@ const UI = {
 
         for (const [key, val] of Object.entries(CompanyModule.businessTypes)) {
             const volatility = val.volatility || 0.1;
-            const riskTag = volatility > 0.3 ? '<span class="biz-tag tag-high-risk">Alto Riesgo</span>' : '<span class="biz-tag tag-low-risk">Estable</span>';
+            const riskTag = volatility > 0.3 ? `<span class="biz-tag tag-high-risk">${t('cat_high_risk')}</span>` : `<span class="biz-tag tag-low-risk">${t('cat_stable')}</span>`;
             const icon = val.icon || '🏢';
 
             // Check Lock Condition (Existing logic for cafe count)
@@ -6379,11 +6633,11 @@ const UI = {
                 card.innerHTML = `
                             <div style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 10px; filter: grayscale(1); opacity:0.6;">${val.icon}</div>
-                                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">${val.name}</div>
-                                <span style="display: inline-block; background: #334155; color: #94a3b8; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">En Desarrollo</span>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">${t('biz_type_' + key)}</div>
+                                <span style="display: inline-block; background: #334155; color: #94a3b8; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${t('wiz_in_development')}</span>
                             </div>
                             <div style="margin-top: 15px; padding: 12px; border-radius: 10px; border: 1px dashed #475569; text-align: center;">
-                                <div style="font-size: 0.9rem; color: #fbbf24; font-weight:600;">🚧 Próximamente...</div>
+                                <div style="font-size: 0.9rem; color: #fbbf24; font-weight:600;">${t('wiz_coming_soon')}</div>
                             </div>
                         `;
 
@@ -6392,12 +6646,12 @@ const UI = {
                 card.innerHTML = `
                             <div style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 10px; filter: grayscale(1);">🔒</div>
-                                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">${val.name}</div>
-                                <span style="display: inline-block; background: #334155; color: #64748b; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Bloqueado</span>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">${t('biz_type_' + key)}</div>
+                                <span style="display: inline-block; background: #334155; color: #64748b; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${t('locked')}</span>
                             </div>
                             <div style="margin-top: 15px; padding: 12px; background: rgba(248, 113, 113, 0.1); border-radius: 10px; border: 1px solid rgba(248, 113, 113, 0.2); text-align: center;">
-                                <div style="font-size: 0.85rem; color: #f87171;">⚠️ Requiere 2 Cafeterías</div>
-                                <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Tienes: <strong style="color: #fbbf24;">${cafeCount}</strong></div>
+                                <div style="font-size: 0.85rem; color: #f87171;">${t('wiz_req_cafes', { count: 2 })}</div>
+                                <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">${t('you_have')}: <strong style="color: #fbbf24;">${cafeCount}</strong></div>
                             </div>
                         `;
 
@@ -6406,13 +6660,13 @@ const UI = {
                 card.innerHTML = `
                             <div style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 10px; opacity: 0.5;">${icon}</div>
-                                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">${val.name}</div>
-                                <span style="display: inline-block; background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.2);">Fondos Insuficientes</span>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">${t('biz_type_' + key)}</div>
+                                <span style="display: inline-block; background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.2);">${t('insufficient_funds')}</span>
                             </div>
                             <div style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.3); border-radius: 10px; border: 1px dashed #475569; text-align: center;">
-                                <div style="font-size: 0.85rem; color: #94a3b8;">Coste de Inversión</div>
+                                <div style="font-size: 0.85rem; color: #94a3b8;">${t('wiz_investment_cost')}</div>
                                 <div style="font-size: 1.1rem; font-weight: 800; color: #ef4444; margin-top: 4px;">${formatCurrency(val.cost)}</div>
-                                <div style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Tienes: <span style="${GameState.cash < val.cost ? 'color:#ef4444' : 'color:#4ade80'}">${formatCurrency(GameState.cash)}</span></div>
+                                <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">${t('you_have')}: <span style="${GameState.cash < val.cost ? 'color:#ef4444' : 'color:#4ade80'}">${formatCurrency(GameState.cash)}</span></div>
                             </div>
                         `;
 
@@ -6421,26 +6675,26 @@ const UI = {
                 const riskColor = volatility > 0.3 ? '#f87171' : '#4ade80';
                 const riskBg = volatility > 0.3 ? 'rgba(248, 113, 113, 0.1)' : 'rgba(74, 222, 128, 0.1)';
                 const riskBorder = volatility > 0.3 ? 'rgba(248, 113, 113, 0.3)' : 'rgba(74, 222, 128, 0.3)';
-                const riskText = volatility > 0.3 ? '⚡ Alto Riesgo' : '✓ Estable';
+                const riskText = volatility > 0.3 ? '⚡ ' + t('cat_high_risk') : '✓ ' + t('cat_stable');
 
                 // Styles now handled by CSS .biz-model-card
                 card.innerHTML = `
                             <div style="text-align: center; margin-bottom: 15px;">
                                 <div style="font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.3));">${icon}</div>
-                                <div style="font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 8px;">${val.name}</div>
-                                <span style="display: inline-block; background: ${riskBg}; color: ${riskColor}; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid ${riskBorder};">${riskText}</span>
+                                <div style="font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 8px;">${t('biz_type_' + key)}</div>
+                                <span style="display: inline-block; background: ${riskBg}; color: ${riskColor}; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid ${riskBorder};">${volatility > 0.3 ? '⚡ ' + t('cat_high_risk') : '✓ ' + t('cat_stable')}</span>
                             </div>
                             <div style="display: grid; gap: 8px;">
                                 <div style="display: flex; justify-content: space-between; padding: 8px; background: rgba(251, 191, 36, 0.05); border-radius: 8px;">
-                                    <span style="color: #94a3b8; font-size: 0.85rem;">💰 Inversión</span>
+                                    <span style="color: #94a3b8; font-size: 0.85rem;">💰 ${t('wiz_investment_cost')}</span>
                                     <span style="color: #fbbf24; font-weight: 700;">${formatCurrency(val.cost)}</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; padding: 8px; background: rgba(248, 113, 113, 0.05); border-radius: 8px;">
-                                    <span style="color: #94a3b8; font-size: 0.85rem;">🏠 Alquiler</span>
+                                    <span style="color: #94a3b8; font-size: 0.85rem;">🏠 ${t('comp_rent_label')}</span>
                                     <span style="color: #f87171; font-weight: 700;">${formatCurrency(val.baseRent)}/mes</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; padding: 8px; background: rgba(74, 222, 128, 0.05); border-radius: 8px;">
-                                    <span style="color: #94a3b8; font-size: 0.85rem;">📈 Demanda</span>
+                                    <span style="color: #94a3b8; font-size: 0.85rem;">📈 ${t('wiz_demand_label')}</span>
                                     <span style="color: #4ade80; font-weight: 700;">${val.baseDemand}/mes</span>
                                 </div>
                             </div>
@@ -6492,19 +6746,19 @@ const UI = {
                         if (key === 'downtown') {
                             if (!hasAutoOuter) {
                                 isLocked = true;
-                                lockReason = 'Req: 1 Cafetería Automatizada en Afueras';
+                                lockReason = t('wiz_req_cafe_auto_suburbs');
                             }
                         } else if (key === 'business_district') {
                             if (!hasAutoDowntown) {
                                 isLocked = true;
-                                lockReason = 'Req: 1 Cafetería Automatizada en Centro';
+                                lockReason = t('wiz_req_cafe_auto_downtown');
                             }
                         }
                     } else {
                         // GENERIC FALLBACK (Old Logic)
                         if (!premiumLocationsUnlocked) {
                             isLocked = true;
-                            lockReason = 'Req: 2+ Negocios Activos';
+                            lockReason = t('wiz_req_active_biz', { count: 2 });
                         }
                     }
                 }
@@ -6525,16 +6779,16 @@ const UI = {
                 card.innerHTML = `
                         <div style="text-align: center; margin-bottom: 15px;">
                             <div style="font-size: 2.5rem; margin-bottom: 10px; filter: ${isLocked ? 'grayscale(1)' : 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.3))'};">${isLocked ? '🔒' : locIcon}</div>
-                            <div style="font-size: 1.1rem; font-weight: 800; color: ${isLocked ? '#64748b' : '#fff'}; margin-bottom: 5px;">${val.name}</div>
+                            <div style="font-size: 1.1rem; font-weight: 800; color: ${isLocked ? '#64748b' : '#fff'}; margin-bottom: 5px;">${t('loc_' + key)}</div>
                             ${isLocked ?
                         `<span style="display: inline-block; background: rgba(251, 191, 36, 0.1); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(251, 191, 36, 0.3);">🔒 ${lockReason}</span>` :
-                        '<p style="color: #94a3b8; font-size: 0.8rem; margin: 0;">Ideal para negocios de volumen</p>'
+                        `<p style="color: #94a3b8; font-size: 0.8rem; margin: 0;">${t('wiz_loc_desc_volume')}</p>`
                     }
                         </div>
                         <div style="margin-top: auto;">
                             <div style="margin-bottom: 10px;">
                                 <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px;">
-                                    <span>Tráfico</span>
+                                    <span>${t('wiz_traffic_label')}</span>
                                     <span>${val.trafficMult}x</span>
                                 </div>
                                 <div style="background: #0f172a; border-radius: 6px; height: 8px; overflow: hidden;">
@@ -6542,7 +6796,7 @@ const UI = {
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(248, 113, 113, 0.05); border-radius: 8px; margin-top: 5px;">
-                                <span style="color: #94a3b8; font-size: 0.85rem;">🏠 Alquiler</span>
+                                <span style="color: #94a3b8; font-size: 0.85rem;">🏠 ${t('comp_rent_label')}</span>
                                 <span class="loc-price-tag" data-mult="${val.rentMult}" style="color: #f87171; font-weight: 700;">${priceDisplay}</span>
                             </div>
                         </div>
@@ -6551,20 +6805,20 @@ const UI = {
                 card.onclick = () => {
                     if (isLocked) {
                         UI.showModal(
-                            '🔒 Ubicación Premium Bloqueada',
+                            '🔒 ' + t('wiz_loc_locked_title'),
                             `<div style="text-align:center;">
-                                    <p style="margin-bottom:15px;">Las ubicaciones <strong>${val.name}</strong> están reservadas para empresarios experimentados.</p>
+                                    <p style="margin-bottom:15px;">${t('wiz_loc_locked_msg', { name: val.name })}</p>
                                     <div style="background:rgba(251, 191, 36, 0.1); border:1px solid #fbbf24; border-radius:8px; padding:15px; margin:15px 0;">
                                         <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                            <span>Requisito:</span>
-                                            <strong style="color:#fbbf24;">${lockReason.replace('Req:', '')}</strong>
+                                            <span>${t('required_prereq')}:</span>
+                                            <strong style="color:#fbbf24;">${lockReason}</strong>
                                         </div>
                                     </div>
                                     <p style="color:#94a3b8; font-size:0.9rem; margin-top:15px;">
-                                        💡 Funda y automatiza tu primera empresa para desbloquear ubicaciones premium.
+                                        ${t('wiz_loc_locked_tip')}
                                     </p>
                                 </div>`,
-                            [{ text: 'Entendido', style: 'secondary', fn: null }],
+                            [{ text: t('understood'), style: 'secondary', fn: null }],
                             true
                         );
                         return;
@@ -6606,12 +6860,12 @@ const UI = {
                 label2.classList.add('inactive');
 
                 btnBack.style.display = 'none';
-                btnNext.textContent = 'Siguiente ➡️';
+                btnNext.textContent = t('wizard_next');
                 btnNext.onclick = goNext;
 
                 // Mobile buttons
                 btnBackMobile.style.display = 'none';
-                btnNextMobile.textContent = 'Siguiente ➡️';
+                btnNextMobile.textContent = t('wizard_next');
                 btnNextMobile.onclick = goNext;
             } else if (step === 2) {
                 step1Container.style.display = 'none';
@@ -6625,12 +6879,12 @@ const UI = {
                 label2.classList.add('active');
 
                 btnBack.style.display = 'block';
-                btnNext.textContent = '🌵 Fundar Empresa';
+                btnNext.textContent = t('wizard_found_btn');
                 btnNext.onclick = finishWizard;
 
                 // Mobile buttons      
                 btnBackMobile.style.display = 'block';
-                btnNextMobile.textContent = '🌵 Fundar Empresa';
+                btnNextMobile.textContent = t('wizard_found_btn');
                 btnNextMobile.onclick = finishWizard;
 
                 // UPDATE DYNAMIC RENT ON CARDS WHEN ENTERING STEP 2
@@ -6642,8 +6896,8 @@ const UI = {
 
         const goNext = () => {
             state.name = nameInput.value;
-            if (!state.name) return showGameAlert('Por favor, indica un nombre para tu empresa.', 'warning');
-            if (!state.typeId) return showGameAlert('Debes seleccionar un modelo de negocio.', 'warning');
+            if (!state.name) return showGameAlert(t('msg_company_name_required'), 'warning');
+            if (!state.typeId) return showGameAlert(t('msg_business_type_required'), 'warning');
             showStep(2);
         };
 
@@ -6657,64 +6911,64 @@ const UI = {
         btnNextMobile.onclick = goNext; // Will be reassigned in showStep(2)
 
         const finishWizard = () => {
-            if (!state.locId) return showGameAlert('Selecciona una ubicación para tu sede.', 'warning');
+            if (!state.locId) return showGameAlert(t('msg_location_required'), 'warning');
 
             // Execute Creation
             const res = CompanyModule.createCompany(state.name, state.typeId, state.locId);
 
             if (res.success) {
                 modal.style.display = 'none';
-                UI.showModal('¡EMPRESA FUNDADA!', `
+                UI.showModal(t('company_founded_title'), `
                     <div style="text-align:center;">
                         <div style="font-size:4rem; margin-bottom:10px; animation: bounceIn 0.8s;">🏢</div>
-                        <h3 style="color:#facc15; font-size:1.6rem; margin:0 0 5px 0; text-shadow:0 0 10px rgba(250, 204, 21, 0.4);">¡Enhorabuena!</h3>
-                        <p style="color:#cbd5e1; font-size:1.1rem; margin-bottom:20px;">Has fundado <strong style="color:#fff;">${state.name}</strong></p>
+                        <h3 style="color:#facc15; font-size:1.6rem; margin:0 0 5px 0; text-shadow:0 0 10px rgba(250, 204, 21, 0.4);">${t('congratulations')}</h3>
+                        <p style="color:#cbd5e1; font-size:1.1rem; margin-bottom:20px;">${t('you_founded')} <strong style="color:#fff;">${state.name}</strong></p>
                         
                         <div style="text-align:left; background:rgba(15, 23, 42, 0.6); border:1px solid #334155; border-radius:12px; padding:20px;">
-                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Panel de Control:</p>
+                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">${t('control_panel')}:</p>
                             
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                                 <div style="display:flex; align-items:center;">
                                     <span style="font-size:1.5rem; margin-right:10px;">📊</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">Resumen</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">Visión general</div>
+                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('summary')}</div>
+                                        <div style="color:#64748b; font-size:0.8rem;">${t('overview')}</div>
                                     </div>
                                 </div>
                                 <div style="display:flex; align-items:center;">
                                     <span style="font-size:1.5rem; margin-right:10px;">👥</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">Personal</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">Equipo y RRHH</div>
+                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('personnel')}</div>
+                                        <div style="color:#64748b; font-size:0.8rem;">${t('team_hr')}</div>
                                     </div>
                                 </div>
                                 <div style="display:flex; align-items:center;">
                                     <span style="font-size:1.5rem; margin-right:10px;">📦</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">Producto</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">Control de Calidad</div>
+                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('product')}</div>
+                                        <div style="color:#64748b; font-size:0.8rem;">${t('quality_control')}</div>
                                     </div>
                                 </div>
                                 <div style="display:flex; align-items:center;">
                                     <span style="font-size:1.5rem; margin-right:10px;">📣</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">Marketing</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">Campañas Publicidad</div>
+                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('marketing')}</div>
+                                        <div style="color:#64748b; font-size:0.8rem;">${t('marketing_campaigns')}</div>
                                     </div>
                                 </div>
                                 <div style="display:flex; align-items:center; grid-column: span 2;">
                                     <span style="font-size:1.5rem; margin-right:10px;">💰</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">Finanzas</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">Salario CEO</div>
+                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('finance')}</div>
+                                        <div style="color:#64748b; font-size:0.8rem;">${t('ceo_salary')}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <p style="color:#94a3b8; font-size:0.9rem; margin-top:20px;">Tu aventura empresarial comienza ahora.</p>
+                        <p style="color:#94a3b8; font-size:0.9rem; margin-top:20px;">${t('adventure_begins')}</p>
                     </div>
                 `, [{
-                    text: '🚀 Ir al Panel de Control',
+                    text: t('go_to_dashboard'),
                     style: 'success',
                     fn: () => {
                         UI.updateHeader();
@@ -6772,7 +7026,7 @@ const UI = {
 
         // LOCKED VIEW CHECKS
         if (targetView === 'lifestyle' && !GameState.expensesUnlocked) {
-            showGameAlert('🔒 Gastos bloqueados: Aún vives con tus padres.', 'warning');
+            showGameAlert(t('msg_expenses_locked'), 'warning');
             // Redirect to dashboard (force click to update nav state properly)
             const dashBtn = document.querySelector('.nav-btn[data-view="dashboard"]');
             if (dashBtn) dashBtn.click();
@@ -7006,8 +7260,8 @@ const UI = {
         if (!GameState.expensesUnlocked) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <h3>Aún no eres independiente</h3>
-                    <p>Esta pestaña se desbloqueará cuando te mudes de casa de tus padres.</p>
+                    <h3>${t('lifestyle_locked_title')}</h3>
+                    <p>${t('lifestyle_locked_msg')}</p>
                 </div>
             `;
             return;
@@ -7023,10 +7277,10 @@ const UI = {
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <div style="font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5));">💸</div>
                     <div style="flex: 1;">
-                        <span style="display: inline-block; background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1)); color: #ec4899; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(236, 72, 153, 0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Estilo de Vida</span>
-                        <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Gastos Mensuales</p>
+                        <span style="display: inline-block; background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1)); color: #ec4899; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(236, 72, 153, 0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">${t('lifestyle')}</span>
+                        <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('monthly_expenses')}</p>
                         <h2 style="margin: 0 0 12px 0; font-size: 1.6rem; color: #ec4899; font-weight: 800;">${formatCurrency(totalCost)}</h2>
-                        <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">💡 Mejora tu nivel de vida con los botones de upgrade.</p>
+                        <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">💡 ${t('lifestyle_upgrade_tip')}</p>
                     </div>
                 </div>
             </div>
@@ -7077,8 +7331,8 @@ const UI = {
 
             let upfrontInfo = '';
             if (nextItem) {
-                if (nextItem.deposit) upfrontInfo = `+ Fianza: ${formatCurrency(nextItem.deposit)}`;
-                else if (nextItem.purchaseCost) upfrontInfo = `+ Compra: ${formatCurrency(nextItem.purchaseCost)}`;
+                if (nextItem.deposit) upfrontInfo = `${t('plus_deposit')} ${formatCurrency(nextItem.deposit)}`;
+                else if (nextItem.purchaseCost) upfrontInfo = `${t('plus_purchase')} ${formatCurrency(nextItem.purchaseCost)}`;
             }
 
             // Premium button styles - 3D style with pink/violet colors
@@ -7088,7 +7342,7 @@ const UI = {
             const lockOverlay = isCategoryLocked ? `
                 <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.9); border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5;">
                     <span style="font-size: 2rem; margin-bottom: 8px;">🔒</span>
-                    <span style="color: #94a3b8; font-weight: 600;">Primero elige vivienda</span>
+                    <span style="color: #94a3b8; font-weight: 600;">${t('choose_housing_first')}</span>
                 </div>
             ` : '';
 
@@ -7097,9 +7351,9 @@ const UI = {
                     ${lockOverlay}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3 style="color: #cbd5e1; margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1rem;">
-                            <span style="font-size: 1.3rem;">${getCatIcon(catKey)}</span> ${cat.label}
+                            <span style="font-size: 1.3rem;">${getCatIcon(catKey)}</span> ${t(catKey)}
                         </h3>
-                        <span style="background: rgba(236, 72, 153, 0.15); color: #ec4899; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(236, 72, 153, 0.3);">Nivel ${levelNum}/${maxLevel}</span>
+                        <span style="background: rgba(236, 72, 153, 0.15); color: #ec4899; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(236, 72, 153, 0.3);">${t('level')} ${levelNum}/${maxLevel}</span>
                     </div>
                     
                     <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid #475569; border-radius: 12px; padding: 15px; margin-bottom: 12px;">
@@ -7107,13 +7361,13 @@ const UI = {
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <span style="font-size: 2rem;">${getItemIcon(currentItem.id)}</span>
                                 <div>
-                                    <h4 style="margin: 0 0 4px 0; color: #f8fafc; font-weight: 700;">${currentItem.name}</h4>
-                                    <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">${currentItem.desc}</p>
+                                    <h4 style="margin: 0 0 4px 0; color: #f8fafc; font-weight: 700;">${t(`life_${catKey}_${currentItem.id}_name`)}</h4>
+                                    <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">${t(`life_${catKey}_${currentItem.id}_desc`)}</p>
                                 </div>
                             </div>
                             <div style="text-align: right;">
                                 <span style="font-size: 1.2rem; color: #ec4899; font-weight: 800;">${formatCurrency(currentItem.cost)}</span>
-                                <span style="display: block; color: #64748b; font-size: 0.75rem;">/mes</span>
+                                <span style="display: block; color: #64748b; font-size: 0.75rem;">${t('per_month')}</span>
                             </div>
                         </div>
                     </div>
@@ -7122,16 +7376,16 @@ const UI = {
                         <button class="btn-upgrade-lifestyle ${isTutorialForce ? 'tutorial-highlight' : ''}" data-cat="${catKey}" data-next-id="${nextItem.id}" style="${btnStyle}">
                             <span style="display: flex; align-items: center; gap: 8px;">
                                 <span style="font-size: 1.1rem;">⬆️</span>
-                                <span>Mejorar nivel ${levelNum}</span>
+                                <span>${t('upgrade_level')} ${levelNum}</span>
                             </span>
                             <span style="text-align: right; font-size: 0.75rem; font-weight: 600;">
-                                ${nextItem.name}<br>
-                                <span style="opacity: 0.85;">${formatCurrency(nextItem.cost)}/mes ${upfrontInfo}</span>
+                                ${t(`life_${catKey}_${nextItem.id}_name`)}<br>
+                                <span style="opacity: 0.85;">${formatCurrency(nextItem.cost)}${t('per_month')} ${upfrontInfo}</span>
                             </span>
                         </button>
                     ` : (!isCategoryLocked ? `
                         <div style="text-align: center; padding: 14px; background: linear-gradient(135deg, rgba(74, 222, 128, 0.15), rgba(34, 197, 94, 0.05)); border: 2px solid rgba(74, 222, 128, 0.3); border-radius: 14px;">
-                            <span style="color: #4ade80; font-weight: 800;">🏆 ¡NIVEL MÁXIMO!</span>
+                            <span style="color: #4ade80; font-weight: 800;">${t('max_level')}</span>
                         </div>
                     ` : '')}
                 </div>
@@ -7158,8 +7412,8 @@ const UI = {
                 if (!item) return;
 
                 let upfront = item.deposit || item.purchaseCost || 0;
-                let upfrontLabel = item.deposit ? `Fianza: ${formatCurrency(item.deposit)}` : (item.purchaseCost ? `Compra: ${formatCurrency(item.purchaseCost)}` : '');
-                const costMsg = upfront > 0 ? `\n\n❗ Requiere PAGO INICIAL: ${formatCurrency(upfront)} (${upfrontLabel})` : '';
+                let upfrontLabel = item.deposit ? `${t('deposit_label')}: ${formatCurrency(item.deposit)}` : (item.purchaseCost ? `${t('purchase_label')}: ${formatCurrency(item.purchaseCost)}` : '');
+                const costMsg = upfront > 0 ? `\n\n❗ ${t('upfront_payment')}: ${formatCurrency(upfront)} (${upfrontLabel})` : '';
 
                 const performUpdate = () => {
                     const res = LifestyleModule.setOption(catKey, nextId);
@@ -7168,14 +7422,14 @@ const UI = {
                             GameState.tutorialState.forceHousing = false;
                             GameState.expensesUnlocked = true;
                         } else {
-                            if (res.message) UI.showToast('¡Nivel Mejorado!', res.message, 'success');
+                            if (res.message) UI.showToast(t('upgrade_success'), t(`lifestyle_${catKey}_${item.id}_name`) || item.id, 'success');
                         }
                         UI.updateLifestyle(LifestyleModule);
                         UI.updateHeader();
                         UI.updateDashboard();
                         UI.playCoinSound();
                     } else {
-                        UI.showToast('Error', res.message, 'error');
+                        UI.showToast(t('error'), res.message, 'error');
                     }
                 };
 
@@ -7185,45 +7439,45 @@ const UI = {
                     const currentId = GameState.lifestyle[catKey];
                     const currentItem = cat.items.find(i => i.id === currentId) || cat.items[0];
 
-                    UI.showModal('Mejorar Nivel de Vida', `
+                    UI.showModal(t('lifestyle_upgrade_title'), `
                         <div style="text-align:center;">
                             <div style="font-size:3rem; margin-bottom:10px;">✨</div>
-                            <h3 style="color:#fbbf24; margin:0 0 5px 0;">${cat.label}</h3>
-                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">¿Deseas mejorar tu calidad de vida?</p>
+                            <h3 style="color:#fbbf24; margin:0 0 5px 0;">${t('lifestyle_cat_' + catKey) || cat.label}</h3>
+                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">${t('upgrade_confirm_msg')}</p>
 
                             <div style="background:rgba(15, 23, 42, 0.5); border-radius:12px; padding:15px; margin-bottom:20px; border:1px solid #334155;">
                                 <!-- Comparison -->
                                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #334155;">
                                     <div style="text-align:left; width:45%;">
-                                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">ACTUAL</div>
-                                        <div style="font-weight:700; color:#cbd5e1; font-size:0.9rem;">${currentItem.name}</div>
-                                        <div style="color:#94a3b8; font-size:0.8rem;">${formatCurrency(currentItem.cost)}/mes</div>
+                                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">${t('current_level')}</div>
+                                        <div style="font-weight:700; color:#cbd5e1; font-size:0.9rem;">${t('lifestyle_' + catKey + '_' + currentItem.id + '_name') || currentItem.name}</div>
+                                        <div style="color:#94a3b8; font-size:0.8rem;">${formatCurrency(currentItem.cost)}${t('per_month')}</div>
                                     </div>
                                     <div style="color:#fbbf24; font-size:1.2rem;">➔</div>
                                     <div style="text-align:right; width:45%;">
-                                        <div style="font-size:0.75rem; color:#fbbf24; margin-bottom:4px;">NUEVO NIVEL</div>
-                                        <div style="font-weight:800; color:#fff; font-size:0.95rem;">${item.name}</div>
-                                        <div style="color:#4ade80; font-weight:700; font-size:0.85rem;">${formatCurrency(item.cost)}/mes</div>
+                                        <div style="font-size:0.75rem; color:#fbbf24; margin-bottom:4px;">${t('new_level')}</div>
+                                        <div style="font-weight:800; color:#fff; font-size:0.95rem;">${t('lifestyle_' + catKey + '_' + item.id + '_name') || item.name}</div>
+                                        <div style="color:#4ade80; font-weight:700; font-size:0.85rem;">${formatCurrency(item.cost)}${t('per_month')}</div>
                                     </div>
                                 </div>
                                 
                                 <!-- Upfront Cost if any -->
                                 ${upfront > 0 ? `
                                 <div style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:8px; padding:10px;">
-                                    <div style="color:#ef4444; font-weight:700; font-size:0.85rem; margin-bottom:2px;">❗ PAGO INICIAL REQUERIDO</div>
+                                    <div style="color:#ef4444; font-weight:700; font-size:0.85rem; margin-bottom:2px;">❗ ${t('upfront_payment')}</div>
                                     <div style="color:#fff; font-weight:700;">${formatCurrency(upfront)}</div>
                                     <div style="color:#cbd5e1; font-size:0.75rem;">${upfrontLabel}</div>
                                 </div>
                                 ` : ''}
 
                                 <div style="margin-top:15px; font-size:0.85rem; color:#94a3b8; font-style:italic;">
-                                    "${item.desc}"
+                                    "${t('lifestyle_' + catKey + '_' + item.id + '_desc') || item.desc}"
                                 </div>
                             </div>
                         </div>
                     `, [
-                        { text: 'Cancelar', style: 'secondary', fn: null },
-                        { text: 'MEJORAR', style: 'primary', fn: performUpdate }
+                        { text: t('cancel'), style: 'secondary', fn: null },
+                        { text: t('upgrade_btn'), style: 'primary', fn: performUpdate }
                     ], true);
                 }
             };
@@ -7340,34 +7594,34 @@ const UI = {
                     hasReq = false;
                     const reqNames = course.required.map(mid => {
                         const m = courses.find(c => c.id === mid);
-                        return m ? m.name : mid;
-                    }).join(' o ');
-                    missingReqText = `Req: ${reqNames}`;
+                        return m ? (getCourseTranslation(m.id).name || m.name) : mid;
+                    }).join(` ${t('or')} `);
+                    missingReqText = `${t('requirements')}: ${reqNames}`;
                 }
             }
 
             // Age Check
             const ageOk = !course.minAge || GameState.age >= course.minAge;
-            const ageText = !ageOk ? `Min: ${course.minAge} años` : '';
+            const ageText = !ageOk ? t('course_min_age', { age: course.minAge }) : '';
             const hasFunds = GameState.cash >= (course.cost || 0);
 
             if (isCompleted) {
-                statusBadge = '<span style="background:rgba(245, 158, 11, 0.2); color:#f59e0b; padding:2px 8px; border-radius:4px; font-size:0.8rem; border:1px solid #f59e0b;">Completado</span>';
+                statusBadge = `<span style="background:rgba(245, 158, 11, 0.2); color:#f59e0b; padding:2px 8px; border-radius:4px; font-size:0.8rem; border:1px solid #f59e0b;">${t('course_completed')}</span>`;
             } else if (isStudying) {
-                statusBadge = '<span style="background:rgba(56, 189, 248, 0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:0.8rem; border:1px solid #38bdf8;">En Curso</span>';
+                statusBadge = `<span style="background:rgba(56, 189, 248, 0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:0.8rem; border:1px solid #38bdf8;">${t('course_in_progress')}</span>`;
             } else if (!hasReq) {
-                statusBadge = '<span style="background:rgba(239, 68, 68, 0.2); color:#ef4444; padding:2px 8px; border-radius:4px; font-size:0.8rem; border:1px solid #ef4444;">Bloqueado</span>';
+                statusBadge = `<span style="background:rgba(239, 68, 68, 0.2); color:#ef4444; padding:2px 8px; border-radius:4px; font-size:0.8rem; border:1px solid #ef4444;">${t('course_locked')}</span>`;
             }
 
             if (!isCompleted && !isStudying) {
                 if (!hasReq) {
-                    actionBtn = `<button class="btn-apply-small" disabled style="opacity:0.5; cursor:not-allowed;">Bloqueado</button>`;
+                    actionBtn = `<button class="btn-apply-small" disabled style="opacity:0.5; cursor:not-allowed;">${t('course_locked')}</button>`;
                 } else if (!ageOk) {
-                    actionBtn = `<button class="btn-apply-small" disabled style="opacity:0.5; cursor:not-allowed;">Edad insuficiente</button>`;
+                    actionBtn = `<button class="btn-apply-small" disabled style="opacity:0.5; cursor:not-allowed;">${t('course_min_age', { age: course.minAge })}</button>`;
                 } else if (!hasFunds && course.cost > 0) {
-                    actionBtn = `<button class="btn-apply-small" disabled style="opacity:0.5; cursor:not-allowed;">Sin Fondos</button>`;
+                    actionBtn = `<button class="btn-apply-small" disabled style="opacity:0.5; cursor:not-allowed;">${t('course_no_funds')}</button>`;
                 } else {
-                    actionBtn = `<button class="btn-apply-small btn-course-start" data-id="${course.id}">Matricularse</button>`;
+                    actionBtn = `<button class="btn-apply-small btn-course-start" data-id="${course.id}">${t('course_enroll')}</button>`;
                 }
             }
 
@@ -7470,7 +7724,7 @@ const UI = {
             details.style.paddingTop = '20px';
 
             const summary = document.createElement('summary');
-            summary.textContent = `📚 Ver otras formaciones (${locked.length} bloqueadas)`;
+            summary.textContent = `📚 ${t('see_other_courses', { count: locked.length })}`;
             summary.style.cursor = 'pointer';
             summary.style.color = '#94a3b8';
             summary.style.marginBottom = '15px';
@@ -7540,56 +7794,26 @@ const UI = {
     },
 
     confirmModal(title, msg, onConfirm) {
-        this.showModal(title, msg, [
-            { text: 'Cancelar', style: 'secondary', fn: null },
-            { text: 'Confirmar', style: 'danger', fn: onConfirm }
+        UI.showModal(t('msg_reset_title'), t('msg_reset_confirm'), [
+            { text: t('cancel'), style: 'secondary', fn: null },
+            {
+                text: t('confirm'), style: 'danger', fn: () => {
+                    onConfirm()
+                }
+            }
         ]);
     },
 
     getLabel(id) {
-        const map = {
-            // Career Paths
-            'unskilled': 'Sin Titulación',
-            'admin_contable': 'Administración y Finanzas',
-            'gestor_cobros': 'Gestión de Cobros',
-            'admin_inmo': 'Gestión Inmobiliaria',
-            'prog_apps': 'Desarrollo de Apps / Web',
-            'sys_support': 'Soporte y Sistemas',
-            'mobile_dev': 'Desarrollo Móvil',
-            'maint_ind': 'Mantenimiento Industrial',
-            'clima': 'Climatización y Frío',
-            'buildings': 'Mantenimiento de Edificios',
-            'analyst_fin': 'Análisis Financiero',
-            'consultant': 'Consultoría de Negocio',
-            'sales_b2b': 'Ventas B2B',
-            'swe': 'Ingeniería de Software',
-            'data': 'Data & Analytics',
-            'devops': 'Cloud & DevOps',
-            'ing_obra': 'Ingeniería de Obra',
-            'oficina_tecnica': 'Oficina Técnica',
-            'urbz_consult': 'Urbanismo y Consultoría',
-            'temporary': 'Trabajo Temporal',
-            'dj': 'DJ Profesional',
+        if (!id) return '';
+        const translated = t(`cat_${id}`);
+        if (translated !== `cat_${id}`) return translated;
 
-            // Education IDs
-            'bachillerato': 'Bachillerato',
-            'fp_medio': 'FP Grado Medio',
-            'fp_admin': 'FP Sup. Administración',
-            'fp_dam': 'FP Sup. Desarrollo Apps',
-            'fp_maint': 'FP Sup. Mantenimiento',
-            'grado_ade': 'Grado en ADE',
-            'grado_cs': 'Grado en Ing. Informática',
-            'grado_civil': 'Grado en Ing. Civil',
-            'master_fin': 'Máster en Finanzas',
-            'dj_basic': 'Curso DJ Básico SYNC',
-            'dj_pioneer': 'Curso DJ Pioneer',
-            'dj_vinyl': 'Curso DJ Avanzado Vinilo',
-            'dj_pro': 'Master DJ Professional',
-            'master_ai': 'Máster en IA',
-            'master_ing': 'Máster Ingeniería',
-            'bootcamp': 'Bootcamp Programación'
-        };
-        return map[id] || id; // Fallback to ID if missing
+        // Fallback for educational ids if prefixing didn't work directly
+        const eduTranslated = t(id);
+        if (eduTranslated !== id) return eduTranslated;
+
+        return id;
     },
 
     updateJob(JobSys = JobSystem) {
@@ -7657,7 +7881,7 @@ const UI = {
                                 <div style="font-size:1.5rem;">🏢</div>
                                 <div>
                                     <h4 style="margin:0; color:#f1f5f9; font-size:1.1rem; font-weight:700;">${co.name}</h4>
-                                    <div style="font-size:0.85rem; color:#94a3b8;">${co.typeName} • ${co.locationName}</div>
+                                    <div style="font-size:0.85rem; color:#94a3b8;">${t('biz_type_' + co.typeId)} • ${t('loc_' + co.locationId)}</div>
                                 </div>
                             </div>
                         </div>
@@ -7683,7 +7907,7 @@ const UI = {
                         const annualProfit = co.baselineProfit * 12;
                         const valuation = annualProfit * 5;
 
-                        UI.showModal('Vender Empresa', `
+                        UI.showModal(t('company_sell_title'), `
                             <div style="text-align:center;">
                                 <div style="font-size:3rem; margin-bottom:10px; filter: grayscale(1);">📉</div>
                                 <p style="color:#cbd5e1; margin-bottom:20px; font-size:1rem;">Estás a punto de liquidar tu participación en <strong style="color:#fff;">${co.name}</strong>.</p>
@@ -7849,18 +8073,18 @@ const UI = {
                         goalCard.innerHTML = `
                                 <div class="card-header"><span class="badge-warning">PEDIR AUMENTO</span></div>
                                 <h3 class="goal-title">Solicitar Aumento de Salario</h3>
-                                <p style="color:#94a3b8; margin:10px 0;">En TRES DEPORTE no hay ascensos, pero puedes pedir aumento cada 2 meses.</p>
+                                <p style="color:#94a3b8; margin:10px 0;">${t('job_tres_deporte_desc')}</p>
                                 
                                 <div class="progress-section" style="margin-top:15px;">
-                                    <div class="progress-label">
-                                        <span>Tiempo desde última petición</span>
-                                        <span>${monthsSinceLastRequest} / 2 meses</span>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#cbd5e1; margin-bottom:8px;">
+                                        <span style="display:flex; align-items:center; gap:5px;">⏱️ ${t('job_time_since_request')}</span>
+                                        <span style="font-family:monospace; color:${canAsk ? '#34d399' : '#94a3b8'}">${monthsSinceLastRequest} / 2 ${t('months')}</span>
                                     </div>
                                     <div class="edu-bar-bg"><div class="edu-bar-fill" style="width:${Math.min(100, (monthsSinceLastRequest / 2) * 100)}%"></div></div>
                                 </div>
 
                                 <button id="btn-raise-tres" class="btn-primary" style="margin-top:15px;" ${canAsk ? '' : 'disabled'}>
-                                    ${canAsk ? 'Pedir Aumento' : `Esperar ${monthsRemaining} mes(es)`}
+                                    ${canAsk ? t('job_raise_btn') : t('job_raise_wait', { months: monthsRemaining })}
                                 </button>
                             `;
                         if (canAsk) {
@@ -7914,10 +8138,10 @@ const UI = {
                                         ">${icon}</div>
                                         <div style="display:flex; flex-direction:column; line-height:1.2;">
                                             <span style="font-size:0.65rem; font-weight:700; text-transform:uppercase; color:${ok ? '#34d399' : '#f87171'}">
-                                                ${ok ? 'CUMPLIDO' : 'REQUERIDO'}
+                                                ${ok ? t('job_fulfilled') : t('job_required')}
                                             </span>
                                             <span style="font-size:0.85rem; font-weight:600; color:#f1f5f9;">
-                                                ${label} <span style="color:#94a3b8;">(Nv. ${level + 1})</span>
+                                                ${t('lifestyle_cat_' + typeKey)} <span style="color:#94a3b8;">(${t('tier_abbr')} ${level + 1})</span>
                                             </span>
                                         </div>
                                     </div>`;
@@ -7985,8 +8209,8 @@ const UI = {
                                 <!-- EXPERIENCE BAR PREMIUM -->
                                 <div style="margin-bottom:20px; background:rgba(15, 23, 42, 0.6); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                                     <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#cbd5e1; margin-bottom:8px;">
-                                        <span style="display:flex; align-items:center; gap:5px;">⏱️ Experiencia</span>
-                                        <span style="font-family:monospace; color:${isTimeOk ? '#34d399' : '#94a3b8'}">${Math.floor(currentMonths)} / ${reqMonths} meses</span>
+                                        <span style="display:flex; align-items:center; gap:5px;">⏱️ ${t('job_exp_label')}</span>
+                                        <span style="font-family:monospace; color:${isTimeOk ? '#34d399' : '#94a3b8'}">${Math.floor(currentMonths)} / ${reqMonths} ${t('months')}</span>
                                     </div>
                                     <div style="height:8px; background:#1e293b; border-radius:4px; overflow:hidden;">
                                         <div style="width:${progress}%; height:100%; background:${isTimeOk ? 'linear-gradient(90deg, #10b981, #34d399)' : '#3b82f6'}; transition:width 0.5s ease; box-shadow:0 0 10px rgba(59, 130, 246, 0.3);"></div>
@@ -7995,7 +8219,7 @@ const UI = {
 
                                 <!-- REQUIREMENTS GRID -->
                                 <div style="margin-bottom:25px;">
-                                    <div style="font-size:0.75rem; text-transform:uppercase; color:#64748b; margin-bottom:10px; padding-left:5px;">REQUISITOS DE ACCESO</div>
+                                    <div style="font-size:0.75rem; text-transform:uppercase; color:#64748b; margin-bottom:10px; padding-left:5px;">${t('job_req_access')}</div>
                                     <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px;">
                                         
                                         <!-- EDUCATION TAG -->
@@ -8003,7 +8227,7 @@ const UI = {
                                             <div style="background:${isEduOk ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; border:1px solid ${isEduOk ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; border-radius:8px; padding:10px; display:flex; align-items:center; gap:10px;">
                                                 <div style="font-size:1.2rem;">${isEduOk ? '🎓' : '📚'}</div>
                                                 <div style="display:flex; flex-direction:column;">
-                                                    <span style="font-size:0.7rem; color:${isEduOk ? '#34d399' : '#f87171'}">${isEduOk ? 'CUMPLIDO' : 'FALTA TÍTULO'}</span>
+                                                    <span style="font-size:0.7rem; color:${isEduOk ? '#34d399' : '#f87171'}">${isEduOk ? t('job_fulfilled') : t('job_missing_edu')}</span>
                                                     <span style="font-size:0.8rem; font-weight:600; color:#e2e8f0;">${UI.getLabel(nextJobInPath.reqEdu)}</span>
                                                 </div>
                                             </div>
@@ -8021,7 +8245,7 @@ const UI = {
                                     cursor:${isReady ? 'pointer' : 'not-allowed'}; 
                                     box-shadow:${isReady ? '0 10px 20px -5px rgba(37, 99, 235, 0.4)' : 'none'}; 
                                     transition:all 0.2s ease;">
-                                    ${!isReady ? '🔒 Requisitos Pendientes' : '✨ Solicitar Ascenso'}
+                                    ${!isReady ? `🔒 ${t('job_req_pending')}` : `✨ ${t('job_ask_promotion')}`}
                                 </button>
                             `;
 
@@ -8041,24 +8265,24 @@ const UI = {
                                     let promoMsg = `
                                         <div style="text-align: center; margin-bottom: 20px;">
                                             <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                                            <h3 style="color: ${themeColor}; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px ${themeColor}4d;">¡Ascenso Conseguido!</h3>
+                                            <h3 style="color: ${themeColor}; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px ${themeColor}4d;">${t('job_promotion_success')}</h3>
                                         </div>
 
                                         <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Nuevo Cargo</div>
-                                            <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">${GameState.jobTitle}</div>
+                                            <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">${t('job_new_position')}</div>
+                                            <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">${getJobTranslation(GameState.jobTitle)}</div>
                                             
                                             <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 8px 16px; border-radius: 20px;">
-                                                <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${formatCurrency(GameState.salary)}/mes</span>
+                                                <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${formatCurrency(GameState.salary)}/${t('month')}</span>
                                             </div>
                                         </div>
 
                                         <p style="text-align: center; color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin: 0;">
-                                            Tu esfuerzo ha valido la pena. Tienes mayores responsabilidades y un mejor sueldo.
+                                            ${t('job_effort_worth')}
                                         </p>
                                     `;
 
-                                    UI.showModal(' ', promoMsg, [{ text: '🚀 ¡A por ello!', style: 'success', fn: () => UI.updateJob(JobSys) }], true);
+                                    UI.showModal(' ', promoMsg, [{ text: `🚀 ${t('job_go_for_it')}`, style: 'success', fn: () => UI.updateJob(JobSys) }], true);
                                     UI.updateHeader();
                                     UI.updateDashboard();
                                 } else {
@@ -8080,24 +8304,24 @@ const UI = {
                         const goalCard = document.createElement('div');
                         goalCard.className = 'dashboard-card goal-card';
                         goalCard.innerHTML = `
-                                <div class="card-header"><span class="badge-warning">PEDIR AUMENTO</span></div>
-                                <h3 class="goal-title">Solicitar Aumento de Salario</h3>
-                                <p style="color:#94a3b8; margin:10px 0;">En TRES DEPORTE no hay ascensos, pero puedes pedir aumento cada 2 meses.</p>
+                                <div class="card-header"><span class="badge-warning">${t('job_raise_request').toUpperCase()}</span></div>
+                                <h3 class="goal-title">${t('job_raise_request')}</h3>
+                                <p style="color:#94a3b8; margin:10px 0;">${t('job_tres_deporte_desc')}</p>
                                 
                                 <div class="progress-section" style="margin-top:15px;">
                                     <div class="progress-label">
-                                        <span>Tiempo desde última petición</span>
-                                        <span>${monthsSinceLastRequest.toFixed(1)} / 2 meses</span>
+                                        <span>${t('job_time_since_request')}</span>
+                                        <span>${monthsSinceLastRequest.toFixed(1)} / 2 ${t('months')}</span>
                                     </div>
                                     <div class="progress-track">
                                         <div class="progress-fill" style="width: ${Math.min(100, (monthsSinceLastRequest / 2) * 100)}%"></div>
                                     </div>
                                 </div>
                                 
-                                ${!canAsk ? `<p style="color:#f87171; margin-top:15px; font-size:0.9rem;">⏱️ Podrás pedir aumento en ${monthsRemaining.toFixed(1)} mes(es)</p>` : ''}
+                                ${!canAsk ? `<p style="color:#f87171; margin-top:15px; font-size:0.9rem;">⏱️ ${t('job_raise_wait', { months: monthsRemaining.toFixed(1) })}</p>` : ''}
                                 
                                 <button class="btn-promote" ${!canAsk ? 'disabled' : ''} style="margin-top:15px; width:100%; padding:12px; background:${canAsk ? 'var(--success-color)' : '#334155'}; color:white; border:none; border-radius:8px; font-weight:bold; cursor:${canAsk ? 'pointer' : 'not-allowed'};">
-                                    ${canAsk ? '💰 Pedir Aumento' : '🔒 Aún no disponible'}
+                                    ${canAsk ? `💰 ${t('job_raise_btn')}` : `🔒 ${t('job_locked_wait')}`}
                                 </button>
                             `;
 
@@ -8122,17 +8346,17 @@ const UI = {
                         raiseCard.className = 'job-peak-card';
                         raiseCard.innerHTML = `
                                 <div class="job-peak-content">
-                                    <h3>👑 Cima Profesional</h3>
-                                    <p style="color:#cbd5e1; font-size:0.95rem;">Has alcanzado el máximo nivel.</p>
+                                    <h3>👑 ${t('job_peak_title')}</h3>
+                                    <p style="color:#cbd5e1; font-size:0.95rem;">${t('job_peak_desc')}</p>
                                     <div style="margin-top:10px;">
                                         <span class="req-tag ${canRaise ? 'success' : 'fail'}">
-                                            ${canRaise ? '✓ Disponible' : '⏳ Cooldown: ' + Math.ceil(waittime) + ' meses'}
+                                            ${canRaise ? `✓ ${t('ready')}` : `⏳ Cooldown: ${Math.ceil(waittime)} ${t('months')}`}
                                         </span>
                                     </div>
                                 </div>
                                 <div>
                                     <button id="btn-request-raise" class="btn-gold" ${canRaise ? '' : 'disabled'}>
-                                        ${canRaise ? 'Solicitar Aumento' : 'Revisión Salarial'}
+                                        ${canRaise ? t('job_raise_request') : t('job_salary_review')}
                                     </button>
                                 </div>
                             `;
@@ -8147,7 +8371,7 @@ const UI = {
                                 let bossMsg = `
                                     <div style="text-align: center; margin-bottom: 20px;">
                                         <div style="font-size: 3.5rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                                        <h3 style="color: ${themeColor}; margin: 0; font-size: 1.4rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">RESPUESTA DEL JEFE</h3>
+                                        <h3 style="color: ${themeColor}; margin: 0; font-size: 1.4rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('job_boss_response')}</h3>
                                     </div>
 
                                     <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: relative;">
@@ -8159,7 +8383,7 @@ const UI = {
                                     </div>
                                     
                                     <div style="text-align: center; font-size: 0.85rem; color: #94a3b8; margin-top: 15px;">
-                                        (Inténtalo de nuevo el próximo año...)
+                                        ${t('job_boss_try_next_year')}
                                     </div>
                                 `;
 
@@ -8181,7 +8405,7 @@ const UI = {
                 // 3. Job Market (Grid)
                 const marketSection = document.createElement('div');
                 marketSection.className = 'market-section';
-                marketSection.innerHTML = `<h3 class="section-title">🌐 Mercado Laboral</h3>`;
+                marketSection.innerHTML = `<h3 class="section-title">🌐 ${t('job_market_title')}</h3>`;
 
                 const marketGrid = document.createElement('div');
                 marketGrid.className = 'market-grid';
@@ -8198,7 +8422,7 @@ const UI = {
                 gigSection.className = 'market-section';
                 gigSection.id = 'temp-jobs-section';
                 gigSection.style.marginBottom = '40px';
-                gigSection.innerHTML = `<h3 class="section-title" style="color:#facc15;">⚡ Trabajo Temporal</h3>`;
+                gigSection.innerHTML = `<h3 class="section-title" style="color:#facc15;">⚡ ${t('gig_jobs')}</h3>`;
                 const gigGrid = document.createElement('div');
                 gigGrid.className = 'market-grid';
 
@@ -8222,15 +8446,15 @@ const UI = {
                         const performApply = (force = false) => {
                             const res = JobSys.applyToJob(vac.title, force);
                             if (res.requiresConfirmation) {
-                                UI.showModal('⚠️ Cerrar Empresa',
+                                UI.showModal(t('msg_close_company_title'),
                                     `<div style="text-align:center;">
                                         <div style="font-size:3rem; margin-bottom:10px;">building</div>
-                                        <p style="color:#cbd5e1; margin-bottom:15px;">Al aceptar este empleo, tu empresa actual se cerrará.</p>
-                                        <p style="color:#ef4444; font-weight:700;">Esta acción es irreversible.</p>
+                                        <p style="color:#cbd5e1; margin-bottom:15px;">${t('msg_close_company_confirm')}</p>
+                                        <p style="color:#ef4444; font-weight:700;">${t('msg_irreversible_action')}</p>
                                     </div>`,
                                     [
-                                        { text: 'Cancelar', style: 'secondary', fn: null },
-                                        { text: 'CERRAR Y ACEPTAR', style: 'danger', fn: () => performApply(true) }
+                                        { text: t('cancel'), style: 'secondary', fn: null },
+                                        { text: t('close_and_accept'), style: 'danger', fn: () => performApply(true) }
                                     ], true
                                 );
                                 return;
@@ -8347,7 +8571,7 @@ const UI = {
                             </div>
                             <div class="market-footer">
                                 <div class="market-salary">${formatCurrency(vac.salary)}</div>
-                                <button class="btn-apply-small">Aplicar</button>
+                                <button class="btn-apply-small">${t('apply')}</button>
                             </div>
                         `;
 
@@ -8356,15 +8580,15 @@ const UI = {
                         const performApply = (force = false) => {
                             const res = JobSys.applyToJob(vac.title, force);
                             if (res.requiresConfirmation) {
-                                UI.showModal('⚠️ Cerrar Empresa',
+                                UI.showModal(t('msg_close_company_title'),
                                     `<div style="text-align:center;">
                                         <div style="font-size:3rem; margin-bottom:10px;">building</div>
-                                        <p style="color:#cbd5e1; margin-bottom:15px;">Al aceptar este empleo, tu empresa actual se cerrará.</p>
-                                        <p style="color:#ef4444; font-weight:700;">Esta acción es irreversible.</p>
+                                        <p style="color:#cbd5e1; margin-bottom:15px;">${t('msg_close_company_confirm')}</p>
+                                        <p style="color:#ef4444; font-weight:700;">${t('msg_irreversible_action')}</p>
                                     </div>`,
                                     [
-                                        { text: 'Cancelar', style: 'secondary', fn: null },
-                                        { text: 'CERRAR Y ACEPTAR', style: 'danger', fn: () => performApply(true) }
+                                        { text: t('cancel'), style: 'secondary', fn: null },
+                                        { text: t('close_and_accept'), style: 'danger', fn: () => performApply(true) }
                                     ], true
                                 );
                                 return;
@@ -8460,7 +8684,7 @@ const UI = {
                     details.style.paddingTop = '20px';
 
                     const summary = document.createElement('summary');
-                    summary.textContent = `📚 Ver otras oportunidades (${locked.length} requieren formación)`;
+                    summary.textContent = `📚 ${t('see_other_opportunities', { count: locked.length })}`;
                     summary.style.cursor = 'pointer';
                     summary.style.color = '#94a3b8';
                     summary.style.marginBottom = '15px';
@@ -8529,7 +8753,7 @@ const UI = {
                                 </div>
                                 <div class="market-footer">
                                     <div class="market-salary">${formatCurrency(vac.salary)}</div>
-                                    <button class="btn-apply-small" disabled>Falta Título</button>
+                                    <button class="btn-apply-small" disabled>${t('job_missing_edu')}</button>
                                 </div>
                             `;
                         lockedGrid.appendChild(card);
@@ -8552,12 +8776,12 @@ const UI = {
                             <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
                                 <div style="flex: 1; min-width: 200px;">
                                     <div style="font-size: 2.5rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.5));">🚀</div>
-                                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: #fbbf24; font-weight: 800;">¿Listo para dar el gran salto?</h3>
-                                    <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">Deja tu empleo y construye tu propio legado empresarial.</p>
-                                    ${!enoughNetWorth ? `<p style="color: #f87171; margin-top: 8px; font-weight: bold; font-size: 0.9rem;">⚠️ Requisito: 100.000€ Patrimonio (Tienes: ${formatCurrency(GameState.netWorth)})</p>` : ''}
+                                    <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: #fbbf24; font-weight: 800;">${t('found_company_title')}</h3>
+                                    <p style="color: #94a3b8; margin: 0; font-size: 0.9rem;">${t('found_company_desc')}</p>
+                                    ${!enoughNetWorth ? `<p style="color: #f87171; margin-top: 8px; font-weight: bold; font-size: 0.9rem;">⚠️ ${t('requirement')}: 100.000€ ${t('net_worth')} (${t('you_have')}: ${formatCurrency(GameState.netWorth)})</p>` : ''}
                                 </div>
                                 <button id="btn-found-company" ${!enoughNetWorth ? 'disabled' : ''} style="background: ${enoughNetWorth ? 'linear-gradient(135deg, #fbbf24, #f59e0b)' : '#334155'}; color: ${enoughNetWorth ? '#0f172a' : '#94a3b8'}; border: none; padding: 16px 40px; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: ${enoughNetWorth ? 'pointer' : 'not-allowed'}; text-transform: uppercase; letter-spacing: 1px; box-shadow: ${enoughNetWorth ? '0 4px 0 #b45309, 0 8px 20px rgba(251, 191, 36, 0.3)' : 'none'}; transition: all 0.15s; opacity: ${enoughNetWorth ? '1' : '0.6'};">
-                                    ${enoughNetWorth ? '🏢 FUNDAR EMPRESA' : '🔒 PATRIMONIO INSUFICIENTE'}
+                                    ${enoughNetWorth ? `🏢 ${t('found_company_btn')}` : `🔒 ${t('insufficient_net_worth')}`}
                                 </button>
                             </div>
                         </div>
@@ -8566,7 +8790,7 @@ const UI = {
                 if (enoughNetWorth) {
                     entrepreneurSection.querySelector('#btn-found-company').onclick = () => UI.openCompanyWizard();
                 } else {
-                    entrepreneurSection.querySelector('#btn-found-company').onclick = () => showGameAlert('Necesitas un patrimonio neto de al menos 100.000€ para asumir el riesgo de fundar una empresa.', 'warning', '🔒 Requisito no cumplido');
+                    entrepreneurSection.querySelector('#btn-found-company').onclick = () => showGameAlert(t('company_found_req'), 'warning', '🔒 ' + t('requirement_not_met'));
                 }
                 contentContainer.appendChild(entrepreneurSection);
             } else {
@@ -8585,16 +8809,16 @@ const UI = {
                                         <div style="font-size: 3rem; filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.5));">${CompanyModule.businessTypes[co.typeId]?.icon || '🏢'}</div>
                                         <div>
                                             <h2 style="margin: 0 0 5px 0; font-size: 1.5rem; color: #fbbf24; font-weight: 800;">${co.name}</h2>
-                                            <p style="margin: 0; color: #94a3b8; font-size: 0.9rem;">${co.typeName} • ${co.locationName}</p>
+                                            <p style="margin: 0; color: #94a3b8; font-size: 0.9rem;">${t('biz_type_' + co.typeId)} • ${t('loc_' + co.locationId)}</p>
                                         </div>
                                     </div>
                                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                                         <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), transparent); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.3); text-align: center; min-width: 100px;">
-                                            <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">💵 Caja</div>
+                                            <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">💵 ${t('comp_hero_cash')}</div>
                                             <div style="font-size: 1.2rem; font-weight: 800; color: #4ade80;">${formatCurrency(co.cash)}</div>
                                         </div>
                                     <div style="background: linear-gradient(145deg, ${co.profitLastMonth >= 0 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)'}, transparent); padding: 12px 18px; border-radius: 12px; border: 1px solid ${co.profitLastMonth >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; text-align: center; min-width: 100px;">
-                                            <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 Beneficio</div>
+                                            <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 ${t('comp_hero_profit')}</div>
                                             <div style="font-size: 1.2rem; font-weight: 800; color: ${co.profitLastMonth >= 0 ? '#4ade80' : '#f87171'};">${co.profitLastMonth >= 0 ? '+' : ''}${formatCurrency(co.profitLastMonth)}</div>
                                         </div>
                                     </div>
@@ -8604,19 +8828,19 @@ const UI = {
                             <!-- Company Tabs - Premium Design -->
                             <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #1e293b; padding: 8px; border-radius: 12px;">
                                 <button class="tab-btn ${activeTab === 'summary' ? 'active' : ''}" data-tab="summary" style="flex: 1; min-width: 60px; padding: 12px 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; ${activeTab === 'summary' ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a;' : 'background: transparent; color: #94a3b8;'}">
-                                    📊 <span class="desktop-text">Resumen</span>
+                                    📊 <span class="desktop-text">${t('comp_tab_summary')}</span>
                                 </button>
                                 <button class="tab-btn ${activeTab === 'staff' ? 'active' : ''}" data-tab="staff" style="flex: 1; min-width: 60px; padding: 12px 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; ${activeTab === 'staff' ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a;' : 'background: transparent; color: #94a3b8;'}">
-                                    👥 <span class="desktop-text">Personal</span>
+                                    👥 <span class="desktop-text">${t('comp_tab_personnel')}</span>
                                 </button>
                                 <button class="tab-btn ${activeTab === 'product' ? 'active' : ''}" data-tab="product" style="flex: 1; min-width: 60px; padding: 12px 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; ${activeTab === 'product' ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a;' : 'background: transparent; color: #94a3b8;'}">
-                                    📦 <span class="desktop-text">Producto</span>
+                                    📦 <span class="desktop-text">${t('comp_tab_product')}</span>
                                 </button>
                                 <button class="tab-btn ${activeTab === 'marketing' ? 'active' : ''}" data-tab="marketing" style="flex: 1; min-width: 60px; padding: 12px 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; ${activeTab === 'marketing' ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a;' : 'background: transparent; color: #94a3b8;'}">
-                                    📢 <span class="desktop-text">Marketing</span>
+                                    📢 <span class="desktop-text">${t('comp_tab_marketing')}</span>
                                 </button>
                                 <button class="tab-btn ${activeTab === 'finance' ? 'active' : ''}" data-tab="finance" style="flex: 1; min-width: 60px; padding: 12px 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; ${activeTab === 'finance' ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a;' : 'background: transparent; color: #94a3b8;'}">
-                                    💰 <span class="desktop-text">Finanzas</span>
+                                    💰 <span class="desktop-text">${t('comp_tab_finance')}</span>
                                 </button>
                             </div>
 
@@ -8656,7 +8880,7 @@ const UI = {
                     const val = parseFloat(el.value);
                     if (val > 0) {
                         GameState.company.customPrice = val;
-                        showGameAlert(`Precio fijado en ${formatCurrency(val)}. La exigencia de calidad cambiará.`, 'success', '💰 Precio Actualizado');
+                        showGameAlert(t('comp_price_updated_msg', { amount: formatCurrency(val) }), 'success', t('comp_price_updated_title'));
                         UI.updateJob(JobSystem);
                     }
                 };
@@ -8664,7 +8888,7 @@ const UI = {
                 if (activeTab === 'summary') {
                     try {
                         let eventsHtml = co.events.map(e => `<li>${e}</li>`).join('');
-                        if (!eventsHtml) eventsHtml = '<li style="color:#aaa">Sin novedades este mes.</li>';
+                        if (!eventsHtml) eventsHtml = `<li style="color:#aaa">${t('comp_no_news')}</li>`;
 
                         let revDiff = 0;
                         let expDiff = 0;
@@ -8700,33 +8924,33 @@ const UI = {
                                     <!-- Estado General Card -->
                                     <div id="comp-status-card" style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.08), transparent); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 16px; padding: 20px;">
                                         <h3 style="margin: 0 0 15px 0; color: #4ade80; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                                            <span style="font-size: 1.3rem;">📊</span> Estado General
+                                            <span style="font-size: 1.3rem;">📊</span> ${t('comp_status_general')}
                                         </h3>
                                         <div style="display: grid; gap: 10px;">
                                             <div style="display: flex; justify-content: space-between;">
-                                                <span style="color: #94a3b8;">⭐ Reputación</span>
+                                                <span style="color: #94a3b8;">⭐ ${t('comp_reputation')}</span>
                                                 <span style="font-weight: 700; color: #fbbf24;">${co.reputation.toFixed(1)}/5.0</span>
                                             </div>
                                             <div style="display: flex; justify-content: space-between;">
-                                                <span style="color: #94a3b8;">👥 Clientes/mes</span>
+                                                <span style="color: #94a3b8;">👥 ${t('comp_clients_mo')}</span>
                                                 <span style="font-weight: 700; color: #fff;">${co.lastStats ? co.lastStats.customers : 0}</span>
                                             </div>
                                             <div style="display: flex; justify-content: space-between;">
-                                                <span style="color: #94a3b8;">📦 Capacidad/mes</span>
+                                                <span style="color: #94a3b8;">📦 ${t('comp_capacity_mo')}</span>
                                                 <span style="font-weight: 700; color: #fff;">${co.lastStats ? co.lastStats.capacity : 0}</span>
                                             </div>
                                         </div>
                                         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155;">
                                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                                <span style="color: #94a3b8;">Ingresos</span>
+                                                <span style="color: #94a3b8;">${t('income')}</span>
                                                 <span style="color: #4ade80; font-weight: 700;">${formatCurrency(co.revenueLastMonth)} ${fmtDiff(revDiff)}</span>
                                             </div>
                                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                                <span style="color: #94a3b8;">Gastos</span>
+                                                <span style="color: #94a3b8;">${t('expenses')}</span>
                                                 <span style="color: #f87171; font-weight: 700;">${formatCurrency(co.expensesLastMonth)}</span>
                                             </div>
                                             <div style="display: flex; justify-content: space-between; font-size: 1.1rem; padding-top: 8px; border-top: 1px dashed #334155;">
-                                                <span style="color: #fff; font-weight: 700;">Beneficio</span>
+                                                <span style="color: #fff; font-weight: 700;">${t('comp_hero_profit')}</span>
                                                 <span style="color: ${co.profitLastMonth >= 0 ? '#4ade80' : '#f87171'}; font-weight: 800;">${co.profitLastMonth >= 0 ? '+' : ''}${formatCurrency(co.profitLastMonth)}</span>
                                             </div>
                                         </div>
@@ -8736,7 +8960,7 @@ const UI = {
                                     <!-- Novedades Card -->
                                     <div id="comp-summary-news" style="background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), transparent); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 20px;">
                                         <h3 style="margin: 0 0 15px 0; color: #38bdf8; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                                            <span style="font-size: 1.3rem;">📢</span> Novedades
+                                            <span style="font-size: 1.3rem;">📢</span> ${t('comp_news_title')}
                                         </h3>
                                         <ul style="max-height: 150px; overflow-y: auto; padding-left: 20px; color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">${eventsHtml}</ul>
                                     </div>
@@ -8745,27 +8969,27 @@ const UI = {
                                         <!-- Desglose Financiero Card -->
                                         <div style="background: linear-gradient(145deg, rgba(168, 85, 247, 0.08), transparent); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 16px; padding: 20px;">
                                             <h3 style="margin: 0 0 15px 0; color: #a855f7; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 1.3rem;">📋</span> Desglose Financiero
+                                                <span style="font-size: 1.3rem;">📋</span> ${t('comp_breakdown_title')}
                                             </h3>
                                             <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse;">
                                                 <tr style="border-bottom: 1px solid #334155;">
-                                                    <td style="padding: 6px 0; color: #94a3b8;">💵 Ventas</td>
+                                                    <td style="padding: 6px 0; color: #94a3b8;">💵 ${t('comp_sales_label')}</td>
                                                     <td style="text-align: right; color: #4ade80; font-weight: 700;">+${formatCurrency(income.revenue)}</td>
                                                 </tr>
-                                                <tr><td style="padding: 6px 0; color: #94a3b8;">📦 COGS</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.cogs)}</td></tr>
-                                                <tr><td style="padding: 6px 0; color: #94a3b8;">👥 Salarios</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.wages)}</td></tr>
-                                                <tr><td style="padding: 6px 0; color: #94a3b8;">🏠 Alquiler</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.rent)}</td></tr>
-                                                <tr><td style="padding: 6px 0; color: #94a3b8;">📢 Marketing</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.marketing)}</td></tr>
-                                                <tr><td style="padding: 6px 0; color: #94a3b8;">🔬 I+D</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.opex)}</td></tr>
-                                                <tr style="border-bottom: 1px solid #334155;"><td style="padding: 6px 0; color: #94a3b8;">👔 Salario CEO</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.salary)}</td></tr>
-                                                <tr style="font-weight: bold;"><td style="padding-top: 10px; color: #fff;">TOTAL GASTOS</td><td style="text-align: right; padding-top: 10px; color: #f87171;">-${formatCurrency(co.expensesLastMonth)}</td></tr>
+                                                <tr><td style="padding: 6px 0; color: #94a3b8;">📦 ${t('comp_cogs_label')}</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.cogs)}</td></tr>
+                                                <tr><td style="padding: 6px 0; color: #94a3b8;">👥 ${t('comp_wages_label')}</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.wages)}</td></tr>
+                                                <tr><td style="padding: 6px 0; color: #94a3b8;">🏠 ${t('comp_rent_label')}</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.rent)}</td></tr>
+                                                <tr><td style="padding: 6px 0; color: #94a3b8;">📢 ${t('comp_marketing_label')}</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.marketing)}</td></tr>
+                                                <tr><td style="padding: 6px 0; color: #94a3b8;">🔬 ${t('comp_rd_label')}</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.opex)}</td></tr>
+                                                <tr style="border-bottom: 1px solid #334155;"><td style="padding: 6px 0; color: #94a3b8;">👔 ${t('comp_ceo_salary_label')}</td><td style="text-align: right; color: #f87171;">-${formatCurrency(details.salary)}</td></tr>
+                                                <tr style="font-weight: bold;"><td style="padding-top: 10px; color: #fff;">${t('comp_total_expenses')}</td><td style="text-align: right; padding-top: 10px; color: #f87171;">-${formatCurrency(co.expensesLastMonth)}</td></tr>
                                             </table>
                                         </div>
     
                                         <!-- Gráfico Card -->
                                         <div style="background: linear-gradient(145deg, rgba(251, 191, 36, 0.08), transparent); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 16px; padding: 20px;">
                                             <h3 style="margin: 0 0 15px 0; color: #fbbf24; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                                                <span style="font-size: 1.3rem;">📈</span> Evolución Financiera
+                                                <span style="font-size: 1.3rem;">📈</span> ${t('comp_evolution_title')}
                                             </h3>
                                             <div style="height: 200px; width: 100%;">
                                                 <canvas id="revenueChart"></canvas>
@@ -8811,8 +9035,7 @@ const UI = {
 
                 } else if (activeTab === 'staff') {
                     let staffHtml = '';
-                    let upgradeCost = 0;
-                    let upgradeText = "Ampliar Negocio";
+                    let upgradeText = t('comp_expand_btn');
                     let upgradeDisabled = "";
 
                     // Get location-based max staff
@@ -8821,10 +9044,10 @@ const UI = {
 
                     // Check if at location max
                     if (co.maxStaff >= locationMaxStaff) {
-                        upgradeText = `Máximo (${locationMaxStaff})`;
+                        upgradeText = `${t('max_level')} (${locationMaxStaff})`;
                         upgradeDisabled = "disabled";
                     } else if (co.staff.length < co.maxStaff) {
-                        upgradeText = `Ampliar Negocio (Req: Plantilla Completa)`;
+                        upgradeText = `${t('comp_expand_btn')} (Req: ${t('comp_full_staff_req')})`;
                         upgradeDisabled = "disabled";
                     } else if (co.maxStaff === 5) {
                         upgradeCost = Math.max(15000, (co.profitLastMonth || 0) * 3);
@@ -8842,7 +9065,7 @@ const UI = {
                     const expertLocked = co.productLevel < 5;
                     const expertBtnDisabled = expertLocked ? 'disabled' : '';
                     const expertBtnStyle = expertLocked ? 'opacity:0.5; cursor:not-allowed;' : '';
-                    const expertBtnText = expertLocked ? `Experto (1.8k) 🔒 Req: Nv.5` : 'Experto (1.8k)';
+                    const expertBtnText = expertLocked ? `${t('cat_expert')} (1.8k) 🔒 ${t('required_prereq')}: ${t('tier_abbr')} 5` : `${t('cat_expert')} (1.8k)`;
 
 
                     // RENDER STAFF CARDS
@@ -8857,14 +9080,14 @@ const UI = {
                                     </div>
                                     
                                     <div class="staff-stat-row">
-                                        <span style="width:60px;">Habilidad</span>
+                                        <span style="width:60px;">${t('skill')}</span>
                                         <div class="staff-bar-track">
                                             <div class="staff-bar-fill bar-skill" style="width:${(emp.skill * 100).toFixed(0)}%"></div>
                                         </div>
                                         <span>${(emp.skill * 100).toFixed(0)}%</span>
                                     </div>
                                     <div class="staff-stat-row">
-                                        <span style="width:60px;">Moral</span>
+                                        <span style="width:60px;">${t('morale')}</span>
                                         <div class="staff-bar-track">
                                             <div class="staff-bar-fill bar-morale ${emp.morale < 0.4 ? 'low' : ''}" style="width:${(emp.morale * 100).toFixed(0)}%"></div>
                                         </div>
@@ -8873,7 +9096,7 @@ const UI = {
 
                                     <div class="staff-controls">
                                         <div class="salary-control">
-                                            <span style="font-size:0.8rem; color:#94a3b8;">Salario</span>
+                                            <span style="font-size:0.8rem; color:#94a3b8;">${t('salary')}</span>
                                             <div class="salary-input-wrapper">
                                                 <input 
                                                     type="number" 
@@ -8888,7 +9111,7 @@ const UI = {
                                                 <button 
                                                     onclick="updateEmployeeSalary(${i})" 
                                                     class="btn-icon-check"
-                                                    title="Actualizar salario"
+                                                    title="${t('update_salary')}"
                                                 >✓</button>
                                             </div>
                                         </div>
@@ -8903,7 +9126,7 @@ const UI = {
                                         style="width: 100%; margin-top: 12px; padding: 8px 12px; border-radius: 8px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;"
                                         onmouseover="this.style.background='rgba(239, 68, 68, 0.25)'"
                                         onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'"
-                                    >🚪 Despedir</button>
+                                    >🚪 ${t('comp_fire_btn')}</button>
                                 </div>
                             `;
                     });
@@ -8912,14 +9135,14 @@ const UI = {
                     tabContent.innerHTML = `
                             <div class="comp-dash-container">
                                 <div class="staff-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:15px; flex-wrap: wrap; gap: 10px;">
-                                    <h3 style="margin:0;">👥 Plantilla (${co.staff.length} / ${co.maxStaff})</h3>
+                                    <h3 style="margin:0;">👥 ${t('comp_staff_header')} (${co.staff.length} / ${co.maxStaff})</h3>
                                     <div style="display: flex; gap: 10px; align-items: center;">
                                         <button id="btn-upgrade-office" ${upgradeDisabled} style="
                                             display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; border: none; cursor: ${upgradeDisabled ? 'not-allowed' : 'pointer'}; transition: all 0.2s;
                                             ${upgradeDisabled ? 'background: #334155; color: #64748b; opacity: 0.6;' : 'background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);'}
                                         ">
                                             <span style="font-size: 1.1rem;">🏢</span>
-                                            ${upgradeText}
+                                            ${t('comp_upgrade_office')}
                                         </button>
                                         
                                         <!-- PAYROLL AUTOMATION BUTTON -->
@@ -8931,14 +9154,14 @@ const UI = {
                                 : (canBuy ? 'background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);' : 'background: #334155; color: #64748b; opacity: 0.6;');
 
                             // Ensure user sees price or status
-                            let label = hasAuto ? 'RRHH Activo' : `Contratar RRHH (${formatCurrency(25000)})`;
+                            let label = hasAuto ? t('comp_auto_payroll') : t('comp_hire_rrhh', { amount: formatCurrency(25000) });
                             let subLabel = '';
 
                             if (!hasAuto && !canBuy) {
                                 if (co.maxStaff <= 5) {
-                                    subLabel = 'Req: Negocio Nivel 2+';
+                                    subLabel = t('req_business_level', { level: 2 });
                                 } else if (co.cash < 25000) {
-                                    subLabel = 'Faltan Fondos';
+                                    subLabel = t('insufficient_funds');
                                 }
                             }
 
@@ -8972,8 +9195,8 @@ const UI = {
                                             box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
                                         ">🧑‍💼</div>
                                         <div>
-                                            <h3 style="margin: 0; color: #38bdf8; font-size: 1.1rem;">Centro de Contratación</h3>
-                                            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">Plantilla: ${co.staff.length} / ${co.maxStaff}</p>
+                                            <h3 style="margin: 0; color: #38bdf8; font-size: 1.1rem;">${t('comp_hiring_center')}</h3>
+                                            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">${t('comp_staff_header')}: ${co.staff.length} / ${co.maxStaff}</p>
                                         </div>
                                     </div>
                                     
@@ -8991,8 +9214,8 @@ const UI = {
                                         onmouseout="this.style.borderColor='#334155'; this.style.transform='translateY(0)'"
                                         >
                                             <div style="font-size: 2rem; margin-bottom: 10px;">👤</div>
-                                            <div style="font-weight: 700; color: #fff; margin-bottom: 5px;">Dependiente</div>
-                                            <div style="font-size: 0.85rem; color: #94a3b8;">Habilidad: 40%</div>
+                                            <div style="font-weight: 700; color: #fff; margin-bottom: 5px;">${t('comp_role_clerk')}</div>
+                                            <div style="font-size: 0.85rem; color: #94a3b8;">${t('comp_skill')}: 40%</div>
                                             <div style="
                                                 margin-top: 12px;
                                                 padding: 8px 15px;
@@ -9001,7 +9224,7 @@ const UI = {
                                                 border-radius: 8px;
                                                 font-weight: 700;
                                                 font-size: 0.85rem;
-                                            ">Contratar • 1.200€/mes</div>
+                                            ">${t('comp_hire_per_month', { amount: formatCurrency(1200) })}</div>
                                         </div>
                                         
                                         <div onclick="${expertLocked ? '' : `hireRole('Experto', 1800)`}" style="
@@ -9018,21 +9241,21 @@ const UI = {
                                         ${expertLocked ? '' : `onmouseout="this.style.borderColor='#a855f7'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"`}
                                         >
                                             <div style="font-size: 2rem; margin-bottom: 10px;">${expertLocked ? '🔒' : '⭐'}</div>
-                                            <div style="font-weight: 700; color: ${expertLocked ? '#64748b' : '#a855f7'}; margin-bottom: 5px;">Experto</div>
-                                            <div style="font-size: 0.85rem; color: #94a3b8;">Habilidad: 80%</div>
+                                            <div style="font-weight: 700; color: ${expertLocked ? '#64748b' : '#a855f7'}; margin-bottom: 5px;">${t('comp_role_expert')}</div>
+                                            <div style="font-size: 0.85rem; color: #94a3b8;">${t('comp_skill')}: 80%</div>
                                             ${expertLocked ?
-                            `<div style="margin-top: 12px; padding: 8px 15px; background: #334155; color: #64748b; border-radius: 8px; font-size: 0.75rem;">🔒 Req: Producto Nv.5</div>` :
-                            `<div style="margin-top: 12px; padding: 8px 15px; background: linear-gradient(135deg, #a855f7, #7c3aed); color: #fff; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">Contratar • 1.800€/mes</div>`
+                            `<div style="margin-top: 12px; padding: 8px 15px; background: #334155; color: #64748b; border-radius: 8px; font-size: 0.75rem;">🔒 ${t('comp_expert_req')}</div>` :
+                            `<div style="margin-top: 12px; padding: 8px 15px; background: linear-gradient(135deg, #a855f7, #7c3aed); color: #fff; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">${t('comp_hire_per_month', { amount: formatCurrency(1800) })}</div>`
                         }
                                         </div>
                                     </div>
                                     
-                                    ${expertLocked ? '<p style="color:#fbbf24; font-size:0.8rem; margin: 15px 0 0 0; text-align: center;">💡 Mejora tu Producto a Nivel 5 para desbloquear talento experto.</p>' : ''}
+                                    ${expertLocked ? `<p style="color:#fbbf24; font-size:0.8rem; margin: 15px 0 0 0; text-align: center;">💡 ${t('comp_expert_hint')}</p>` : ''}
                                 </div>
                                 
-                                <h4 style="color:#94a3b8; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px;">📋 Empleados Actuales</h4>
+                                <h4 style="color:#94a3b8; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px;">📋 ${t('comp_current_employees')}</h4>
                                 <div class="staff-grid">
-                                    ${staffHtml || '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">No hay empleados contratados.</div>'}
+                                    ${staffHtml || `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">${t('comp_no_employees')}</div>`}
                                 </div>
                             </div>
                         `;
@@ -9047,8 +9270,8 @@ const UI = {
                         btnPayroll.onclick = () => {
                             const res = CompanyModule.buyUpgrade('autoPayroll');
                             if (res) {
-                                UI.showModal(res.success ? '¡Departamento RRHH Contratado!' : 'Error', res.message, [
-                                    { text: 'Excelente', style: 'primary', fn: () => UI.updateJob(JobSystem) }
+                                UI.showModal(res.success ? t('comp_hr_hired_title') : t('error'), res.message, [
+                                    { text: t('great') || 'Excelente', style: 'primary', fn: () => UI.updateJob(JobSystem) }
                                 ]);
                             }
                         };
@@ -9059,44 +9282,45 @@ const UI = {
                         if (role === 'Experto' && GameState.company.productLevel < 5) {
                             const lockMsg = `
                                         <div style="text-align:center;">
-                                            <p style="margin-bottom:15px;">No puedes contratar <strong>Empleados Expertos</strong> aún.</p>
+                                            <p style="margin-bottom:15px;">${t('comp_expert_locked_msg')}</p>
                                             <div style="background:rgba(251, 191, 36, 0.1); border:1px solid #fbbf24; border-radius:8px; padding:15px; margin:15px 0;">
                                                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                                    <span>Requisito:</span>
-                                                    <strong style="color:#fbbf24;">Nivel de Producto 5</strong>
+                                                    <span>${t('requirements')}:</span>
+                                                    <strong style="color:#fbbf24;">${t('comp_expert_req').replace('Req: ', '')}</strong>
                                                 </div>
                                                 <div style="display:flex; justify-content:space-between;">
-                                                    <span>Nivel Actual:</span>
-                                                    <strong style="color:#f87171;">Nivel ${GameState.company.productLevel}</strong>
+                                                    <span>${t('current_level') || 'Nivel Actual'}:</span>
+                                                    <strong style="color:#f87171;">${t('comp_product_level')} ${GameState.company.productLevel}</strong>
                                                 </div>
                                             </div>
                                             <p style="color:#94a3b8; font-size:0.9rem; margin-top:15px;">
-                                                💡 Debes invertir más en <strong>Desarrollo de Producto (I+D)</strong>.
+                                                💡 ${t('comp_expert_hint')}
                                             </p>
                                             <p style="color:#94a3b8; font-size:0.9rem;">
                                                 Ve a la pestaña <strong style="color:#38bdf8;">"Producto"</strong> y realiza inversiones hasta alcanzar el Nivel 5.
                                             </p>
                                         </div>
                                     `;
-                            UI.showModal('🔒 Empleados Expertos Bloqueados', lockMsg, [
-                                { text: 'Entendido', style: 'secondary', fn: null }
+                            UI.showModal(t('comp_expert_locked_msg'), lockMsg, [
+                                { text: t('understood') || 'Entendido', style: 'secondary', fn: null }
                             ]);
                             return;
                         }
                         const skill = role === 'Experto' ? 0.8 : 0.4;
+                        const roleName = role === 'Experto' ? t('comp_role_expert') : t('comp_role_clerk');
 
                         // Show styled modal for employee name input
                         const nameInputHtml = `
                             <div style="text-align: center;">
                                 <div style="font-size: 3rem; margin-bottom: 15px;">👤</div>
                                 <p style="color: #94a3b8; margin-bottom: 20px;">
-                                    Dale un nombre a tu nuevo <strong style="color: #38bdf8;">${role}</strong>
+                                    ${t('comp_new_employee_desc')} <strong style="color: #38bdf8;">${roleName}</strong>
                                 </p>
                                 <input 
                                     type="text" 
                                     id="new-employee-name" 
                                     maxlength="10" 
-                                    placeholder="Ej: María, Juan..."
+                                    placeholder="${t('name_placeholder')}"
                                     style="
                                         width: 100%;
                                         padding: 12px 16px;
@@ -9113,7 +9337,7 @@ const UI = {
                                     onfocus="this.style.borderColor='#38bdf8'"
                                     onblur="this.style.borderColor='rgba(56, 189, 248, 0.3)'"
                                 />
-                                <p style="color: #64748b; font-size: 0.75rem; margin-top: 8px;">Máximo 10 caracteres</p>
+                                <p style="color: #64748b; font-size: 0.75rem; margin-top: 8px;">Max 10 chars</p>
                             </div>
                         `;
 
@@ -9124,7 +9348,7 @@ const UI = {
                         let hireMsg = `
                             <div style="text-align: center; margin-bottom: 20px;">
                                 <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡NUEVO TALENTO!</h3>
+                                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('comp_new_employee_title')}</h3>
                             </div>
                             
                             <div style="margin-bottom: 20px;">
@@ -9132,31 +9356,31 @@ const UI = {
                             </div>
                             
                             <p style="text-align: center; color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                                Contratar personal aumenta la capacidad de tu negocio.
+                                ${t('comp_hire_info')}
                             </p>
                         `;
 
                         UI.showModal(' ', hireMsg, [
                             {
-                                text: 'Cancelar',
+                                text: t('cancel'),
                                 style: 'secondary',
                                 fn: null
                             },
                             {
-                                text: '¡Contratar!',
+                                text: t('comp_hire_action'),
                                 style: 'primary', // Cyan button style
                                 fn: () => {
                                     const nameInput = document.getElementById('new-employee-name');
-                                    let empName = (nameInput.value || '').trim().substring(0, 10) || role;
+                                    let empName = (nameInput.value || '').trim().substring(0, 10) || roleName;
 
                                     const r = CompanyModule.hireStaff(role, sal, skill, empName);
                                     if (r) {
                                         if (!r.success) {
-                                            UI.showModal('❌ Error al Contratar', r.message, [
-                                                { text: 'Cerrar', style: 'secondary', fn: null }
+                                            UI.showModal(t('error'), r.message, [
+                                                { text: t('close') || 'Cerrar', style: 'secondary', fn: null }
                                             ]);
                                         } else {
-                                            UI.showToast(`¡${empName} se une al equipo! 🎉`, 'success');
+                                            UI.showToast(t('comp_employee_joined', { name: empName }), 'success');
                                         }
                                         UI.updateJob(JobSystem);
                                     }
@@ -9171,7 +9395,7 @@ const UI = {
                         }, 100);
                     };
                     window.fireEmployee = (i) => {
-                        if (confirm('¿Despedir empleado? Baja moral del equipo.')) {
+                        if (confirm(t('comp_fire_confirm'))) {
                             CompanyModule.fireStaff(i);
                             UI.updateJob(JobSystem);
                         }
@@ -9187,10 +9411,10 @@ const UI = {
                         // Validation: Range check
                         if (isNaN(newSalary) || newSalary < 1000 || newSalary > 9000) {
                             UI.showModal(
-                                '⚠️ Salario Inválido',
-                                'El salario debe estar entre <strong>1.000€</strong> y <strong>9.000€</strong>.',
+                                '⚠️ ' + t('comp_salary_invalid'),
+                                t('comp_salary_range_msg', { min: '<strong>1.000€</strong>', max: '<strong>9.000€</strong>' }),
                                 [{
-                                    text: 'Entendido', style: 'secondary', fn: () => {
+                                    text: t('understood') || 'Entendido', style: 'secondary', fn: () => {
                                         inputEl.value = GameState.company.staff[employeeIndex].salary;
                                     }
                                 }]
@@ -9205,25 +9429,25 @@ const UI = {
                         if (newSalary < employee.requiredWage) {
                             const warningMsg = `
                                         <div style="text-align:left;">
-                                            <p style="margin-bottom:10px;">Estás estableciendo el salario por debajo del mínimo requerido:</p>
+                                            <p style="margin-bottom:10px;">${t('comp_salary_low_desc').split('.')[0]}:</p>
                                             <div style="background:rgba(248, 113, 113, 0.1); border-left:3px solid #f87171; padding:10px; margin:10px 0; border-radius:4px;">
                                                 <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                                                    <span>Nuevo salario:</span>
+                                                    <span>${t('salary')}:</span>
                                                     <strong>${formatCurrency(newSalary)}</strong>
                                                 </div>
                                                 <div style="display:flex; justify-content:space-between;">
-                                                    <span>Mínimo requerido:</span>
+                                                    <span>${t('requirements')}:</span>
                                                     <strong style="color:#f87171;">${formatCurrency(employee.requiredWage)}</strong>
                                                 </div>
                                             </div>
                                             <p style="color:#fbbf24; margin-top:10px;">
-                                                ⚠️ Esto afectará <strong>negativamente la MORAL</strong> del empleado y reducirá su productividad.
+                                                ⚠️ ${t('comp_salary_low_desc')}
                                             </p>
-                                            <p style="margin-top:10px;">¿Continuar de todos modos?</p>
+                                            <p style="margin-top:10px;">${t('continue_question') || '¿Continuar?'}</p>
                                         </div>
                                     `;
 
-                            UI.confirmModal('⚠️ Advertencia de Salario Bajo', warningMsg, () => {
+                            UI.confirmModal('⚠️ ' + t('comp_salary_low_warning'), warningMsg, () => {
                                 // User confirmed - proceed with update
                                 employee.salary = newSalary;
 
@@ -9231,14 +9455,14 @@ const UI = {
                                 const diffText = diff >= 0 ? `+${formatCurrency(diff)}` : formatCurrency(diff);
 
                                 UI.showModal(
-                                    '⚠️ Salario Reducido',
+                                    '⚠️ ' + t('comp_salary_reduced'),
                                     `<div style="text-align:center;">
-                                                <p>Salario actualizado a <strong style="color:#f87171;">${formatCurrency(newSalary)}</strong></p>
+                                                <p>${t('comp_salary_updated')} <strong style="color:#f87171;">${formatCurrency(newSalary)}</strong></p>
                                                 <p style="color:#94a3b8; font-size:0.9rem;">(${diffText})</p>
-                                                <p style="margin-top:15px; color:#fbbf24;">😠 Esto afectará la moral del empleado.</p>
+                                                <p style="margin-top:15px; color:#fbbf24;">${t('comp_salary_demotivated')}</p>
                                             </div>`,
                                     [{
-                                        text: 'Entendido', style: 'secondary', fn: () => {
+                                        text: t('understood') || 'Entendido', style: 'secondary', fn: () => {
                                             UI.updateJob(JobSystem);
                                             UI.updateHeader();
                                         }
@@ -9260,14 +9484,14 @@ const UI = {
 
                         if (diff > 0) {
                             UI.showModal(
-                                '✅ Salario Actualizado',
+                                '✅ ' + t('comp_salary_updated'),
                                 `<div style="text-align:center;">
-                                            <p>Nuevo salario: <strong style="color:#4ade80;">${formatCurrency(newSalary)}</strong></p>
+                                            <p>${t('comp_salary_updated')}: <strong style="color:#4ade80;">${formatCurrency(newSalary)}</strong></p>
                                             <p style="color:#94a3b8; font-size:0.9rem;">(${diffText})</p>
-                                            <p style="margin-top:15px; color:#4ade80;">😊 El empleado estará más motivado.</p>
+                                            <p style="margin-top:15px; color:#4ade80;">${t('comp_salary_motivated')}</p>
                                         </div>`,
                                 [{
-                                    text: 'Perfecto', style: 'success', fn: () => {
+                                    text: t('great') || 'Perfecto', style: 'success', fn: () => {
                                         UI.updateJob(JobSystem);
                                         UI.updateHeader();
                                     }
@@ -9275,14 +9499,14 @@ const UI = {
                             );
                         } else if (diff < 0) {
                             UI.showModal(
-                                '⚠️ Salario Reducido',
+                                '⚠️ ' + t('comp_salary_reduced'),
                                 `<div style="text-align:center;">
-                                            <p>Nuevo salario: <strong style="color:#f87171;">${formatCurrency(newSalary)}</strong></p>
+                                            <p>${t('comp_salary_updated')}: <strong style="color:#f87171;">${formatCurrency(newSalary)}</strong></p>
                                             <p style="color:#94a3b8; font-size:0.9rem;">(${diffText})</p>
-                                            <p style="margin-top:15px; color:#fbbf24;">😠 Esto afectará la moral del empleado.</p>
+                                            <p style="margin-top:15px; color:#fbbf24;">${t('comp_salary_demotivated')}</p>
                                         </div>`,
                                 [{
-                                    text: 'Entendido', style: 'secondary', fn: () => {
+                                    text: t('understood') || 'Entendido', style: 'secondary', fn: () => {
                                         UI.updateJob(JobSystem);
                                         UI.updateHeader();
                                     }
@@ -9290,9 +9514,9 @@ const UI = {
                             );
                         } else {
                             UI.showModal(
-                                'ℹ️ Salario Confirmado',
+                                'ℹ️ ' + t('comp_salary_confirmed'),
                                 `<div style="text-align:center;">
-                                            <p>Salario confirmado: <strong>${formatCurrency(newSalary)}</strong></p>
+                                            <p>${t('comp_salary_confirmed')}: <strong>${formatCurrency(newSalary)}</strong></p>
                                         </div>`,
                                 [{
                                     text: 'OK', style: 'primary', fn: () => {
@@ -9318,13 +9542,13 @@ const UI = {
                     const stats = co.lastStats || { actualQuality: 0, requiredQuality: 0, targetRep: 3, repGrowth: 0 };
                     const qGap = stats.actualQuality - stats.requiredQuality;
                     const qColor = qGap >= 0 ? '#4ade80' : '#f87171';
-                    const qText = qGap >= 0 ? 'La reputación está subiendo' : 'La reputación está bajando';
+                    const qText = qGap >= 0 ? t('comp_rep_rising') : t('comp_rep_falling');
 
                     let provOpts = '';
                     for (const [k, v] of Object.entries(CompanyModule.providers)) {
                         const isSel = co.providerId === k;
                         provOpts += `<div class="selection-card ${isSel ? 'selected' : ''}" onclick="setStrat('provider', '${k}')">
-                                <strong>${v.name}</strong><br>Coste: x${v.priceMod}<br>Calidad: ${(v.quality * 100).toFixed(0)}%
+                                <strong>${t('prov_' + k)}</strong><br>${t('comp_cost_label')}: x${v.priceMod}<br>${t('comp_quality_label')}: ${(v.quality * 100).toFixed(0)}%
                             </div>`;
                     }
 
@@ -9348,16 +9572,16 @@ const UI = {
                                             flex-shrink: 0;
                                         ">🔬</div>
                                         <div style="flex: 1; min-width: 200px;">
-                                            <h3 style="margin: 0 0 8px 0; color: #4ade80; font-size: 1.1rem;">Desarrollo de Producto</h3>
+                                            <h3 style="margin: 0 0 8px 0; color: #4ade80; font-size: 1.1rem;">${t('comp_product_dev')}</h3>
                                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                                <span style="color: #fff; font-weight: 800; font-size: 1.5rem;">Nivel ${co.productLevel}</span>
+                                                <span style="color: #fff; font-weight: 800; font-size: 1.5rem;">${t('comp_product_level')} ${co.productLevel}</span>
                                                 <span style="color: #64748b; font-size: 0.85rem;">/ 10</span>
                                             </div>
                                             <div style="background: #0f172a; border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 12px;">
                                                 <div style="width: ${co.productLevel * 10}%; height: 100%; background: linear-gradient(90deg, #4ade80, #22c55e); border-radius: 8px; transition: width 0.3s;"></div>
                                             </div>
                                             <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">
-                                                Cada nivel aumenta la <strong style="color: #4ade80;">calidad base +5%</strong> → Mayor satisfacción.
+                                                ${t('comp_prod_level_desc1')} <strong style="color: #4ade80;">${t('comp_prod_level_desc2')}</strong> → ${t('comp_prod_level_desc3')}.
                                             </p>
                                         </div>
                                         ${(() => {
@@ -9368,7 +9592,7 @@ const UI = {
                             const requiredStaff = co.productLevel + 1;
 
                             if (isMaxLevel) {
-                                return `<div style="padding: 14px 28px; border-radius: 12px; background: #334155; color: #64748b; font-weight: 700; text-align: center;">✓ Nivel Máximo</div>`;
+                                return `<div style="padding: 14px 28px; border-radius: 12px; background: #334155; color: #64748b; font-weight: 700; text-align: center;">${t('comp_product_max')}</div>`;
                             }
 
                             if (needsMoreStaff) {
@@ -9387,8 +9611,8 @@ const UI = {
                                                     align-items: center;
                                                     gap: 4px;
                                                 ">
-                                                    <span>🔒 Req: ${requiredStaff} empleados</span>
-                                                    <span style="font-size: 0.7rem; color: #fbbf24;">Tienes: ${co.staff.length} 👥</span>
+                                                    <span>🔒 ${t('req_staff_needs', { count: requiredStaff })}</span>
+                                                    <span style="font-size: 0.7rem; color: #fbbf24;">${t('you_have_staff', { count: co.staff.length })} 👥</span>
                                                 </button>`;
                             }
 
@@ -9409,7 +9633,7 @@ const UI = {
                                                     gap: 4px;
                                                 ">
                                                     <span>🔒 ${formatCurrency(productCost)}</span>
-                                                    <span style="font-size: 0.7rem; color: #f87171;">Caja: ${formatCurrency(co.cash)}</span>
+                                                    <span style="font-size: 0.7rem; color: #f87171;">${t('cash_label')}: ${formatCurrency(co.cash)}</span>
                                                 </button>`;
                             }
 
@@ -9428,60 +9652,60 @@ const UI = {
                                             "
                                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(74, 222, 128, 0.4)'"
                                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(74, 222, 128, 0.3)'"
-                                            >⬆️ Mejorar (${formatCurrency(productCost)})</button>`;
+                                            >⬆️ ${t('comp_upgrade_action')} (${formatCurrency(productCost)})</button>`;
                         })()}
                                     </div>
                                 </div>
                                 
                                 <div class="strategy-grid">
                                     <div id="comp-pricing-card" class="strat-card">
-                                        <h4 class="staff-role-title" style="margin-bottom:15px;">🏷️ Estrategia de Precio</h4>
-                                        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:5px;">Base Mercado: ${formatCurrency(baseTicket)}</p>
-                                        <p style="font-size:0.85rem; color:#facc15; margin-bottom:15px;">Equilibrio (Rep. ${co.reputation.toFixed(1)}): <strong>${formatCurrency(equiPrice)}</strong></p>
+                                        <h4 class="staff-role-title" style="margin-bottom:15px;">${t('comp_pricing_strategy')}</h4>
+                                        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:5px;">${t('comp_market_base')}: ${formatCurrency(baseTicket)}</p>
+                                        <p style="font-size:0.85rem; color:#facc15; margin-bottom:15px;">${t('comp_break_even')} (Rep. ${co.reputation.toFixed(1)}): <strong>${formatCurrency(equiPrice)}</strong></p>
                                         <div style="display:flex; align-items:center; gap:10px;">
                                             <input type="number" id="price-input" value="${currentPrice}" step="0.5" class="comp-input-sm" style="width:100px; text-align:center;">
-                                            <button onclick="updatePrice()" class="btn-sm" style="background:#38bdf8; color:#0f172a; border:none; padding:6px 15px;">Fijar</button>
+                                            <button onclick="updatePrice()" class="btn-sm" style="background:#38bdf8; color:#0f172a; border:none; padding:6px 15px;">${t('comp_set_btn')}</button>
                                         </div>
                                     </div>
                                     <div id="comp-reputation-card" class="strat-card highlight">
-                                        <h4 class="staff-role-title">📊 Análisis de Reputación</h4>
+                                        <h4 class="staff-role-title">${t('comp_rep_analysis')}</h4>
                                         <div class="analysis-box">
                                             <div class="data-row strong">
-                                                <span>Calidad Real</span>
+                                                <span>${t('comp_real_quality')}</span>
                                                 <span>${(stats.actualQuality * 100).toFixed(0)}%</span>
                                             </div>
                                             <div class="data-row">
-                                                <span>• Base Proveedor</span>
+                                                <span>${t('comp_provider_base')}</span>
                                                 <span>${(curProv.quality * 100).toFixed(0)}%</span>
                                             </div>
                                             <div class="data-row" style="margin-bottom:15px;">
-                                                <span>• Bonus I+D (Nvl ${co.productLevel})</span>
+                                                <span>${t('comp_rnd_bonus')} (${t('comp_product_level')} ${co.productLevel})</span>
                                                 <span style="color:#4ade80;">+${((co.productLevel - 1) * 5).toFixed(0)}%</span>
                                             </div>
 
                                             <div class="data-row strong">
-                                                <span>Exigencia (Precio)</span>
+                                                <span>${t('comp_demand_price')}</span>
                                                 <span>${(stats.requiredQuality * 100).toFixed(0)}%</span>
                                             </div>
                                             <div class="data-row">
-                                                <span>• Base Mercado</span>
+                                                <span>${t('comp_market_base')}</span>
                                                 <span>70%</span>
                                             </div>
                                             <div class="data-row">
-                                                <span>• Ajuste Precio</span>
+                                                <span>${t('comp_price_adj')}</span>
                                                 <span>${((stats.requiredQuality - 0.70) * 100).toFixed(0)}%</span>
                                             </div>
                                         </div>
                                         <div style="text-align:center; padding-top:15px;">
-                                            <p style="margin-bottom:5px; color:#fbbf24;">Reputación Actual: <strong>${co.reputation.toFixed(2)}</strong></p>
-                                            <p style="margin-bottom:5px; color:${(stats.targetRep || 0) > co.reputation ? '#4ade80' : '#f87171'}">Proyección de la reputacion: <strong>${stats.targetRep ? stats.targetRep.toFixed(2) : '3.50'}</strong></p>
+                                            <p style="margin-bottom:5px; color:#fbbf24;">${t('comp_current_rep')}: <strong>${co.reputation.toFixed(2)}</strong></p>
+                                            <p style="margin-bottom:5px; color:${(stats.targetRep || 0) > co.reputation ? '#4ade80' : '#f87171'}">${t('comp_projected_rep')}: <strong>${stats.targetRep ? stats.targetRep.toFixed(2) : '3.50'}</strong></p>
 
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div id="comp-providers-section">
-                                    <h3 style="border-bottom:1px solid #334155; padding-bottom:10px; margin: 25px 0 20px 0;">📦 Proveedores (Insumos)</h3>
+                                    <h3 style="border-bottom:1px solid #334155; padding-bottom:10px; margin: 25px 0 20px 0;">${t('comp_providers_section')}</h3>
                                     <div class="options-grid">${provOpts}</div>
                                 </div>
                             </div>
@@ -9514,10 +9738,10 @@ const UI = {
                                 ${isSel ? `border-color: ${color}; box-shadow: 0 0 15px ${color}33;` : ''}
                             ">
                                 <div style="font-size: 2rem; filter: ${isSel ? 'none' : 'grayscale(0.5)'};">${icon}</div>
-                                <div style="font-weight: 700; color: ${isSel ? color : '#fff'}; font-size: 0.95rem;">${v.name}</div>
+                                <div style="font-weight: 700; color: ${isSel ? color : '#fff'}; font-size: 0.95rem;">${t('mkt_chan_' + k)}</div>
                                 <div style="display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: #94a3b8;">
-                                    <span>💰 ${v.cost === 0 ? 'Gratis' : formatCurrency(v.cost) + '/mes'}</span>
-                                    <span style="color: ${v.impact > 1 ? '#4ade80' : '#64748b'};">📈 Impacto x${v.impact}</span>
+                                    <span>💰 ${v.cost === 0 ? t('comp_cost_free') : formatCurrency(v.cost) + (t('per_month') || '/mes')}</span>
+                                    <span style="color: ${v.impact > 1 ? '#4ade80' : '#64748b'};">📈 ${t('comp_impact_label')} x${v.impact}</span>
                                 </div>
                             </div>`;
                     }
@@ -9542,16 +9766,16 @@ const UI = {
                                                 flex-shrink: 0;
                                             ">📣</div>
                                             <div style="flex: 1; min-width: 200px;">
-                                                <h3 style="margin: 0 0 8px 0; color: #fbbf24; font-size: 1.1rem;">Infraestructura de Marketing</h3>
+                                                <h3 style="margin: 0 0 8px 0; color: #fbbf24; font-size: 1.1rem;">${t('comp_mkt_infra')}</h3>
                                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                                    <span style="color: #fff; font-weight: 800; font-size: 1.5rem;">Nivel ${co.marketingLevel}</span>
+                                                    <span style="color: #fff; font-weight: 800; font-size: 1.5rem;">${t('comp_mkt_level')} ${co.marketingLevel}</span>
                                                     <span style="color: #64748b; font-size: 0.85rem;">/ 10</span>
                                                 </div>
                                                 <div style="background: #0f172a; border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 12px;">
                                                     <div style="width: ${co.marketingLevel * 10}%; height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 8px; transition: width 0.3s;"></div>
                                                 </div>
                                                 <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">
-                                                    Cada nivel aumenta la <strong style="color: #fbbf24;">eficacia +20%</strong> → Más clientes.
+                                                    ${t('comp_prod_level_desc1')} <strong style="color: #fbbf24;">${t('comp_mkt_level_effect')}</strong> → ${t('comp_mkt_level_benefit')}.
                                                 </p>
                                             </div>
                                             ${(() => {
@@ -9562,7 +9786,7 @@ const UI = {
                             const requiredStaff = co.marketingLevel + 1;
 
                             if (isMaxLevel) {
-                                return `<div style="padding: 14px 28px; border-radius: 12px; background: #334155; color: #64748b; font-weight: 700; text-align: center;">✓ Nivel Máximo</div>`;
+                                return `<div style="padding: 14px 28px; border-radius: 12px; background: #334155; color: #64748b; font-weight: 700; text-align: center;">${t('comp_product_max')}</div>`;
                             }
 
                             if (needsMoreStaff) {
@@ -9581,8 +9805,8 @@ const UI = {
                                                         align-items: center;
                                                         gap: 4px;
                                                     ">
-                                                        <span>🔒 Req: ${requiredStaff} empleados</span>
-                                                        <span style="font-size: 0.7rem; color: #fbbf24;">Tienes: ${co.staff.length} 👥</span>
+                                                        <span>🔒 ${t('req_staff_needs', { count: requiredStaff })}</span>
+                                                        <span style="font-size: 0.7rem; color: #fbbf24;">${t('you_have_staff', { count: co.staff.length })} 👥</span>
                                                     </button>`;
                             }
 
@@ -9603,7 +9827,7 @@ const UI = {
                                                         gap: 4px;
                                                     ">
                                                         <span>🔒 ${formatCurrency(mktCost)}</span>
-                                                        <span style="font-size: 0.7rem; color: #f87171;">Caja: ${formatCurrency(co.cash)}</span>
+                                                        <span style="font-size: 0.7rem; color: #f87171;">${t('cash_label')}: ${formatCurrency(co.cash)}</span>
                                                     </button>`;
                             }
 
@@ -9622,38 +9846,44 @@ const UI = {
                                                 "
                                                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.4)'"
                                                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(251, 191, 36, 0.3)'"
-                                                >⬆️ Mejorar (${formatCurrency(mktCost)})</button>`;
+                                                >⬆️ ${t('comp_upgrade_action')} (${formatCurrency(mktCost)})</button>`;
                         })()}
                                         </div>
                                     </div>
                                     
-                                    <div id="comp-marketing-channels-section">
-                                        <h3 style="border-bottom:1px solid #334155; padding-bottom:10px; margin-bottom:20px; font-size: 1.1rem;">📡 Canales de Publicidad</h3>
-                                        <div class="options-grid" style="margin-bottom:25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">${mktOpts}</div>
-                                    </div>
-
-                                    <div id="comp-marketing-analysis-card" class="strat-card highlight">
-                                        <h4 class="staff-role-title" style="color:#38bdf8;">📈 Análisis de Demanda</h4>
-                                        <div class="analysis-box" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:15px;">
-                                            <div class="data-row"><span>Base:</span> <strong>${comp.base}</strong></div>
-                                            <div class="data-row"><span>Tráfico:</span> <strong>x${comp.traffic.toFixed(2)}</strong></div>
-                                            <div class="data-row"><span>Marketing:</span> <strong>x${comp.marketing.toFixed(2)}</strong></div>
-                                            <div class="data-row"><span>Reputación:</span> <strong>x${comp.reputation.toFixed(2)}</strong></div>
-                                            <div class="data-row"><span>Orgánico:</span> <strong>x${comp.organic.toFixed(2)}</strong></div>
-                                            <div class="data-row" style="color:#facc15;"><span>Volatilidad:</span> <strong>x${(comp.volatility || 1).toFixed(2)}</strong></div>
-                                            <div style="grid-column: 1 / -1; border-top:1px solid #334155; margin-top:5px; padding-top:10px; text-align:center;">
-                                                Total Estimado: <strong style="color:#4ade80; font-size:1.1rem;">${stats.demand || 0} clientes/mes</strong>
+                                    <div class="strategy-grid">
+                                        <div id="comp-campaigns-section">
+                                            <h3 style="border-bottom:1px solid #334155; padding-bottom:10px; margin: 0 0 15px 0;">${t('marketing_campaigns')}</h3>
+                                            <div class="options-grid">${mktOpts}</div>
+                                        </div>
+                                        <div id="comp-traffic-card" class="strat-card">
+                                            <h4 class="staff-role-title">🔍 ${t('comp_impact_label')}</h4>
+                                            <div class="analysis-box">
+                                                <div class="data-row">
+                                                    <span>Natural</span>
+                                                    <span>${(comp.organic || 1).toFixed(1)}x</span>
+                                                </div>
+                                                <div class="data-row strong">
+                                                    <span>Marketing</span>
+                                                    <span>${(comp.marketing || 1).toFixed(1)}x</span>
+                                                </div>
+                                                <div class="data-row">
+                                                    <span>Reputación</span>
+                                                    <span>${(comp.reputation || 1).toFixed(1)}x</span>
+                                                </div>
+                                                <div style="border-top:1px solid #334155; margin-top:10px; padding-top:10px; display:flex; justify-content:space-between; color:#fbbf24; font-weight:700;">
+                                                    <span>Total</span>
+                                                    <span>${((comp.traffic || 1) * 100).toFixed(0)}%</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             `;
+
                     tabContent.innerHTML = strategyHTML;
 
-
-                    // Functions moved to shared scope above
-
-
+                    // window.attachMarketingHandlers(); // Removed
                 } else if (activeTab === 'finance') {
                     tabContent.innerHTML = `
                         <div style="display: flex; flex-direction: column; gap: 20px;">
@@ -9675,16 +9905,16 @@ const UI = {
                                         box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
                                     ">💰</div>
                                     <div>
-                                        <h3 style="margin: 0; color: #38bdf8; font-size: 1.1rem;">Movimientos de Caja</h3>
-                                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">Transfiere fondos entre empresa y cuenta personal</p>
+                                        <h3 style="margin: 0; color: #38bdf8; font-size: 1.1rem;">${t('comp_cash_movements')}</h3>
+                                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">${t('comp_cash_movements_desc')}</p>
                                     </div>
                                 </div>
                                 
                                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                                     <div style="background: rgba(15, 23, 42, 0.5); border-radius: 12px; padding: 15px;">
-                                        <label style="display:block; margin-bottom:8px; color:#4ade80; font-weight: 600; font-size:0.9rem;">📤 Retirar a cuenta personal</label>
+                                        <label style="display:block; margin-bottom:8px; color:#4ade80; font-weight: 600; font-size:0.9rem;">${t('comp_withdraw_label')}</label>
                                         <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                                            <input type="number" id="co-trans-amount" placeholder="Cantidad €" style="
+                                            <input type="number" id="co-trans-amount" placeholder="${t('comp_amount_placeholder')}" style="
                                                 flex: 1;
                                                 background: #0f172a;
                                                 border: 1px solid #334155;
@@ -9701,13 +9931,13 @@ const UI = {
                                                 border-radius: 8px;
                                                 font-weight: 700;
                                                 cursor: pointer;
-                                            ">Retirar</button>
+                                            ">${t('withdraw_btn')}</button>
                                         </div>
                                     </div>
                                     <div style="background: rgba(15, 23, 42, 0.5); border-radius: 12px; padding: 15px;">
-                                        <label style="display:block; margin-bottom:8px; color:#a855f7; font-weight: 600; font-size:0.9rem;">📥 Inyectar desde cuenta personal</label>
+                                        <label style="display:block; margin-bottom:8px; color:#a855f7; font-weight: 600; font-size:0.9rem;">${t('comp_deposit_label')}</label>
                                         <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                                            <input type="number" id="co-dep-amount" placeholder="Cantidad €" style="
+                                            <input type="number" id="co-dep-amount" placeholder="${t('comp_amount_placeholder')}" style="
                                                 flex: 1;
                                                 background: #0f172a;
                                                 border: 1px solid #334155;
@@ -9724,7 +9954,7 @@ const UI = {
                                                 border-radius: 8px;
                                                 font-weight: 700;
                                                 cursor: pointer;
-                                            ">Ingresar</button>
+                                            ">${t('deposit_btn')}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -9747,8 +9977,8 @@ const UI = {
                                         box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
                                     ">💼</div>
                                     <div>
-                                        <h3 style="margin: 0; color: #fbbf24; font-size: 1.1rem;">Salario del CEO</h3>
-                                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">Tu sueldo mensual (cubre gastos personales)</p>
+                                        <h3 style="margin: 0; color: #fbbf24; font-size: 1.1rem;">${t('comp_ceo_salary')}</h3>
+                                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">${t('comp_ceo_salary_desc')}</p>
                                     </div>
                                 </div>
                                 <div style="display:flex; flex-wrap:wrap; gap:10px; align-items: center;">
@@ -9763,7 +9993,7 @@ const UI = {
                                         font-weight: 700;
                                         text-align: center;
                                     ">
-                                    <span style="color: #64748b;">€ / mes</span>
+                                    <span style="color: #64748b;">${t('per_month_unit') || t('per_month') || '€ / mes'}</span>
                                     <button id="btn-set-salary" style="
                                         background: linear-gradient(135deg, #fbbf24, #f59e0b);
                                         color: #0f172a;
@@ -9773,7 +10003,7 @@ const UI = {
                                         font-weight: 700;
                                         cursor: pointer;
                                         margin-left: auto;
-                                    ">Actualizar</button>
+                                    ">${t('update_btn')}</button>
                                 </div>
                             </div>
                             
@@ -9794,8 +10024,8 @@ const UI = {
                                         box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
                                     ">⚠️</div>
                                     <div>
-                                        <h3 style="margin: 0; color: #ef4444; font-size: 1.1rem;">Zona de Peligro</h3>
-                                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">Acciones irreversibles</p>
+                                        <h3 style="margin: 0; color: #ef4444; font-size: 1.1rem;">${t('danger_zone')}</h3>
+                                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 0.8rem;">${t('irreversible_actions')}</p>
                                     </div>
                                 </div>
                                 <button onclick="sellCompanyAction()" style="
@@ -9810,14 +10040,14 @@ const UI = {
                                 "
                                 onmouseover="this.style.background='rgba(239, 68, 68, 0.1)'"
                                 onmouseout="this.style.background='transparent'"
-                                >🏷️ VENDER EMPRESA (EXIT)</button>
+                                >${t('sell_company_exit')}</button>
                             </div>
                         </div>
             `;
 
                     document.getElementById('btn-withdraw').onclick = () => {
                         const val = parseInt(document.getElementById('co-trans-amount').value);
-                        if (!val || val <= 0) return showGameAlert('Introduce cantidad válida', 'warning');
+                        if (!val || val <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
                         let r = CompanyModule.withdraw(val);
                         if (r) showGameAlert(r.message, r.success ? 'success' : 'error');
                         UI.updateJob(JobSystem);
@@ -9825,7 +10055,7 @@ const UI = {
                     };
                     document.getElementById('btn-deposit').onclick = () => {
                         const val = parseInt(document.getElementById('co-dep-amount').value);
-                        if (!val || val <= 0) return showGameAlert('Introduce cantidad válida', 'warning');
+                        if (!val || val <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
                         let r = CompanyModule.deposit(val);
                         if (r) showGameAlert(r.message, r.success ? 'success' : 'error');
                         UI.updateJob(JobSystem);
@@ -9834,7 +10064,7 @@ const UI = {
                     document.getElementById('btn-set-salary').onclick = () => {
                         const val = parseInt(document.getElementById('co-ceo-salary').value) || 0;
                         co.ceoSalary = val;
-                        showGameAlert(`Salario de CEO actualizado a ${formatCurrency(val)}`, 'success', '💼 Salario Actualizado');
+                        showGameAlert(t('comp_ceo_salary_updated_msg', { amount: formatCurrency(val) }), 'success', t('comp_salary_updated_title'));
                         UI.updateJob(JobSystem);
                     };
                     window.sellCompanyAction = async () => {
@@ -9867,23 +10097,23 @@ const UI = {
             let bdayMsg = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">¡FELIZ CUMPLEAÑOS!</h3>
+                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('happy_birthday')}</h3>
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Regalo Familiar</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('family_gift_label')}</div>
                     <div style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-bottom: 15px;">+300,00 €</div>
                     
                     <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                        <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">Cash Extra</span>
+                        <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('cash_extra_label')}</span>
                     </div>
                 </div>
 
                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                    Tu familia te envía un regalo por tu aniversario. ¡Disfrútalo!
+                    ${t('family_gift_msg')}
                 </p>
             `;
-            UI.showModal(' ', bdayMsg, [{ text: '🥰 ¡Gracias!', style: 'primary', fn: null }], true);
+            UI.showModal(' ', bdayMsg, [{ text: t('thanks_btn'), style: 'primary', fn: null }], true);
             UI.playCoinSound();
         }
 
@@ -9985,7 +10215,7 @@ function nextTurn() {
         expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
         GameState.cash -= expropriationAmount;
         expropriationTriggered = true;
-        expropriationMessage = `¡ATENCIÓN CIUDADANO!<br><br>El Comité Central ha detectado que posees una cantidad <strong>obscena</strong> de capital (${formatCurrency(GameState.cash + expropriationAmount)}).<br><br>En nombre de la <strong>igualdad social</strong>, procedemos a <strong>redistribuir el 90%</strong> (${formatCurrency(expropriationAmount)}) entre... ehh... proyectos del partido.<br><br>🚩 ¡Viva la revolución!`;
+        expropriationMessage = t('event_communist_6m');
     }
     // Tier 3: 3 Million - 70% (ONCE)
     else if (GameState.cash >= 3000000 && !GameState.expropriation3MDone) {
@@ -9994,7 +10224,7 @@ function nextTurn() {
         GameState.cash -= expropriationAmount;
         GameState.expropriation3MDone = true;
         expropriationTriggered = true;
-        expropriationMessage = `Estimado "camarada"...<br><br>Hemos notado que tu cuenta bancaria parece la de un <strong>burgués capitalista</strong>. Esto no puede ser.<br><br>El Estado de Sergio ha aprobado una <strong>"contribución solidaria obligatoria"</strong> del 70% (${formatCurrency(expropriationAmount)}).<br><br>Tranquilo, lo usaremos para... cosas. Importantes. Probablemente.`;
+        expropriationMessage = t('event_communist_3m');
     }
     // Tier 2: 1 Million - 60% (ONCE)
     else if (GameState.cash >= 1000000 && !GameState.expropriation1MDone) {
@@ -10003,7 +10233,7 @@ function nextTurn() {
         GameState.cash -= expropriationAmount;
         GameState.expropriation1MDone = true;
         expropriationTriggered = true;
-        expropriationMessage = `¡Felicidades! Has alcanzado el <strong>millón de euros</strong>.<br><br>Lástima que en el Estado de Sergio eso sea considerado <strong>"riqueza indecente"</strong>.<br><br>Se te aplicará un <strong>"ajuste patrimonial"</strong> del 60% (${formatCurrency(expropriationAmount)}) para financiar... ehh... la nueva estatua de Sergio. Es muy grande.`;
+        expropriationMessage = t('event_communist_1m');
     }
     // Tier 1: 500k - 50% (ONCE)
     else if (GameState.cash >= 500000 && !GameState.expropriation500kDone) {
@@ -10012,7 +10242,7 @@ function nextTurn() {
         GameState.cash -= expropriationAmount;
         GameState.expropriation500kDone = true;
         expropriationTriggered = true;
-        expropriationMessage = `Lamentablemente en el juego de Sergio gobierna el <strong>comunismo</strong>... y piensa que tienes demasiado dinero.<br><br>El estado ha decidido <strong>expropiarte el 50%</strong> de tu dinero (${formatCurrency(expropriationAmount)}) para gastárselo en... bueno, que somos el estado no tenemos que darte explicaciones.`;
+        expropriationMessage = t('event_communist_500k');
     }
 
     // Show expropriation modal if triggered
@@ -10025,27 +10255,30 @@ function nextTurn() {
             let exproMsg = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">EXPROPIACIÓN ESTATAL</h3>
+                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('event_communist_title')}</h3>
                 </div>
 
                 <div style="background: linear-gradient(145deg, rgba(69, 10, 10, 0.8), rgba(30, 20, 20, 0.9)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">Impuesto Revolucionario (50%)</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('rev_tax_label')}</div>
                     <div style="font-size: 1.6rem; font-weight: 800; color: #f87171; margin-bottom: 15px;">-${formatCurrency(expropriationAmount)}</div>
                     
                     <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                        <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">"Por el Bien Común"</span>
+                        <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('common_good_label')}</span>
                     </div>
                 </div>
 
                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                    El Estado ha decidido que tenías demasiado dinero. Se han incautado de la mitad de tu efectivo para financiar infraestructuras... o eso dicen.
+                    ${t('state_expro_desc')}
+                </p>
+                <p style="text-align: center; color: #fbbf24; font-size: 0.9rem; margin-top: 15px; font-style: italic;">
+                    "${expropriationMessage}"
                 </p>
             `;
 
             UI.showModal(
                 ' ',
                 exproMsg,
-                [{ text: '😢 Entendido', style: 'danger', fn: null }],
+                [{ text: t('understood_sad'), style: 'danger', fn: null }],
                 true
             );
         }, 500);
@@ -10151,34 +10384,34 @@ function nextTurn() {
             const breakdown = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(248, 113, 113, 0.4));">📋</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">Declaración de la Renta</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">${t('tax_declaration')}</div>
                 </div>
                 
                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.5)); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                         <span style="font-size: 1.3rem;">📊</span>
-                        <span style="color: #38bdf8; font-weight: 700; font-size: 1rem;">Ingresos Año ${GameState.year - 1}</span>
+                        <span style="color: #38bdf8; font-weight: 700; font-size: 1rem;">${t('income_year')} ${GameState.year - 1}</span>
                     </div>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">💼</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">Salarios</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_salary')}</div>
                             <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.salary)}</div>
                         </div>
                         <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">🏠</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">Alquileres</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_rental')}</div>
                             <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.rental)}</div>
                         </div>
                         <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">📈</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">Bolsa</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_stocks')}</div>
                             <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.stocks)}</div>
                         </div>
                         <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">🏢</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">Empresa</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_company')}</div>
                             <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.company)}</div>
                         </div>
                     </div>
@@ -10186,37 +10419,37 @@ function nextTurn() {
                 
                 <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: center;">
                     <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 5px; padding: 0 20px;">
-                        <span>Ingresos Brutos:</span>
+                        <span>${t('gross_income')}:</span>
                         <span>${formatCurrency(totalIncome)}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #fbbf24; margin-bottom: 10px; padding: 0 20px;">
-                        <span>Gastos Deducibles (75%):</span>
+                        <span>${t('tax_expenses')} (75%):</span>
                         <span>-${formatCurrency(deductibleExpenses)}</span>
                     </div>
                     <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;"></div>
-                    <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 5px;">Base Imponible</div>
+                    <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 5px;">${t('taxable_base')}</div>
                     <div style="font-size: 1.5rem; color: #4ade80; font-weight: 800; text-shadow: 0 0 15px rgba(74, 222, 128, 0.3);">${formatCurrency(taxableBase)}</div>
-                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px;">Tramo: <span style="color: #facc15; font-weight: 600;">${(taxRate * 100).toFixed(0)}%</span></div>
+                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px;">${t('tax_bracket_label')} <span style="color: #facc15; font-weight: 600;">${(taxRate * 100).toFixed(0)}%</span></div>
                 </div>
                 
                 <div style="background: linear-gradient(145deg, rgba(248, 113, 113, 0.15), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(248, 113, 113, 0.4); border-radius: 12px; padding: 15px; text-align: center;">
-                    <div style="font-size: 0.8rem; color: #f87171; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">A Pagar</div>
+                    <div style="font-size: 0.8rem; color: #f87171; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">${t('to_pay')}</div>
                     <div style="font-size: 1.8rem; color: #f87171; font-weight: 800; text-shadow: 0 0 20px rgba(248, 113, 113, 0.4);">${formatCurrency(taxAmount)}</div>
                 </div>
             `;
 
             UI.showModal(
-                '📋 Renta Año ' + (GameState.year - 1),
+                `📋 ${t('tax_return_year')} ` + (GameState.year - 1),
                 breakdown,
                 [{
-                    text: '💸 Pagar Impuestos',
+                    text: `💸 ${t('pay_taxes')}`,
                     style: 'danger',
                     fn: () => {
                         // Show blocking confirmation first. Deduction happens AFTER accepting.
                         showGameAlert(
-                            `Has pagado ${formatCurrency(taxAmount)} en impuestos.`,
+                            t('tax_paid_msg', { amount: formatCurrency(taxAmount) }),
                             'warning',
-                            'Pago Realizado',
+                            t('tax_paid_title'),
                             () => {
                                 GameState.cash -= taxAmount;
                                 GameState.lifetimeStats.totalTaxesPaid += taxAmount;
@@ -10290,7 +10523,7 @@ function nextTurn() {
         if (nw >= m && !GameState.achievedMilestones.includes(m)) {
             GameState.achievedMilestones.push(m);
             UI.triggerConfetti();
-            UI.showToast('¡HITO DESBLOQUEADO!', `Has alcanzado tus primeros ${formatCurrency(m)} de Patrimonio.`, 'success');
+            UI.showToast(t('milestone_title'), t('milestone_msg', { amount: formatCurrency(m) }), 'success');
             // Add a small bonus? No, visual only for now.
         }
     });
@@ -10364,19 +10597,19 @@ function nextTurn() {
             `
             <div style="text-align: center;">
                 <div style="font-size: 3rem; margin-bottom: 15px;">💸</div>
-                <p style="color: #ef4444; font-weight: 700; font-size: 1.1rem; margin-bottom: 10px;">¡Tu saldo es negativo!</p>
+                <p style="color: #ef4444; font-weight: 700; font-size: 1.1rem; margin-bottom: 10px;">${t('bankruptcy_negative_balance')}</p>
                 <p style="color: #cbd5e1; margin-bottom: 15px;">
-                    Llevas <strong>${GameState.consecutiveBankruptcyTurns}/3</strong> avisos con deuda.
+                    ${t('bankruptcy_warnings', { count: GameState.consecutiveBankruptcyTurns })}
                     <br>
-                    Necesitas liquidez urgentemente. <strong>Vende cosas o se acabará el juego.</strong>
+                    ${t('bankruptcy_liquidity_req')}
                 </p>
                 <p style="color: #94a3b8; font-size: 0.9rem; font-style: italic;">
-                    "Si llegas a 3 avisos consecutivos, caerás en bancarrota."
+                    ${t('bankruptcy_consecutive_msg')}
                 </p>
             </div>
             `,
             'error',
-            '⚠️ ¡ALERTA DE QUIEBRA!'
+            t('bankruptcy_alert_title')
         );
     } else {
         // Reset counter if positive balance
@@ -10401,30 +10634,30 @@ function showBankruptcyModal() {
     const summary = `
                 <div style="text-align: center; padding: 15px; max-height: 75vh; overflow-y: auto;">
                     <div style="font-size: 3rem; margin-bottom: 10px;">💸☠️</div>
-                    <h2 style="color: #ef4444; margin: 0 0 10px 0; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 1px;">¡BANCARROTA!</h2>
+                    <h2 style="color: #ef4444; margin: 0 0 10px 0; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 1px;">${t('bankruptcy_title')}</h2>
                     
                     <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
                         <p style="color: #fca5a5; margin: 0 0 10px 0; font-size: 1rem; font-weight: 600;">
-                            Tus deudas te han consumido.
+                            ${t('bankruptcy_liquidity_out')}
                         </p>
                         <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">
-                            Has ignorado las advertencias de liquidez durante 3 meses consecutivos. El banco ha ejecutado el embargo de todos tus bienes.
+                            ${t('bankruptcy_seizure_msg')}
                         </p>
                     </div>
 
                     <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
                          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: #94a3b8;">Patrimonio Final:</span>
+                            <span style="color: #94a3b8;">${t('final_net_worth')}:</span>
                             <strong style="color: #f87171;">${formatCurrency(liquidationValue)}</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #94a3b8;">Deuda Total:</span>
+                            <span style="color: #94a3b8;">${t('total_debt')}:</span>
                             <strong style="color: #f87171;">-${formatCurrency(totalDebt)}</strong>
                         </div>
                     </div>
 
                     <p style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">
-                        "El mercado no perdona a quien no sabe gestionar su caja."
+                        ${t('bankruptcy_quote')}
                     </p>
                     
                     <button onclick="location.reload()" style="
@@ -10434,7 +10667,7 @@ function showBankruptcyModal() {
                         box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
                         width: 100%;
                     ">
-                        Intentarlo de Nuevo
+                        ${t('try_again_btn')}
                     </button>
                 </div>
     `;
@@ -10560,9 +10793,9 @@ try {
     };
 
     const initGame = () => {
-        console.log('DEBUG: initGame() CALLED');
         StockMarket.init();
         UI.render();
+        UI.setupLanguageSwitcher();
         setupEventListeners();
 
         // Sync Bottom Nav
@@ -10570,7 +10803,6 @@ try {
         document.querySelectorAll('.b-nav-item').forEach(btn => {
             btn.onclick = () => {
                 const view = btn.dataset.view;
-                console.log('DEBUG: Bottom Nav Clicked', view);
 
                 // LOCK BANK UNTIL UNLOCKED
                 if (view === 'bank' && !GameState.bankUnlocked) {
@@ -10669,10 +10901,10 @@ try {
                     <div class="slot-player">🎮 ${save.playerName}</div>
                     <div class="slot-details">
                         <span class="slot-money">💰 ${formatCurrency(save.cash)}</span>
-                        <span>📅 Año ${save.year}, Mes ${save.month}</span>
+                        <span>📅 ${t('year')} ${save.year}, ${t('month')} ${save.month}</span>
                     </div>
                     ${dateStr ? `<div class="slot-date">⏰ ${dateStr}</div>` : ''}
-                    <button class="btn-load-slot" data-key="${save.key}">▶️ Cargar</button>
+                    <button class="btn-load-slot" data-key="${save.key}">▶️ ${t('load_game_btn')}</button>
                 </div>
             `;
         };
@@ -10705,14 +10937,14 @@ try {
             </style>
             <div class="welcome-back-container">
                 <span class="welcome-icon">👋</span>
-                <h2 class="welcome-title">¡Bienvenido de nuevo!</h2>
-                <p class="welcome-subtitle">Selecciona una partida</p>
+                <h2 class="welcome-title">${t('welcome_back_title')}</h2>
+                <p class="welcome-subtitle">${t('welcome_back_subtitle')}</p>
                 <div class="saves-list">${allSaves.map(renderSaveSlot).join('')}</div>
-                <button id="btn-new-game-saved" class="btn-new-game">🔄 Nueva Partida</button>
+                <button id="btn-new-game-saved" class="btn-new-game">🔄 ${t('new_game_btn')}</button>
             </div>
         `;
 
-        UI.showModal('Bienvenido de nuevo', msg, [], true);
+        UI.showModal(t('welcome_back_title'), msg, [], true);
 
         document.querySelectorAll('.btn-load-slot').forEach(btn => {
             btn.onclick = () => {
@@ -10749,11 +10981,11 @@ try {
                 </style>
                 <div class="confirm-container">
                     <span class="confirm-icon">⚠️</span>
-                    <h2 class="confirm-title">Nueva Partida</h2>
-                    <p class="confirm-text">¿Estás seguro de que quieres iniciar una nueva partida?<br>Tu progreso no guardado se perderá.</p>
+                    <h2 class="confirm-title">${t('msg_new_game_title')}</h2>
+                    <p class="confirm-text">${t('msg_new_game_warning')}</p>
                     <div class="confirm-buttons">
-                        <button id="btn-confirm-cancel" class="btn-confirm-cancel">Cancelar</button>
-                        <button id="btn-confirm-action" class="btn-confirm-action">Confirmar</button>
+                        <button id="btn-confirm-cancel" class="btn-confirm-cancel">${t('cancel')}</button>
+                        <button id="btn-confirm-action" class="btn-confirm-action">${t('confirm')}</button>
                     </div>
                 </div>
             `;

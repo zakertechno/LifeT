@@ -47,10 +47,12 @@
                 <canvas id="modal-stock-chart" width="500" height="200"></canvas>
             </div>
             <div class="stock-fundamentals">
-                <div><small>Bº Por Acción (BPA)</small><br><span id="modal-stock-earnings"></span></div>
-                <div><small>Volatilidad</small><br><span id="modal-stock-volatility"></span></div>
-                <div><small>PER (Precio/Beneficio)</small><br><span id="modal-stock-per"></span></div>
-                <div><small>Tendencia</small><br><span id="modal-stock-trend"></span></div>
+                <div><small id="label-stock-eps">Bº Por Acción (BPA)</small><br><span id="modal-stock-earnings"></span>
+                </div>
+                <div><small id="label-stock-vol">Volatilidad</small><br><span id="modal-stock-volatility"></span></div>
+                <div><small id="label-stock-per">PER (Precio/Beneficio)</small><br><span id="modal-stock-per"></span>
+                </div>
+                <div><small id="label-stock-trend">Tendencia</small><br><span id="modal-stock-trend"></span></div>
             </div>
         </div>
     </div>
@@ -66,8 +68,9 @@
                 <div class="wizard-title-group">
                     <div class="wizard-icon">🚀</div>
                     <div>
-                        <h2 class="wizard-title">Lanzamiento de Venture</h2>
-                        <p class="wizard-subtitle">Diseña tu modelo de negocio y estrategia de mercado</p>
+                        <h2 id="wiz-main-title" class="wizard-title">Lanzamiento de Venture</h2>
+                        <p id="wiz-main-subtitle" class="wizard-subtitle">Diseña tu modelo de negocio y estrategia de
+                            mercado</p>
                     </div>
                 </div>
                 <span class="close wizard-close" id="close-wizard">&times;</span>
@@ -81,7 +84,7 @@
                     <div class="wizard-progress">
                         <div class="progress-step">
                             <div class="step-badge active">1</div>
-                            <span class="step-label active">Modelo</span>
+                            <span id="wiz-step-label-1" class="step-label active">Modelo</span>
                             <div class="step-line-container">
                                 <div id="wiz-step-ind-1" class="step-line-fill full"></div>
                             </div>
@@ -97,17 +100,17 @@
 
                     <!-- STEP 1: MODEL & CONCEPT -->
                     <div id="wizard-step-1" class="wizard-step active">
-                        <h3 class="step-header">
+                        <h3 id="wiz-step-1-header" class="step-header">
                             <span class="wiz-icon-lg">📋</span> Define tu Modelo de Negocio
                         </h3>
 
                         <div class="wiz-form-group">
-                            <label class="wiz-label">🏷️ Nombre Comercial</label>
+                            <label id="wiz-name-label" class="wiz-label">🏷️ Nombre Comercial</label>
                             <input type="text" id="wiz-name" class="wiz-input"
                                 placeholder="Ej. Nexus Innovations, Café Altura...">
                         </div>
 
-                        <p class="wiz-instruction-text">
+                        <p id="wiz-select-vehicle" class="wiz-instruction-text">
                             <span class="wiz-icon-md">🎯</span> Selecciona tu vehículo de inversión:
                         </p>
                         <div id="wiz-types-grid" class="wiz-cards-grid">
@@ -117,10 +120,10 @@
 
                     <!-- STEP 2: LOCATION STRATEGY -->
                     <div id="wizard-step-2" class="wizard-step wiz-step-hidden">
-                        <h3 class="step-header">
+                        <h3 id="wiz-step-2-header" class="step-header">
                             <span class="wiz-icon-lg">📍</span> Estrategia de Ubicación (HQ)
                         </h3>
-                        <p class="wiz-instruction-text">Elige donde establecer tu
+                        <p id="wiz-select-location" class="wiz-instruction-text">Elige donde establecer tu
                             sede. El tráfico determina tu techo de ingresos inicial.</p>
 
                         <div id="wiz-loc-grid" class="wiz-cards-grid loc-grid">
@@ -130,36 +133,36 @@
 
                     <!-- MOBILE NAVIGATION BUTTONS -->
                     <div id="mobile-wiz-buttons" class="mobile-wiz-buttons wiz-step-hidden">
-                        <button id="btn-wiz-back-mobile" class="btn-wiz-back">← Atrás</button>
-                        <button id="btn-wiz-next-mobile" class="btn-wiz-next">Siguiente ➡️</button>
+                        <button id="btn-wiz-back-mobile" class="btn-wiz-back">← </button>
+                        <button id="btn-wiz-next-mobile" class="btn-wiz-next"> </button>
                     </div>
 
                 </div>
 
                 <!-- Sidebar: Investment Summary -->
                 <div class="wizard-sidebar">
-                    <h4 class="sidebar-title">
+                    <h4 id="wiz-sidebar-title" class="sidebar-title">
                         <span class="wiz-icon-md">💰</span> Resumen de Capital
                     </h4>
 
                     <div class="cash-display-card">
-                        <span class="cash-label">Capital Disponible</span>
+                        <span id="wiz-cash-label" class="cash-label">Capital Disponible</span>
                         <strong id="wiz-current-cash" class="cash-value">0 €</strong>
                     </div>
 
                     <div class="wizard-sidebar-flex">
                         <div class="cost-breakdown-card">
                             <div class="cost-row">
-                                <span>🏢 Setup</span>
+                                <span id="wiz-label-setup">🏢 Setup</span>
                                 <span id="summ-setup-cost">0 €</span>
                             </div>
                             <div class="cost-row">
-                                <span>🏠 Alquiler (Mes 1)</span>
+                                <span id="wiz-label-rent">🏠 Alquiler (Mes 1)</span>
                                 <span id="summ-rent-cost">0 €</span>
                             </div>
                             <div class="cost-divider"></div>
                             <div class="total-row">
-                                <span>💸 Total Inversión</span>
+                                <span id="wiz-label-total">💸 Total Inversión</span>
                                 <span id="wiz-total-cost">0 €</span>
                             </div>
                         </div>
@@ -169,8 +172,8 @@
                     </div>
 
                     <div class="wiz-actions">
-                        <button id="btn-wiz-back" class="btn-wiz-back">← Atrás</button>
-                        <button id="btn-wiz-next" class="btn-wiz-next">Siguiente ➡️</button>
+                        <button id="btn-wiz-back" class="btn-wiz-back">← </button>
+                        <button id="btn-wiz-next" class="btn-wiz-next"> </button>
                     </div>
                 </div>
             </div>
@@ -190,15 +193,23 @@
                 </div>
             </button>
 
-            <h1 class="game-title-main">
+            <h1 id="header-game-title" class="game-title-main">
                 🎮 El Juego de Sergio 🎮
             </h1>
 
-            <button id="desktop-save-btn" class="save-btn desktop-only-btn desktop-btn-right"
-                onclick="PersistenceModule.showSaveModal()">
-                <span>💾</span>
-                <span>Guardar</span>
-            </button>
+            <div class="desktop-btn-right-group">
+                <button id="lang-switch-btn" class="save-btn desktop-only-btn"
+                    style="background: rgba(255, 255, 255, 0.1);">
+                    <span>🇪🇸</span>
+                    <span>ES</span>
+                </button>
+
+                <button id="desktop-save-btn" class="save-btn desktop-only-btn"
+                    onclick="PersistenceModule.showSaveModal()">
+                    <span>💾</span>
+                    <span id="label-save-desktop">Guardar</span>
+                </button>
+            </div>
         </div>
 
         <header class="app-header">
@@ -206,7 +217,7 @@
             <div class="header-left">
                 <button class="save-btn" onclick="PersistenceModule.showSaveModal()">
                     <span>💾</span>
-                    <span>Guardar</span>
+                    <span id="label-save-mobile">Guardar</span>
                 </button>
                 <div class="home-btn"
                     onclick="document.querySelector('.nav-btn[data-view=&quot;dashboard&quot;]').click()">
@@ -218,7 +229,7 @@
             <!-- CENTER: Next Turn Button -->
             <div class="header-center">
                 <button id="next-turn-btn" class="btn-premium-3d">
-                    ⚡ Siguiente Mes →
+                    <span id="label-next-month">⚡ Siguiente Mes →</span>
                 </button>
             </div>
 
@@ -238,88 +249,91 @@
         <nav id="bottom-nav">
             <button class="b-nav-item" data-view="education">
                 <span class="icon">🎓</span>
-                <span class="label">Formación</span>
+                <span id="nav-label-education" class="label">Educación</span>
             </button>
             <button class="b-nav-item" data-view="lifestyle">
-                <span class="icon">💸</span>
-                <span class="label">Gastos</span>
+                <span class="icon">🏠</span>
+                <span id="nav-label-lifestyle" class="label">Vivienda</span>
             </button>
             <button class="b-nav-item" data-view="job">
                 <span class="icon">💼</span>
-                <span class="label">Trabajo</span>
+                <span id="nav-label-job" class="label">Trabajo</span>
             </button>
-            <button class="b-nav-item" data-view="bank">
-                <span class="icon">🏦</span>
-                <span class="label">Banco</span>
+            <button class="b-nav-item" data-view="dashboard">
+                <span class="icon">📊</span>
+                <span id="nav-label-dashboard" class="label">Patrimonio</span>
             </button>
             <button class="b-nav-item" data-view="real-estate">
                 <span class="icon">🏘️</span>
-                <span class="label">Inmuebles</span>
+                <span id="nav-label-real-estate" class="label">Inmuebles</span>
             </button>
             <button class="b-nav-item" data-view="market">
                 <span class="icon">📈</span>
-                <span class="label">Bolsa</span>
+                <span id="nav-label-market" class="label">Bolsa</span>
             </button>
         </nav>
 
         <main>
             <nav id="main-nav" class="desktop-nav">
-                <button class="nav-btn active" data-view="dashboard">📊 Resumen</button>
-                <button class="nav-btn" data-view="education">🎓 Formación</button>
-                <button class="nav-btn" data-view="lifestyle">💸 Gastos</button>
-                <button class="nav-btn" data-view="job">💼 Empleo</button>
-                <button class="nav-btn" data-view="bank">🏦 Banco</button>
-                <button class="nav-btn" data-view="real-estate">🏘️ Inmobiliaria</button>
-                <button class="nav-btn" data-view="market">📈 Bolsa</button>
+                <button class="nav-btn active" data-view="dashboard"><span id="d-nav-label-dashboard">📊
+                        Resumen</span></button>
+                <button class="nav-btn" data-view="education"><span id="d-nav-label-education">🎓
+                        Formación</span></button>
+                <button class="nav-btn" data-view="lifestyle"><span id="d-nav-label-lifestyle">💸 Gastos</span></button>
+                <button class="nav-btn" data-view="job"><span id="d-nav-label-job">💼 Empleo</span></button>
+                <button class="nav-btn" data-view="bank"><span id="d-nav-label-bank">🏦 Banco</span></button>
+                <button class="nav-btn" data-view="real-estate"><span id="d-nav-label-real-estate">🏘️
+                        Inmobiliaria</span></button>
+                <button class="nav-btn" data-view="market"><span id="d-nav-label-market">📈 Bolsa</span></button>
             </nav>
 
             <section id="view-container">
                 <!-- Views will be rendered here -->
                 <div id="dashboard-view" class="view active">
-                    <h2>Resumen Financiero</h2>
+                    <h2 id="dashboard-title">Resumen Financiero</h2>
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <h3>Patrimonio Neto</h3>
+                            <h3 id="label-net-worth">Patrimonio Neto</h3>
                             <p id="net-worth">---</p>
                         </div>
                         <div class="stat-card">
-                            <h3>Ingresos Mensuales</h3>
+                            <h3 id="label-monthly-income">Ingresos Mensuales</h3>
                             <p id="monthly-income">---</p>
                         </div>
                         <div class="stat-card">
-                            <h3>Gastos Mensuales</h3>
+                            <h3 id="label-monthly-expenses">Gastos Mensuales</h3>
                             <p id="monthly-expenses">---</p>
                         </div>
                         <div class="stat-card">
-                            <h3>Edad</h3>
+                            <h3 id="label-age">Edad</h3>
                             <p id="age-display">---</p>
                         </div>
                     </div>
 
                     <div class="chart-container">
-                        <h3>Evolución Patrimonio</h3>
+                        <h3 id="label-net-worth-chart">Evolución Patrimonio</h3>
                         <canvas id="net-worth-chart" width="800" height="300"></canvas>
                     </div>
                 </div>
 
                 <div id="market-view" class="view">
-                    <h2>Mercado de Valores</h2>
+                    <h2 id="market-title">Mercado de Valores</h2>
                     <div class="market-container">
                         <div class="stocks-list">
-                            <h3>Acciones Disponibles</h3>
+                            <h3 id="label-market-available">Acciones Disponibles</h3>
                             <div id="stocks-grid" class="stocks-grid">
                                 <!-- Stock Items injected here -->
                             </div>
                         </div>
 
                         <div class="portfolio-panel">
-                            <h3>Tu Portafolio</h3>
+                            <h3 id="label-market-portfolio">Tu Portafolio</h3>
                             <div id="portfolio-list">
-                                <p class="empty-msg">No tienes inversiones todavía.</p>
+                                <p id="market-empty-msg" class="empty-msg">No tienes inversiones todavía.</p>
                             </div>
 
                             <div class="trade-panel">
-                                <h3>Operar</h3>
+                                <h3 id="label-market-trade">Operar</h3>
                                 <div class="trade-controls">
                                     <select id="stock-select"></select>
                                     <input type="number" id="trade-amount" placeholder="Cantidad" min="1" value="1">
@@ -335,31 +349,33 @@
                 </div>
 
                 <div id="bank-view" class="view">
-                    <h2>Banco Central</h2>
+                    <h2 id="view-bank-title">Banco Central</h2>
                     <div class="bank-container">
                         <div class="loans-panel">
-                            <h3>Mis Préstamos</h3>
+                            <h3 id="label-bank-loans">Mis Préstamos</h3>
                             <div id="active-loans-list">
                                 <!-- Loans injected here -->
                             </div>
                         </div>
 
                         <div class="new-loan-panel">
-                            <h3>Solicitar Préstamo Personal</h3>
+                            <h3 id="label-bank-request">Solicitar Préstamo Personal</h3>
                             <div class="loan-calculator">
-                                <p>Límite estimado: <span id="loan-limit" class="highlight">0 €</span></p>
+                                <p><span id="label-bank-limit">Límite estimado:</span> <span id="loan-limit"
+                                        class="highlight">0 €</span></p>
                                 <div class="form-group">
-                                    <label>Cantidad:</label>
+                                    <label id="label-bank-amt">Cantidad:</label>
                                     <input type="number" id="loan-amount" placeholder="Ej. 5000">
                                 </div>
                                 <div class="form-group">
-                                    <label>Plazo (Años):</label>
+                                    <label id="label-bank-term">Plazo (Años):</label>
                                     <input type="range" id="loan-years" min="1" max="5" value="2">
                                     <span id="loan-years-display">2 años</span>
                                 </div>
                                 <div class="loan-summary">
-                                    <p>Interés: <span class="highlight">12%</span></p>
-                                    <p>Cuota estimada: <span id="loan-monthly-payment">0 €</span></p>
+                                    <p><span id="label-bank-int">Interés:</span> <span class="highlight">12%</span></p>
+                                    <p><span id="label-bank-quota">Cuota estimada:</span> <span
+                                            id="loan-monthly-payment">0 €</span></p>
                                 </div>
                                 <button id="btn-request-loan" class="btn-primary">Solicitar Dinero</button>
                                 <p id="bank-feedback"></p>
@@ -369,29 +385,29 @@
                 </div>
 
                 <div id="real-estate-view" class="view">
-                    <h2>Bienes Inmobiliarios</h2>
+                    <h2 id="view-re-title">Bienes Inmobiliarios</h2>
                     <div class="re-container">
                         <div class="listings-panel">
-                            <h3>Oportunidades de Mercado</h3>
+                            <h3 id="label-re-market">Oportunidades de Mercado</h3>
                             <div id="property-listings" class="listings-grid">
                                 <!-- Properties injected here -->
                             </div>
                         </div>
 
                         <div class="my-properties-panel">
-                            <h3>Mis Propiedades</h3>
+                            <h3 id="label-re-my">Mis Propiedades</h3>
                             <div id="my-properties-list">
-                                <p class="empty-msg">No tienes propiedades.</p>
+                                <p id="re-empty-msg" class="empty-msg">No tienes propiedades.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="job-view" class="view">
-                    <h2>Carrera Profesional</h2>
+                    <h2 id="view-job-title">Carrera Profesional</h2>
                     <div class="job-container">
                         <div class="current-job-panel">
-                            <h3>Puesto Actual</h3>
+                            <h3 id="label-job-current">Puesto Actual</h3>
                             <div class="job-card main-job">
                                 <h4 id="job-title-display">Reponedor</h4>
                                 <p class="job-salary">Salario: <span id="job-salary-display">1,100 €</span>/mes</p>
@@ -400,15 +416,15 @@
                             </div>
 
                             <div id="promotion-section" class="promotion-area">
-                                <h4>Próximo Ascenso Interno</h4>
-                                <p id="next-job-info">Cargando...</p>
-                                <button id="btn-promote" class="btn-primary" disabled>Solicitar Ascenso</button>
+                                <h4 id="label-job-promotion-title">Próximo Ascenso Interno</h4>
+                                <p id="next-job-info"></p>
+                                <button id="btn-promote" class="btn-primary" disabled></button>
                             </div>
                         </div>
 
                         <!-- NEW: Job Market -->
                         <div class="job-market-panel">
-                            <h3>Mercado Laboral (Otras Vacantes)</h3>
+                            <h3 id="label-job-market">Mercado Laboral (Otras Vacantes)</h3>
                             <div id="job-market-list" class="listings-grid">
                                 <!-- Job Offers injected here -->
                             </div>
@@ -417,17 +433,17 @@
                 </div>
 
                 <div id="education-view" class="view">
-                    <h2>Formación y Estudios</h2>
+                    <h2 id="view-edu-title">Formación y Estudios</h2>
                     <div class="education-container">
                         <div class="current-edu-panel">
-                            <h3>Tu Formación</h3>
+                            <h3 id="label-edu-current">Tu Formación</h3>
                             <div id="current-education-list">
                                 <!-- List injected here -->
-                                <div class="edu-item">Bachillerato</div>
+                                <div id="label-edu-bachillerato" class="edu-item">Bachillerato</div>
                             </div>
                         </div>
                         <div class="courses-panel">
-                            <h3>Cursos Disponibles</h3>
+                            <h3 id="label-edu-available">Cursos Disponibles</h3>
                             <div id="courses-list" class="listings-grid">
                                 <!-- Courses injected here -->
                             </div>

@@ -3618,6 +3618,47 @@
             filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.5));
         }
 
+        #top-bar-container {
+            position: relative;
+            text-align: center;
+            padding: 10px 0 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #top-bar-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0px;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+        }
+
+        /* Left/Right Button Groups */
+        /* Left/Right Button Groups */
+        .desktop-btn-left {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .desktop-btn-right-group {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Remove independent absolute positioning for individual buttons inside right group 
+           BUT maintain it for direct children if not grouped (backward compatibility) */
+        /* .desktop-btn-right rules removed as they are now handled by flex group context or empty */
+
         .wizard-title {
             margin: 0;
             font-size: 1.4rem;
@@ -4859,16 +4900,10 @@
 
         /* Desktop positioned buttons */
         .desktop-btn-left {
-            position: absolute;
-            left: 20px;
-            z-index: 10;
+            /* Handled by group wrapper or flex */
         }
 
-        .desktop-btn-right {
-            position: absolute;
-            right: 20px;
-            z-index: 10;
-        }
+        /* Note: desktop-btn-right removed here, handled above */
 
         #header-player-name-desktop {
             font-weight: 700;
