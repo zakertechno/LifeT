@@ -631,6 +631,25 @@ const PersistenceModule = {
         location.reload();
     },
 
+    // Exit Game
+    exitGame() {
+        UI.showModal(
+            t('exit_game_title') || 'Salir del Juego',
+            `<div style="text-align:center; padding: 10px;">
+                <p style="margin-bottom: 10px;">${t('exit_game_confirm') || '¿Seguro que quieres cerrar el juego?'}</p>
+                <p style="color: #ef4444; font-size: 0.9em;">⚠️ ${t('exit_game_warning') || 'El progreso no guardado se perderá.'}</p>
+            </div>`,
+            [
+                { text: t('cancel'), style: 'secondary', fn: null },
+                {
+                    text: t('exit_btn') || 'Cerrar Juego',
+                    style: 'danger',
+                    fn: () => { window.close(); }
+                }
+            ]
+        );
+    },
+
     // Show save slots modal for manual saving
     showSaveModal() {
         const saves = this.getAllSaves();
@@ -4042,6 +4061,7 @@ const TutorialSystem = {
                                                     statusCard.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                                     this.showTooltip(
+                                                        statusCard,
                                                         t('tutorial_general_status'),
                                                         t('tutorial_general_status_msg'),
                                                         t('go_to_finance'),
@@ -4328,6 +4348,7 @@ const TutorialSystem = {
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                 this.showTooltip(
+                    target,
                     t('tutorial_finance_movements'),
                     t('tutorial_finance_movements_msg'),
                     t('next'),
@@ -4343,6 +4364,7 @@ const TutorialSystem = {
                                 salary.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                 this.showTooltip(
+                                    salary,
                                     t('tutorial_finance_salary'),
                                     t('tutorial_finance_salary_msg'),
                                     t('next'),
@@ -4358,6 +4380,7 @@ const TutorialSystem = {
                                                 danger.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                                 this.showTooltip(
+                                                    danger,
                                                     t('tutorial_finance_danger'),
                                                     t('tutorial_finance_danger_msg'),
                                                     t('understood'),
@@ -4418,6 +4441,7 @@ const TutorialSystem = {
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                 this.showTooltip(
+                    target,
                     t('tutorial_mkt_infra'),
                     t('tutorial_mkt_infra_msg'),
                     t('next'),
@@ -4433,6 +4457,7 @@ const TutorialSystem = {
                                 channels.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                 this.showTooltip(
+                                    channels,
                                     t('tutorial_mkt_channels'),
                                     t('tutorial_mkt_channels_msg'),
                                     t('next'),
@@ -4448,6 +4473,7 @@ const TutorialSystem = {
                                                 analysis.scrollIntoView({ behavior: 'auto', block: 'center' });
 
                                                 this.showTooltip(
+                                                    analysis,
                                                     t('tutorial_mkt_analysis'),
                                                     t('tutorial_mkt_analysis_msg'),
                                                     t('understood'),
@@ -4770,7 +4796,7 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
             bgGradient: 'linear-gradient(145deg, rgba(250, 204, 21, 0.15), rgba(234, 179, 8, 0.05))',
             borderColor: 'rgba(250, 204, 21, 0.4)',
             glowColor: 'rgba(250, 204, 21, 0.3)',
-            title: 'Aviso',
+            title: t('warning') || 'Aviso',
             btnStyle: 'linear-gradient(135deg, #facc15, #eab308)'
         },
         error: {
@@ -4868,7 +4894,7 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transition: transform 0.2s, box-shadow 0.2s;
         ">
-            Entendido
+            ${t('understood')}
         </button>
     `;
 
@@ -9870,11 +9896,11 @@ const UI = {
                                     </div>
                                     
                                     <div class="strategy-grid">
-                                        <div id="comp-campaigns-section">
+                                        <div id="comp-marketing-channels-section">
                                             <h3 style="border-bottom:1px solid #334155; padding-bottom:10px; margin: 0 0 15px 0;">${t('marketing_campaigns')}</h3>
                                             <div class="options-grid">${mktOpts}</div>
                                         </div>
-                                        <div id="comp-traffic-card" class="strat-card">
+                                        <div id="comp-marketing-analysis-card" class="strat-card">
                                             <h4 class="staff-role-title">🔍 ${t('comp_impact_label')}</h4>
                                             <div class="analysis-box">
                                                 <div class="data-row">
@@ -11074,7 +11100,8 @@ try {
                         .custom-modal-box { 
                             max-width: 420px !important; 
                             border-radius: 24px !important;
-                            overflow: hidden !important;
+                            overflow-y: auto !important;
+                            max-height: 90vh !important;
                             border: 1px solid #334155 !important;
                         }
                         .profile-create-container {

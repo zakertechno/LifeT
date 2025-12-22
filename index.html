@@ -209,6 +209,12 @@
                     <span>💾</span>
                     <span id="label-save-desktop" data-i18n="save_game">Guardar</span>
                 </button>
+
+                <button id="desktop-exit-btn" class="save-btn desktop-only-btn"
+                    style="background: #ef4444; border-color: #dc2626; padding: 0; width: 42px; height: 42px; justify-content: center;"
+                    onclick="PersistenceModule.exitGame()">
+                    <span style="color: white; font-weight: 800; font-size: 1.2rem;">✕</span>
+                </button>
             </div>
         </div>
 
@@ -259,9 +265,9 @@
                 <span class="icon">💼</span>
                 <span id="nav-label-job" class="label">Trabajo</span>
             </button>
-            <button class="b-nav-item" data-view="dashboard">
-                <span class="icon">📊</span>
-                <span id="nav-label-dashboard" class="label">Patrimonio</span>
+            <button class="b-nav-item" data-view="bank">
+                <span class="icon">🏦</span>
+                <span id="nav-label-bank" class="label">Banco</span>
             </button>
             <button class="b-nav-item" data-view="real-estate">
                 <span class="icon">🏘️</span>
@@ -467,16 +473,13 @@
 
     <!-- Twemoji Initialization - Only on Windows/Linux (Mac uses native Apple emojis) -->
     <script>
-        // Detect if NOT on macOS - only use Twemoji on Windows/Linux
-        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 ||
-            navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
-
-        if (!isMac && typeof twemoji !== 'undefined') {
-            // Parse initial document (Windows/Linux only)
+        // Use local Twemoji icons for consistent cross-platform look
+        if (typeof twemoji !== 'undefined') {
+            // Parse initial document
             twemoji.parse(document.body, {
-                folder: '',
-                ext: '.svg',
-                base: 'assets/emoji/'
+                folder: 'emoji', // Relative to 'base'
+                ext: '.png',
+                base: 'assets/'  // Result: assets/emoji/
             });
 
             // Re-parse on DOM changes (for dynamic content)
@@ -485,9 +488,9 @@
                     mutation.addedNodes.forEach((node) => {
                         if (node.nodeType === 1) {
                             twemoji.parse(node, {
-                                folder: '',
-                                ext: '.svg',
-                                base: 'assets/emoji/'
+                                folder: 'emoji',
+                                ext: '.png',
+                                base: 'assets/'
                             });
                         }
                     });
