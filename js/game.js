@@ -10808,7 +10808,7 @@ try {
                 if (view === 'bank' && !GameState.bankUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
-                        '🔒 Acceso Restringido.<br>Disponible próximamente tras avanzar en el juego.',
+                        `${t('access_restricted')}<br>${t('access_restricted_bank')}`,
                         'warning',
                         null,
                         () => UI.showView('dashboard'),
@@ -10821,7 +10821,7 @@ try {
                 if (view === 'market' && !GameState.stockUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
-                        '🔒 Acceso Restringido.<br>Necesitas un patrimonio de 30.000€ para operar en Bolsa.',
+                        `${t('access_restricted')}<br>${t('access_restricted_stock')}`,
                         'warning',
                         null,
                         () => UI.showView('dashboard'),
@@ -10844,7 +10844,7 @@ try {
                 if (view === 'bank' && !GameState.bankUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
-                        '🔒 Acceso Restringido.<br>Disponible próximamente tras avanzar en el juego.',
+                        `${t('access_restricted')}<br>${t('access_restricted_bank')}`,
                         'warning',
                         null,
                         () => UI.showView('dashboard'),
@@ -10857,7 +10857,7 @@ try {
                 if (view === 'market' && !GameState.stockUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
-                        '🔒 Acceso Restringido.<br>Necesitas un patrimonio de 30.000€ para operar en Bolsa.',
+                        `${t('access_restricted')}<br>${t('access_restricted_stock')}`,
                         'warning',
                         null,
                         () => UI.showView('dashboard'),
