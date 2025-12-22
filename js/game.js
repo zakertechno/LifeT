@@ -5179,12 +5179,12 @@ const UI = {
                 </div>
                 <div class="metric-card cash" style="flex:1.5; min-width: 200px; background: linear-gradient(145deg, rgba(34, 197, 94, 0.1), rgba(74, 222, 128, 0.05)); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
                     <div style="font-size: 2.5rem; margin-bottom: 8px; filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.4));">💵</div>
-                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Caja (Efectivo)</span>
+                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('cash_box')}</span>
                     <span style="font-size:1.8rem; font-weight:800; color:#4ade80; text-shadow: 0 0 20px rgba(34, 197, 94, 0.3);">${formatCurrency(cash)}</span>
                 </div>
                 <div class="metric-card monthly-flow" style="flex:1; min-width: 160px; background: linear-gradient(145deg, ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)' : 'rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05)'}); border: 1px solid ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; border-radius: 16px; padding: 20px; text-align: center;">
                     <div style="font-size: 2.5rem; margin-bottom: 8px; filter: drop-shadow(0 0 15px ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.4)' : 'rgba(248, 113, 113, 0.4)'});">${monthlyFlow >= 0 ? '📈' : '📉'}</div>
-                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Flujo Mensual</span>
+                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('monthly_flow')}</span>
                     <span style="font-size:1.5rem; font-weight:800; color:${monthlyFlow >= 0 ? '#4ade80' : '#f87171'}; text-shadow: 0 0 15px ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};">${monthlyFlow >= 0 ? '+' : ''}${formatCurrency(monthlyFlow)}</span>
                     <div style="margin-top: 10px; font-size: 0.75rem; color: #64748b;">
                         <span style="color: #4ade80;">▲ ${formatCurrency(totalIncome)}</span> · 
@@ -5199,12 +5199,12 @@ const UI = {
 
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; margin-bottom:20px; padding-bottom:15px;">
                         <h3 style="margin:0; color:#cbd5e1; font-size:1.1rem; display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 1.3rem;">📈</span> Evolución
+                            <span style="font-size: 1.3rem;">📈</span> ${t('financial_history')}
                         </h3>
                         <div style="display:flex; gap:5px; background: #0f172a; padding: 4px; border-radius: 8px;">
-                            <button class="btn-filter ${UI.chartTimeframe === 6 ? 'active' : ''}" onclick="UI.chartTimeframe=6; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 6 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">6M</button>
-                            <button class="btn-filter ${UI.chartTimeframe === 24 ? 'active' : ''}" onclick="UI.chartTimeframe=24; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 24 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">2A</button>
-                            <button class="btn-filter ${UI.chartTimeframe === 999 ? 'active' : ''}" onclick="UI.chartTimeframe=999; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 999 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">MAX</button>
+                            <button class="btn-filter ${UI.chartTimeframe === 6 ? 'active' : ''}" onclick="UI.chartTimeframe=6; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 6 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">${t('chart_timeframe_6m')}</button>
+                            <button class="btn-filter ${UI.chartTimeframe === 24 ? 'active' : ''}" onclick="UI.chartTimeframe=24; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 24 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">${t('chart_timeframe_2y')}</button>
+                            <button class="btn-filter ${UI.chartTimeframe === 999 ? 'active' : ''}" onclick="UI.chartTimeframe=999; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 999 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">${t('chart_timeframe_max')}</button>
                         </div>
                     </div>
                     <div style="height:300px; width:100%;">
@@ -5214,42 +5214,42 @@ const UI = {
                     <div style="display: flex; justify-content: center; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155;">
                         <div onclick="UI.toggleChartDataset('netWorth')" style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: ${UI.chartVisibleDatasets.netWorth ? '1' : '0.4'}; transition: opacity 0.2s;">
                             <div style="width: 12px; height: 12px; background: #facc15; border-radius: 50%; box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);"></div>
-                            <span style="color: #facc15; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.netWorth ? 'none' : 'line-through'};">Patrimonio</span>
+                            <span style="color: #facc15; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.netWorth ? 'none' : 'line-through'};">${t('chart_legend_networth')}</span>
                         </div>
                         <div onclick="UI.toggleChartDataset('cash')" style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: ${UI.chartVisibleDatasets.cash ? '1' : '0.4'}; transition: opacity 0.2s;">
                             <div style="width: 12px; height: 3px; background: #4ade80; border-radius: 2px; box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);"></div>
-                            <span style="color: #4ade80; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.cash ? 'none' : 'line-through'};">Efectivo</span>
+                            <span style="color: #4ade80; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.cash ? 'none' : 'line-through'};">${t('chart_legend_cash')}</span>
                         </div>
                         <div onclick="UI.toggleChartDataset('debt')" style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: ${UI.chartVisibleDatasets.debt ? '1' : '0.4'}; transition: opacity 0.2s;">
                             <div style="width: 12px; height: 3px; background: #f87171; border-radius: 2px; box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);"></div>
-                            <span style="color: #f87171; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.debt ? 'none' : 'line-through'};">Deuda</span>
+                            <span style="color: #f87171; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.debt ? 'none' : 'line-through'};">${t('chart_legend_debt')}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="dashboard-card" style="background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 16px; padding: 20px;">
                     <h3 style="margin-top:0; color:#cbd5e1; font-size:1.1rem; margin-bottom:20px; border-bottom:1px solid #334155; padding-bottom:15px; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.3rem;">📊</span> Desglose de Activos
+                        <span style="font-size: 1.3rem;">📊</span> ${t('asset_breakdown')}
                     </h3>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                         <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2);">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">💵</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Efectivo</div>
+                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('chart_legend_cash')}</div>
                             <div style="font-size:1.2rem; font-weight:800; color:#4ade80;">${formatCurrency(cash)}</div>
                         </div>
                         <div style="background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2);">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">📈</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Bolsa</div>
+                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('stocks')}</div>
                             <div style="font-size:1.2rem; font-weight:800; color:#38bdf8;">${formatCurrency(stocksVal)}</div>
                         </div>
                         <div style="background: linear-gradient(145deg, rgba(168, 85, 247, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(168, 85, 247, 0.2);">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">🏠</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Inmobiliario</div>
+                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('nav_real_estate')}</div>
                             <div style="font-size:1.2rem; font-weight:800; color:#a855f7;">${formatCurrency(reEquity)}</div>
                         </div>
                         <div style="background: linear-gradient(145deg, rgba(251, 146, 60, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(251, 146, 60, 0.2);">
                             <div style="font-size: 1.5rem; margin-bottom: 5px;">🏢</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Empresas</div>
+                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('company_title')}</div>
                             <div style="font-size:1.2rem; font-weight:800; color:#fb923c;">${companyCount}</div>
                         </div>
                     </div>
@@ -5311,14 +5311,14 @@ const UI = {
         container.innerHTML = `
                     <div class="dashboard-container">
                         <div class="section-header">
-                            <h2>Mercado de Valores</h2>
+                            <h2>${t('stock_market')}</h2>
                             <span style="color:#94a3b8; font-size:0.9rem;">IBEX 35</span>
                         </div>
 
                         <!-- LIMIT ALERT MOCKUP -->
                         <div style="margin-bottom: 20px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 15px;">
                              <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
-                                <span style="color:#94a3b8; font-size:0.85rem;">Límite de Cartera (Según Vivienda)</span>
+                                <span style="color:#94a3b8; font-size:0.85rem;">${t('portfolio_limit')}</span>
                                 <span style="color:${isLimitReached ? '#f87171' : '#cbd5e1'}; font-weight:700; font-size:0.9rem;">
                                     ${formatCurrency(portValue)} / ${limitDisp}
                                 </span>
@@ -5326,33 +5326,33 @@ const UI = {
                             <div style="background:#1e293b; height:8px; border-radius:4px; overflow:hidden;">
                                 <div style="width:${limitPct}%; height:100%; background:${isLimitReached ? '#f87171' : '#38bdf8'}; transition: width 0.3s;"></div>
                             </div>
-                            ${isLimitReached ? '<div style="color:#f87171; font-size:0.8rem; margin-top:5px;">⚠️ Has alcanzado tu límite de inversión. Mejora tu vivienda para invertir más.</div>' : ''}
+                            ${isLimitReached ? `<div style="color:#f87171; font-size:0.8rem; margin-top:5px;">⚠️ ${t('stock_limit_reached')}</div>` : ''}
                         </div>
 
                         <!-- MARKET HERO - Premium Design -->
                         <div class="market-hero-stats" style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
                             <div class="market-stat-card" style="flex:2; min-width: 180px; background: linear-gradient(145deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.05)); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));">📈</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Valor Cartera</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('portfolio_value')}</span>
                                 <span style="font-size:1.5rem; font-weight:800; color:#38bdf8; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);">${formatCurrency(portValue)}</span>
                             </div>
                             <div class="market-stat-card" style="flex:1.3; min-width: 150px; background: linear-gradient(145deg, ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)' : 'rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05)'}); border: 1px solid ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.4)' : 'rgba(248, 113, 113, 0.4)'});">${totalReturn >= 0 ? '💰' : '📉'}</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Retorno Total</span>
-                                <span style="font-size:1.3rem; font-weight:800; color:${returnClass}; text-shadow: 0 0 15px ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};">${returnDir}${formatCurrency(totalReturn)}</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('total_return')}</span>
+                                <span style="font-size:1.3rem; font-weight:800; color:${returnClass}; text-shadow: 0 0 15px ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};"> ${returnDir}${formatCurrency(totalReturn)}</span>
                             </div>
 
                             <div class="market-stat-card" style="flex:1; min-width: 140px; background: linear-gradient(145deg, ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)' : 'rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05)'}); border: 1px solid ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.4)' : 'rgba(248, 113, 113, 0.4)'});">📊</div>
-                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">Rentabilidad</span>
-                                <span style="font-size:1.3rem; font-weight:800; color:${returnClass}; text-shadow: 0 0 15px ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};">${costBasis > 0 ? (totalReturn / costBasis * 100).toFixed(2) : '0.00'}%</span>
+                                <span style="display:block; color:#94a3b8; font-size:0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('profitability')}</span>
+                                <span style="font-size:1.3rem; font-weight:800; color:${returnClass}; text-shadow: 0 0 15px ${totalReturn >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};"> ${costBasis > 0 ? (totalReturn / costBasis * 100).toFixed(2) : '0.00'}%</span>
                             </div>
                         </div>
 
                         <!-- TICKER TAPE / GRID -->
                         <div class="job-section-spacer">
-                            <h3 style="color:#cbd5e1; margin-bottom:15px;">📊 Cotizaciones</h3>
-                            <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:10px;">Toca para operar</p>
+                            <h3 style="color:#cbd5e1; margin-bottom:15px;">📊 ${t('quotes')}</h3>
+                            <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:10px;">${t('tap_to_trade')}</p>
                             <div class="market-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:10px;">
                                 ${stocks.map(stock => {
             const trendClass = stock.trend >= 0 ? 'rising' : 'falling';
@@ -5376,8 +5376,8 @@ const UI = {
 
                         <!-- POSITIONS CARDS (RESPONSIVE) -->
                          <div class="dashboard-card">
-                            <h3 style="margin-top:0; color:#cbd5e1; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">💼 Mis Posiciones</h3>
-                            ${portfolio.length === 0 ? '<p style="color:#64748b;">No hay posiciones abiertas.</p>' :
+                            <h3 style="margin-top:0; color:#cbd5e1; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">💼 ${t('my_positions')}</h3>
+                            ${portfolio.length === 0 ? `<p style="color:#64748b;">${t('no_positions')}</p>` :
                 `<div style="display:flex; flex-direction:column; gap:10px;">
                             ${portfolio.map(p => {
                     const s = StockMarket.getStock(p.symbol);
