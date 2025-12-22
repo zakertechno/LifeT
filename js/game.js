@@ -360,6 +360,12 @@ const ChartModule = {
     instance: null,
 
     drawChart(canvasId, history, visibility = { netWorth: true, cash: true, debt: true }) {
+        // Defensive check - if Chart.js failed to load, skip gracefully
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js not loaded - skipping chart rendering');
+            return;
+        }
+
         const ctx = document.getElementById(canvasId).getContext('2d');
 
         // Destroy previous to avoid overlay
@@ -393,7 +399,7 @@ const ChartModule = {
 
         if (visibility.cash) {
             datasets.push({
-                label: 'Efectivo',
+                label: t('chart_cash'),
                 data: history.cash,
                 borderColor: '#4ade80', // Green
                 backgroundColor: gradientCash,
@@ -407,7 +413,7 @@ const ChartModule = {
 
         if (visibility.debt) {
             datasets.push({
-                label: 'Deuda',
+                label: t('chart_debt'),
                 data: history.debt,
                 borderColor: '#f87171', // Red
                 borderWidth: 2,
@@ -461,6 +467,12 @@ const ChartModule = {
         });
     },
     drawStockChart(canvasId, stock, timeframe) {
+        // Defensive check - if Chart.js failed to load, skip gracefully
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js not loaded - skipping stock chart rendering');
+            return;
+        }
+
         const ctx = document.getElementById(canvasId).getContext('2d');
         if (this.instanceStock) {
             this.instanceStock.destroy();
@@ -539,7 +551,7 @@ const PersistenceModule = {
                         name: slot.name,
                         isAuto: slot.isAuto,
                         data: parsed,
-                        playerName: parsed.playerName || 'Desconocido',
+                        playerName: parsed.playerName || t('unknown'),
                         cash: parsed.cash || 0,
                         year: parsed.year || 1,
                         month: parsed.month || 1,
@@ -564,9 +576,9 @@ const PersistenceModule = {
             };
             const data = JSON.stringify(dataToSave);
             localStorage.setItem(slotKey, data);
-            return { success: true, message: 'Partida guardada correctamente.' };
+            return { success: true, message: t('msg_save_success') };
         } catch (e) {
-            return { success: false, message: 'Error al guardar: ' + e.message };
+            return { success: false, message: t('msg_save_error', { error: e.message }) };
         }
     },
 
@@ -574,7 +586,7 @@ const PersistenceModule = {
     loadFromSlot(slotKey) {
         try {
             const data = localStorage.getItem(slotKey);
-            if (!data) return { success: false, message: 'No hay partida en este slot.' };
+            if (!data) return { success: false, message: t('msg_load_no_save') };
             const loadedState = JSON.parse(data);
 
             // Restore language if saved
@@ -585,9 +597,9 @@ const PersistenceModule = {
             }
 
             Object.assign(GameState, loadedState);
-            return { success: true, message: `Bienvenido de nuevo, ${GameState.playerName}` };
+            return { success: true, message: t('welcome_back_title') + ', ' + GameState.playerName };
         } catch (e) {
-            return { success: false, message: 'Error al cargar: ' + e.message };
+            return { success: false, message: t('msg_load_error', { error: e.message }) };
         }
     },
 
@@ -739,7 +751,7 @@ const PersistenceModule = {
         // Use 'this.saveToSlot' was called above, so we know 'this' refers to PersistenceModule or we can use the global object if context is lost
         // But since we are inside an object method:
         document.querySelector('.custom-modal-overlay')?.remove();
-        UI.showToast(result.success ? '✅ Guardado' : '❌ Error', result.message, result.success ? 'success' : 'error');
+        UI.showToast(result.success ? t('msg_saved_title') : t('msg_error_title'), result.message, result.success ? 'success' : 'error');
     }
 };
 
@@ -986,7 +998,7 @@ const StockMarket = {
 
     buyStock(symbol, qty) {
         const stock = this.getStock(symbol);
-        if (!stock) return { success: false, message: 'Acción no encontrada' };
+        if (!stock) return { success: false, message: t('stock_not_found') };
 
         const cost = stock.price * qty;
 
@@ -1011,7 +1023,7 @@ const StockMarket = {
             return { success: false, message: `Esta compra superaría tu límite actual de ${formatCurrency(portfolioLimit)}.<br>Mejora tu nivel de vida para aumentar tu credibilidad financiera.` };
         }
 
-        if (GameState.cash < cost) return { success: false, message: 'Dinero insuficiente' };
+        if (GameState.cash < cost) return { success: false, message: t('stock_insufficient_funds') };
 
         GameState.cash -= cost;
         let pItem = GameState.inventory.stocks.find(s => s.symbol === symbol);
@@ -1027,9 +1039,9 @@ const StockMarket = {
 
     sellStock(symbol, qty) {
         const stock = this.getStock(symbol);
-        if (!stock) return { success: false, message: 'Acción no encontrada' };
+        if (!stock) return { success: false, message: t('stock_not_found') };
         let pItem = GameState.inventory.stocks.find(s => s.symbol === symbol);
-        if (!pItem || pItem.quantity < qty) return { success: false, message: 'No tienes suficientes acciones' };
+        if (!pItem || pItem.quantity < qty) return { success: false, message: t('stock_not_enough') };
 
         const saleValue = stock.price * qty;
         const purchaseCost = pItem.avgPrice * qty;
@@ -1182,7 +1194,7 @@ const Bank = {
         const monthlyPayment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -termMonths));
         const loan = {
             id: Date.now(),
-            type: isBusiness ? 'Crédito Empresarial' : 'Préstamo Personal',
+            type: isBusiness ? t('loan_type_business') : t('loan_type_personal'),
             principal: amount,
             termMonths: termMonths,
             remainingMonths: termMonths,
@@ -1196,7 +1208,7 @@ const Bank = {
     },
 
     takeLoan(amount, years) {
-        if (amount <= 0) return { success: false, message: 'La cantidad debe ser mayor a 0' };
+        if (amount <= 0) return { success: false, message: t('loan_amount_invalid') };
 
         const max = this.getMaxLoanAmount();
         // Exclude mortgages from personal credit limit check
@@ -1214,9 +1226,9 @@ const Bank = {
 
     payLoanPartial(loanId, amount) {
         const loan = GameState.loans.find(l => l.id === loanId);
-        if (!loan) return { success: false, message: 'Préstamo no encontrado' };
-        if (amount <= 0) return { success: false, message: 'Cantidad inválida' };
-        if (GameState.cash < amount) return { success: false, message: 'No tienes suficiente dinero' };
+        if (!loan) return { success: false, message: t('loan_not_found') };
+        if (amount <= 0) return { success: false, message: t('msg_amt_invalid') };
+        if (GameState.cash < amount) return { success: false, message: t('msg_not_enough_cash') };
         if (amount > loan.remainingBalance) amount = loan.remainingBalance;
 
         GameState.cash -= amount;
@@ -1226,7 +1238,7 @@ const Bank = {
             // Fully paid
             const idx = GameState.loans.indexOf(loan);
             GameState.loans.splice(idx, 1);
-            return { success: true, message: '¡Préstamo liquidado totalmente!' };
+            return { success: true, message: t('loan_paid_full') };
         } else {
             // Recalculate Quota (Reduce Quota, keep term)
             // Formula: P * r / (1 - (1+r)^-n)
@@ -1240,14 +1252,14 @@ const Bank = {
 
     payLoanTotally(loanId) {
         const loanIndex = GameState.loans.findIndex(l => l.id === loanId);
-        if (loanIndex === -1) return { success: false, message: 'Préstamo no encontrado' };
+        if (loanIndex === -1) return { success: false, message: t('loan_not_found') };
         const loan = GameState.loans[loanIndex];
         if (GameState.cash >= loan.remainingBalance) {
             GameState.cash -= loan.remainingBalance;
             GameState.loans.splice(loanIndex, 1);
-            return { success: true, message: 'Préstamo liquidado totalmente' };
+            return { success: true, message: t('loan_paid_full') };
         }
-        return { success: false, message: 'Dinero insuficiente para liquidar' };
+        return { success: false, message: t('loan_insufficient_funds') };
     },
     nextTurn() {
         let totalPaid = 0;
@@ -1688,15 +1700,15 @@ const EducationModule = {
     },
 
     startCourse(courseId) {
-        if (GameState.currentCourse) return { success: false, message: 'Ya estás estudiando.' };
+        if (GameState.currentCourse) return { success: false, message: t('edu_already_studying') };
         const course = this.courses.find(c => c.id === courseId);
         const cost = course.cost; // Changed from costYear to cost
-        if (GameState.cash < cost) return { success: false, message: 'No tienes dinero suficiente para la matrícula.' };
+        if (GameState.cash < cost) return { success: false, message: t('edu_no_funds') };
 
         // Strict Requirement Check
         if (course.required) {
             const hasReq = course.required.some(req => GameState.education.includes(req));
-            if (!hasReq) return { success: false, message: `Requisito no cumplido: Necesitas ${course.required.join(' o ')}.` };
+            if (!hasReq) return { success: false, message: t('edu_req_missing', { req: course.required.join(' ' + t('or') + ' ') }) };
         }
 
         GameState.cash -= cost;
@@ -1808,26 +1820,26 @@ const EducationModule = {
 const CompanyModule = {
     // Configuration
     businessTypes: {
-        'cafe': { name: 'Cafetería', cost: 50000, initialCash: 20000, baseDemand: 800, baseTicket: 5, cogsPct: 0.25, productivityPerStaff: 800, volatility: 0.05, tier: 1, baseWage: 1200, icon: '☕', baseRent: 1500 },
-        'retail_clothing': { name: 'Tienda de Ropa', cost: 50000, baseDemand: 100, baseTicket: 55, cogsPct: 0.4, productivityPerStaff: 120, volatility: 0.2, tier: 1, baseWage: 1200, icon: '👗', baseRent: 2500 },
-        'marketing_agency': { name: 'Agencia Marketing', cost: 250000, baseDemand: 8, baseTicket: 2000, cogsPct: 0.1, productivityPerStaff: 4, volatility: 0.3, tier: 1, baseWage: 2800, icon: '📈', baseRent: 4000 },
-        'tech_startup': { name: 'Startup SaaS', cost: 750000, baseDemand: 100, baseTicket: 100, cogsPct: 0.05, productivityPerStaff: 200, volatility: 0.6, tier: 2, baseWage: 3000, icon: '💻', baseRent: 2000 }
+        'cafe': { nameKey: 'biz_cafe', cost: 50000, initialCash: 20000, baseDemand: 800, baseTicket: 5, cogsPct: 0.25, productivityPerStaff: 800, volatility: 0.05, tier: 1, baseWage: 1200, icon: '☕', baseRent: 1500 },
+        'retail_clothing': { nameKey: 'biz_retail_clothing', cost: 50000, baseDemand: 100, baseTicket: 55, cogsPct: 0.4, productivityPerStaff: 120, volatility: 0.2, tier: 1, baseWage: 1200, icon: '👗', baseRent: 2500 },
+        'marketing_agency': { nameKey: 'biz_marketing_agency', cost: 250000, baseDemand: 8, baseTicket: 2000, cogsPct: 0.1, productivityPerStaff: 4, volatility: 0.3, tier: 1, baseWage: 2800, icon: '📈', baseRent: 4000 },
+        'tech_startup': { nameKey: 'biz_tech_startup', cost: 750000, baseDemand: 100, baseTicket: 100, cogsPct: 0.05, productivityPerStaff: 200, volatility: 0.6, tier: 2, baseWage: 3000, icon: '💻', baseRent: 2000 }
     },
     locations: {
-        'suburbs': { name: 'Afueras', rentMult: 0.5, trafficMult: 0.8, maxStaff: 10 },
-        'downtown': { name: 'Centro Ciudad', rentMult: 1.5, trafficMult: 1.0, maxStaff: 15 },
-        'business_district': { name: 'Distrito Financiero', rentMult: 3.0, trafficMult: 1.2, maxStaff: 20 }
+        'suburbs': { nameKey: 'loc_suburbs', rentMult: 0.5, trafficMult: 0.8, maxStaff: 10 },
+        'downtown': { nameKey: 'loc_downtown', rentMult: 1.5, trafficMult: 1.0, maxStaff: 15 },
+        'business_district': { nameKey: 'loc_business_district', rentMult: 3.0, trafficMult: 1.2, maxStaff: 20 }
     },
     providers: {
-        'cheap': { name: 'Mayorista Low-Cost', priceMod: 0.8, quality: 0.4, reliability: 0.7 },
-        'standard': { name: 'Distribuidor Estándar', priceMod: 1.0, quality: 0.7, reliability: 0.9 },
-        'premium': { name: 'Importador Premium', priceMod: 1.4, quality: 1.0, reliability: 0.99 }
+        'cheap': { nameKey: 'prov_cheap', priceMod: 0.8, quality: 0.4, reliability: 0.7 },
+        'standard': { nameKey: 'prov_standard', priceMod: 1.0, quality: 0.7, reliability: 0.9 },
+        'premium': { nameKey: 'prov_premium', priceMod: 1.4, quality: 1.0, reliability: 0.99 }
     },
     marketingChannels: {
-        'none': { name: 'Sin Publicidad', cost: 0, impact: 1.0 },
-        'social': { name: 'Redes Sociales', cost: 500, impact: 1.3 },
-        'local': { name: 'Radio/Prensa Local', cost: 1500, impact: 1.6 },
-        'influencers': { name: 'Campaña Influencers', cost: 5000, impact: 2.2 }
+        'none': { nameKey: 'mkt_none', cost: 0, impact: 1.0 },
+        'social': { nameKey: 'mkt_social', cost: 500, impact: 1.3 },
+        'local': { nameKey: 'mkt_local', cost: 1500, impact: 1.6 },
+        'influencers': { nameKey: 'mkt_influencers', cost: 5000, impact: 2.2 }
     },
 
     // Logic
@@ -1842,9 +1854,9 @@ const CompanyModule = {
         GameState.company = {
             name: name,
             typeId: typeKey,
-            typeName: type.name,
+            typeName: t(type.nameKey),
             locationId: locKey,
-            locationName: loc.name,
+            locationName: t(loc.nameKey),
 
             // Financials
             cash: type.initialCash || 5000,
@@ -2083,7 +2095,7 @@ const CompanyModule = {
                     <div style="text-align: center; margin-bottom: 15px;">
                         <div style="font-size: 3rem; margin-bottom: 10px;">📢</div>
                         <p style="color: #cbd5e1; margin-bottom: 15px;">
-                            ${count === 1 ? 'Un empleado está descontento con su sueldo.' : 'Varios empleados exigen un aumento.'}
+                            ${count === 1 ? t('employee_unhappy_single') : t('employee_unhappy_multiple')}
                             <br>Si no lo subes, su motivación bajará.
                         </p>
                     </div>
@@ -2185,7 +2197,7 @@ const CompanyModule = {
                 emp.skill = Math.min(1.0, emp.skill + growth);
             } else {
                 // Expert endgame growth bonus
-                const growthRate = (emp.role === 'Experto') ? 0.006 : 0.005;
+                const growthRate = (emp.role === t('role_expert') || emp.role === 'Experto') ? 0.006 : 0.005;
                 emp.skill += growthRate;
             }
 
@@ -2208,7 +2220,7 @@ const CompanyModule = {
                 // Collect for modal
                 co.tempSalaryDemands.push({
                     name: emp.name,
-                    role: emp.role || 'Empleado',
+                    role: emp.role || t('role_employee'),
                     current: emp.salary,
                     required: emp.requiredWage
                 });
@@ -2377,7 +2389,7 @@ const CompanyModule = {
 
     withdraw(amount) {
         if (!GameState.company) return;
-        if (GameState.company.cash < amount) return { success: false, message: 'No hay suficiente caja.' };
+        if (GameState.company.cash < amount) return { success: false, message: t('company_no_cash') };
         GameState.company.cash -= amount;
         GameState.cash += amount;
 
@@ -2394,7 +2406,7 @@ const CompanyModule = {
 
     deposit(amount) {
         if (!GameState.company) return;
-        if (GameState.cash < amount) return { success: false, message: 'No tienes suficiente efectivo personal.' };
+        if (GameState.cash < amount) return { success: false, message: t('company_no_personal_cash') };
         GameState.cash -= amount;
         GameState.company.cash += amount;
         return { success: true, message: `Inyectados ${formatCurrency(amount)}.` };
@@ -2433,11 +2445,11 @@ TOTAL OPERACIÓN: ${formatCurrency(totalExit)}
 ¿Vender empresa y salir?`;
 
         const confirmed = await showGameConfirm(message, '💰 Oferta de Compra', t('sell'), t('cancel'));
-        if (!confirmed) return { success: false, message: 'Operación cancelada' };
+        if (!confirmed) return { success: false, message: t('company_op_cancelled') };
 
         GameState.cash += totalExit;
         GameState.company = null;
-        GameState.jobTitle = 'Ex-Fundador (Desempleado)';
+        GameState.jobTitle = t('job_ex_founder');
         GameState.salary = 0;
         JobSystem.currentCareerPath = 'none';
 
@@ -2497,20 +2509,26 @@ const BossMessages = {
 
 // --- GIGS POOL ---
 const GIGS_POOL = [
-    { title: 'Vender cromos', salary: 50, duration: 3, type: 'gig', desc: 'Pequeño trapicheo escolar.', reqMonths: 0, reqEdu: null },
-    { title: 'Ventas en Wallapop', salary: 120, duration: 4, type: 'gig', desc: 'Limpiando el trastero.', reqMonths: 0, reqEdu: null },
-    { title: 'Limpiar casas', salary: 200, duration: 5, type: 'gig', desc: 'Trabajo doméstico puntual.', reqMonths: 0, reqEdu: null },
-    { title: 'Pasear perros', salary: 150, duration: 3, type: 'gig', desc: 'Sacar a Rufo y sus amigos.', reqMonths: 0, reqEdu: null },
-    { title: 'Repartir publicidad', salary: 80, duration: 2, type: 'gig', desc: 'Buzoneo por el barrio.', reqMonths: 0, reqEdu: null },
-    { title: 'Cuidar niños', salary: 180, duration: 4, type: 'gig', desc: 'Babysitter de fin de semana.', reqMonths: 0, reqEdu: null },
-    { title: 'Ayudante mudanzas', salary: 220, duration: 2, type: 'gig', desc: 'Cargar cajas pesadas.', reqMonths: 0, reqEdu: null },
-    { title: 'Cliente misterioso', salary: 100, duration: 3, type: 'gig', desc: 'Evaluar tiendas locales.', reqMonths: 0, reqEdu: null },
-    { title: 'Transcribir audios', salary: 130, duration: 4, type: 'gig', desc: 'Trabajo freelance online.', reqMonths: 0, reqEdu: null },
-    { title: 'Encuestador', salary: 90, duration: 2, type: 'gig', desc: 'Hacer preguntas por la calle.', reqMonths: 0, reqEdu: null },
-    { title: 'DJ fiestas infantiles', salary: 160, duration: 3, type: 'gig', desc: 'Música y globoflexia.', reqMonths: 0, reqEdu: null },
-    { title: 'Monitor comedor', salary: 210, duration: 5, type: 'gig', desc: 'Vigilar el patio del cole.', reqMonths: 0, reqEdu: null },
-    { title: 'Cortar césped', salary: 140, duration: 4, type: 'gig', desc: 'Jardinería básica vecinal.', reqMonths: 0, reqEdu: null }
+    { title: 'Vender cromos', titleKey: 'gig_cromos', descKey: 'gig_cromos_desc', salary: 50, duration: 3, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Ventas en Wallapop', titleKey: 'gig_wallapop', descKey: 'gig_wallapop_desc', salary: 120, duration: 4, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Limpiar casas', titleKey: 'gig_limpiar', descKey: 'gig_limpiar_desc', salary: 200, duration: 5, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Pasear perros', titleKey: 'gig_perros', descKey: 'gig_perros_desc', salary: 150, duration: 3, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Repartir publicidad', titleKey: 'gig_publicidad', descKey: 'gig_publicidad_desc', salary: 80, duration: 2, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Cuidar niños', titleKey: 'gig_ninos', descKey: 'gig_ninos_desc', salary: 180, duration: 4, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Ayudante mudanzas', titleKey: 'gig_mudanzas', descKey: 'gig_mudanzas_desc', salary: 220, duration: 2, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Cliente misterioso', titleKey: 'gig_misterioso', descKey: 'gig_misterioso_desc', salary: 100, duration: 3, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Transcribir audios', titleKey: 'gig_transcribir', descKey: 'gig_transcribir_desc', salary: 130, duration: 4, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Encuestador', titleKey: 'gig_encuestador', descKey: 'gig_encuestador_desc', salary: 90, duration: 2, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'DJ fiestas infantiles', titleKey: 'gig_dj_fiestas', descKey: 'gig_dj_fiestas_desc', salary: 160, duration: 3, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Monitor comedor', titleKey: 'gig_monitor', descKey: 'gig_monitor_desc', salary: 210, duration: 5, type: 'gig', reqMonths: 0, reqEdu: null },
+    { title: 'Cortar césped', titleKey: 'gig_cesped', descKey: 'gig_cesped_desc', salary: 140, duration: 4, type: 'gig', reqMonths: 0, reqEdu: null }
 ];
+
+// Helper to get gig translation
+function getGigTranslation(gig) {
+    if (gig.titleKey) return t(gig.titleKey);
+    return gig.title;
+}
 
 const JobSystem = {
     careers: {
@@ -2708,10 +2726,10 @@ const JobSystem = {
                 UI.showModal(
                     ' ',
                     expiryMsg,
-                    [{ text: '🔍 Buscar Trabajo', style: 'primary', fn: () => UI.updateJob(this) }],
+                    [{ text: t('job_search_btn'), style: 'primary', fn: () => UI.updateJob(this) }],
                     true
                 );
-                GameState.jobTitle = 'Desempleado';
+                GameState.jobTitle = t('unemployed');
                 GameState.salary = 0;
                 GameState.jobType = 'unemployed';
                 this.currentCareerPath = 'none';
@@ -2818,10 +2836,10 @@ const JobSystem = {
 
         // NORMAL PROMOTION LOGIC
         const nextJob = this.getAvailablePromotions();
-        if (!nextJob) return { success: false, message: 'No hay ascensos disponibles.' };
+        if (!nextJob) return { success: false, message: t('job_no_promotions') };
 
         if (Math.floor(this.monthsInCurrentJob) < nextJob.reqMonths) {
-            return { success: false, message: `Faltan ${(nextJob.reqMonths - this.monthsInCurrentJob).toFixed(1)} meses de experiencia.` };
+            return { success: false, message: t('job_exp_missing', { months: (nextJob.reqMonths - this.monthsInCurrentJob).toFixed(1) }) };
         }
 
         if (nextJob.reqEdu) {
@@ -2966,7 +2984,7 @@ const JobSystem = {
             targetPath = 'temporary';
         }
 
-        if (!targetJob) return { success: false, message: 'Oferta no válida.' };
+        if (!targetJob) return { success: false, message: t('job_offer_invalid') };
         if (targetJob.reqEdu && !this.checkEducation(targetJob.reqEdu)) {
             return { success: false, message: `Requisito académico no cumplido: ${targetJob.reqEdu}` };
         }
@@ -2988,7 +3006,7 @@ const JobSystem = {
 
         if (GameState.company) {
             if (!force) {
-                return { success: false, requiresConfirmation: true, message: 'Cierre de empresa requerido.' };
+                return { success: false, requiresConfirmation: true, message: t('company_close_required') };
             }
             GameState.company = null;
         }
@@ -5312,7 +5330,7 @@ const UI = {
         if (actions.length === 0) {
             // Default close
             const btn = document.createElement('button');
-            btn.textContent = 'Cerrar';
+            btn.textContent = t('close');
             btn.className = 'btn-modal-action btn-secondary';
             btn.onclick = () => overlay.remove();
             footer.appendChild(btn);
@@ -5342,8 +5360,8 @@ const UI = {
 
     confirmModal(title, text, onConfirm) {
         this.showModal(title, text, [
-            { text: 'Cancelar', style: 'secondary', fn: null },
-            { text: 'Confirmar', style: 'primary', fn: onConfirm }
+            { text: t('cancel'), style: 'secondary', fn: null },
+            { text: t('confirm'), style: 'primary', fn: onConfirm }
         ]);
     },
     updateDashboard() {
@@ -10760,7 +10778,7 @@ try {
         const slider = document.getElementById('loan-years');
         if (slider) {
             slider.oninput = (e) => {
-                document.getElementById('loan-years-display').textContent = e.target.value + ' años';
+                document.getElementById('loan-years-display').textContent = t('loan_years_label', { years: e.target.value });
                 Bank.calculateLoanPayment();
             };
             document.getElementById('loan-amount').oninput = () => Bank.calculateLoanPayment();

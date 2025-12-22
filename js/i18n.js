@@ -24,6 +24,19 @@ const I18n = {
             accept: 'Aceptar',
             understood: 'Entendido',
             player_placeholder: 'Jugador',
+            default_player_name: 'Inversor',
+            unknown: 'Desconocido',
+
+            // Chart Labels
+            chart_start: 'Inicio',
+            chart_cash: 'Efectivo',
+            chart_debt: 'Deuda',
+
+            // Employee Roles
+            role_expert: 'Experto',
+            role_employee: 'Empleado',
+            employee_unhappy_single: 'Un empleado está descontento con su sueldo.',
+            employee_unhappy_multiple: 'Varios empleados exigen un aumento.',
 
             // Generic Messages
             msg_save_title: '💾 Guardar Partida',
@@ -53,6 +66,53 @@ const I18n = {
             repay_reduced_capital: 'Capital Reducido',
             repay_interests_down: 'Intereses ⬇️',
             repay_success_desc: 'Has reducido tu deuda principal. Tus cuotas mensuales bajarán.',
+
+            // Save/Load Messages
+            msg_save_success: 'Partida guardada correctamente.',
+            msg_save_error: 'Error al guardar: {error}',
+            msg_load_no_save: 'No hay partida en este slot.',
+            msg_load_error: 'Error al cargar: {error}',
+            msg_saved_title: '✅ Guardado',
+            msg_error_title: '❌ Error',
+
+            // Stock Market Messages
+            stock_not_found: 'Acción no encontrada',
+            stock_insufficient_funds: 'Dinero insuficiente',
+
+            // Bank/Loan Messages
+            loan_type_business: 'Crédito Empresarial',
+            loan_type_personal: 'Préstamo Personal',
+            loan_amount_invalid: 'La cantidad debe ser mayor a 0',
+            loan_not_found: 'Préstamo no encontrado',
+            loan_paid_full: '¡Préstamo liquidado totalmente!',
+            loan_insufficient_funds: 'Dinero insuficiente para liquidar',
+            loan_years_label: '{years} años',
+
+            // Education Messages
+            edu_already_studying: 'Ya estás estudiando.',
+            edu_no_funds: 'No tienes dinero suficiente para la matrícula.',
+            edu_req_missing: 'Requisito no cumplido: Necesitas {req}.',
+
+            // Company Messages
+            company_no_cash: 'No hay suficiente caja.',
+            company_no_personal_cash: 'No tienes suficiente efectivo personal.',
+            company_op_cancelled: 'Operación cancelada',
+            company_close_required: 'Cierre de empresa requerido.',
+
+            // Job Messages
+            job_no_promotions: 'No hay ascensos disponibles.',
+            job_exp_missing: 'Faltan {months} meses de experiencia.',
+            job_offer_invalid: 'Oferta no válida.',
+            job_ex_founder: 'Ex-Fundador (Desempleado)',
+            job_search_btn: '🔍 Buscar Trabajo',
+            job_temp_title: '¡TRABAJO TEMPORAL!',
+            job_contract_title: '¡CONTRATO FIRMADO!',
+            job_temp_subtitle: 'Trabajo Temporal',
+            job_contract_subtitle: 'Nueva Trayectoria Profesional',
+            job_duration_months: '⏱ {months} meses',
+
+            // Modal Buttons
+            btn_ok: 'OK',
 
             // Save/Load specific
             save_slot_1: 'Ranura 1',
@@ -259,6 +319,57 @@ const I18n = {
             edu_start_success: 'Has empezado: {name}',
             edu_complete_msg: 'Has finalizado tus estudios. Ahora puedes acceder a puestos de mayor responsabilidad y salario.',
             comp_create_invalid: 'Configuración inválida.',
+
+            // Company Business Types
+            biz_cafe: 'Cafetería',
+            biz_retail_clothing: 'Tienda de Ropa',
+            biz_marketing_agency: 'Agencia Marketing',
+            biz_tech_startup: 'Startup SaaS',
+
+            // Company Locations
+            loc_suburbs: 'Afueras',
+            loc_downtown: 'Centro Ciudad',
+            loc_business_district: 'Distrito Financiero',
+
+            // Company Providers
+            prov_cheap: 'Mayorista Low-Cost',
+            prov_standard: 'Distribuidor Estándar',
+            prov_premium: 'Importador Premium',
+
+            // Company Marketing Channels
+            mkt_none: 'Sin Publicidad',
+            mkt_social: 'Redes Sociales',
+            mkt_local: 'Radio/Prensa Local',
+            mkt_influencers: 'Campaña Influencers',
+
+            // Temporary Jobs (Gigs)
+            gig_cromos: 'Vender cromos',
+            gig_cromos_desc: 'Pequeño trapicheo escolar.',
+            gig_wallapop: 'Ventas en Wallapop',
+            gig_wallapop_desc: 'Limpiando el trastero.',
+            gig_limpiar: 'Limpiar casas',
+            gig_limpiar_desc: 'Trabajo doméstico puntual.',
+            gig_perros: 'Pasear perros',
+            gig_perros_desc: 'Sacar a Rufo y sus amigos.',
+            gig_publicidad: 'Repartir publicidad',
+            gig_publicidad_desc: 'Buzoneo por el barrio.',
+            gig_ninos: 'Cuidar niños',
+            gig_ninos_desc: 'Babysitter de fin de semana.',
+            gig_mudanzas: 'Ayudante mudanzas',
+            gig_mudanzas_desc: 'Cargar cajas pesadas.',
+            gig_misterioso: 'Cliente misterioso',
+            gig_misterioso_desc: 'Evaluar tiendas locales.',
+            gig_transcribir: 'Transcribir audios',
+            gig_transcribir_desc: 'Trabajo freelance online.',
+            gig_encuestador: 'Encuestador',
+            gig_encuestador_desc: 'Hacer preguntas por la calle.',
+            gig_dj_fiestas: 'DJ fiestas infantiles',
+            gig_dj_fiestas_desc: 'Música y globoflexia.',
+            gig_monitor: 'Monitor comedor',
+            gig_monitor_desc: 'Vigilar el patio del cole.',
+            gig_cesped: 'Cortar césped',
+            gig_cesped_desc: 'Jardinería básica vecinal.',
+
             demand_ignore: 'Ignorar por ahora',
             stock_buy_success: 'Has comprado {qty} acciones de {name}',
             stock_sell_success: 'Has vendido {qty} acciones de {name}',
@@ -1306,6 +1417,19 @@ const I18n = {
             accept: 'Accept',
             understood: 'Understood',
             player_placeholder: 'Player',
+            default_player_name: 'Investor',
+            unknown: 'Unknown',
+
+            // Chart Labels
+            chart_start: 'Start',
+            chart_cash: 'Cash',
+            chart_debt: 'Debt',
+
+            // Employee Roles
+            role_expert: 'Expert',
+            role_employee: 'Employee',
+            employee_unhappy_single: 'An employee is unhappy with their salary.',
+            employee_unhappy_multiple: 'Several employees are demanding a raise.',
 
             // Generic Messages
             msg_save_title: '💾 Save Game',
@@ -1335,6 +1459,53 @@ const I18n = {
             repay_reduced_capital: 'Reduced Capital',
             repay_interests_down: 'Interests ⬇️',
             repay_success_desc: 'You have reduced your principal debt. Your monthly payments will go down.',
+
+            // Save/Load Messages
+            msg_save_success: 'Game saved successfully.',
+            msg_save_error: 'Error saving: {error}',
+            msg_load_no_save: 'No save in this slot.',
+            msg_load_error: 'Error loading: {error}',
+            msg_saved_title: '✅ Saved',
+            msg_error_title: '❌ Error',
+
+            // Stock Market Messages
+            stock_not_found: 'Stock not found',
+            stock_insufficient_funds: 'Insufficient funds',
+
+            // Bank/Loan Messages
+            loan_type_business: 'Business Credit',
+            loan_type_personal: 'Personal Loan',
+            loan_amount_invalid: 'Amount must be greater than 0',
+            loan_not_found: 'Loan not found',
+            loan_paid_full: 'Loan fully paid off!',
+            loan_insufficient_funds: 'Insufficient funds to pay off',
+            loan_years_label: '{years} years',
+
+            // Education Messages
+            edu_already_studying: 'You are already studying.',
+            edu_no_funds: 'You don\'t have enough money for tuition.',
+            edu_req_missing: 'Requirement not met: You need {req}.',
+
+            // Company Messages
+            company_no_cash: 'Not enough company cash.',
+            company_no_personal_cash: 'You don\'t have enough personal cash.',
+            company_op_cancelled: 'Operation cancelled',
+            company_close_required: 'Company closure required.',
+
+            // Job Messages
+            job_no_promotions: 'No promotions available.',
+            job_exp_missing: 'Missing {months} months of experience.',
+            job_offer_invalid: 'Invalid offer.',
+            job_ex_founder: 'Ex-Founder (Unemployed)',
+            job_search_btn: '🔍 Find Work',
+            job_temp_title: 'TEMP JOB!',
+            job_contract_title: 'CONTRACT SIGNED!',
+            job_temp_subtitle: 'Temporary Work',
+            job_contract_subtitle: 'New Career Path',
+            job_duration_months: '⏱ {months} months',
+
+            // Modal Buttons
+            btn_ok: 'OK',
 
             // Save/Load specific
             save_slot_1: 'Slot 1',
@@ -1551,6 +1722,57 @@ const I18n = {
             edu_start_success: 'Enrolled in: {name}',
             edu_complete_msg: 'You have finished your studies. Now you can access positions of greater responsibility and salary.',
             comp_create_invalid: 'Invalid configuration.',
+
+            // Company Business Types
+            biz_cafe: 'Coffee Shop',
+            biz_retail_clothing: 'Clothing Store',
+            biz_marketing_agency: 'Marketing Agency',
+            biz_tech_startup: 'SaaS Startup',
+
+            // Company Locations
+            loc_suburbs: 'Suburbs',
+            loc_downtown: 'Downtown',
+            loc_business_district: 'Business District',
+
+            // Company Providers
+            prov_cheap: 'Low-Cost Wholesaler',
+            prov_standard: 'Standard Distributor',
+            prov_premium: 'Premium Importer',
+
+            // Company Marketing Channels
+            mkt_none: 'No Advertising',
+            mkt_social: 'Social Media',
+            mkt_local: 'Local Radio/Press',
+            mkt_influencers: 'Influencer Campaign',
+
+            // Temporary Jobs (Gigs)
+            gig_cromos: 'Sell trading cards',
+            gig_cromos_desc: 'Small schoolyard hustle.',
+            gig_wallapop: 'Sell on marketplace',
+            gig_wallapop_desc: 'Cleaning out the closet.',
+            gig_limpiar: 'House cleaning',
+            gig_limpiar_desc: 'One-time domestic work.',
+            gig_perros: 'Dog walking',
+            gig_perros_desc: 'Taking Fido and friends out.',
+            gig_publicidad: 'Flyer distribution',
+            gig_publicidad_desc: 'Leafleting the neighborhood.',
+            gig_ninos: 'Babysitting',
+            gig_ninos_desc: 'Weekend babysitter.',
+            gig_mudanzas: 'Moving helper',
+            gig_mudanzas_desc: 'Carrying heavy boxes.',
+            gig_misterioso: 'Mystery shopper',
+            gig_misterioso_desc: 'Evaluate local stores.',
+            gig_transcribir: 'Audio transcription',
+            gig_transcribir_desc: 'Online freelance work.',
+            gig_encuestador: 'Surveyor',
+            gig_encuestador_desc: 'Asking questions on the street.',
+            gig_dj_fiestas: 'Kids party DJ',
+            gig_dj_fiestas_desc: 'Music and balloon animals.',
+            gig_monitor: 'Lunch monitor',
+            gig_monitor_desc: 'Watching the school yard.',
+            gig_cesped: 'Lawn mowing',
+            gig_cesped_desc: 'Basic neighborhood gardening.',
+
             demand_ignore: 'Ignore for now',
             stock_buy_success: 'You have bought {qty} shares of {name}',
             stock_sell_success: 'You have sold {qty} shares of {name}',
@@ -2598,6 +2820,19 @@ const I18n = {
             accept: 'Akzeptieren',
             understood: 'Verstanden',
             player_placeholder: 'Spieler',
+            default_player_name: 'Investor',
+            unknown: 'Unbekannt',
+
+            // Chart Labels
+            chart_start: 'Start',
+            chart_cash: 'Bargeld',
+            chart_debt: 'Schulden',
+
+            // Employee Roles
+            role_expert: 'Experte',
+            role_employee: 'Mitarbeiter',
+            employee_unhappy_single: 'Ein Mitarbeiter ist mit seinem Gehalt unzufrieden.',
+            employee_unhappy_multiple: 'Mehrere Mitarbeiter fordern eine Gehaltserhöhung.',
 
             // Generic Messages
             msg_save_title: '💾 Spiel speichern',
@@ -2627,6 +2862,53 @@ const I18n = {
             repay_reduced_capital: 'Reduziertes Kapital',
             repay_interests_down: 'Zinsen ⬇️',
             repay_success_desc: 'Sie haben Ihre Kapitalschuld reduziert. Ihre monatlichen Raten werden sinken.',
+
+            // Save/Load Messages
+            msg_save_success: 'Spiel erfolgreich gespeichert.',
+            msg_save_error: 'Fehler beim Speichern: {error}',
+            msg_load_no_save: 'Kein Spielstand in diesem Slot.',
+            msg_load_error: 'Fehler beim Laden: {error}',
+            msg_saved_title: '✅ Gespeichert',
+            msg_error_title: '❌ Fehler',
+
+            // Stock Market Messages
+            stock_not_found: 'Aktie nicht gefunden',
+            stock_insufficient_funds: 'Nicht genügend Geld',
+
+            // Bank/Loan Messages
+            loan_type_business: 'Geschäftskredit',
+            loan_type_personal: 'Privatkredit',
+            loan_amount_invalid: 'Betrag muss größer als 0 sein',
+            loan_not_found: 'Kredit nicht gefunden',
+            loan_paid_full: 'Kredit vollständig abbezahlt!',
+            loan_insufficient_funds: 'Nicht genügend Geld zum Abbezahlen',
+            loan_years_label: '{years} Jahre',
+
+            // Education Messages
+            edu_already_studying: 'Sie studieren bereits.',
+            edu_no_funds: 'Sie haben nicht genügend Geld für die Studiengebühren.',
+            edu_req_missing: 'Voraussetzung nicht erfüllt: Sie benötigen {req}.',
+
+            // Company Messages
+            company_no_cash: 'Nicht genügend Firmenkasse.',
+            company_no_personal_cash: 'Sie haben nicht genügend persönliches Geld.',
+            company_op_cancelled: 'Vorgang abgebrochen',
+            company_close_required: 'Unternehmensschließung erforderlich.',
+
+            // Job Messages
+            job_no_promotions: 'Keine Beförderungen verfügbar.',
+            job_exp_missing: 'Es fehlen {months} Monate Erfahrung.',
+            job_offer_invalid: 'Ungültiges Angebot.',
+            job_ex_founder: 'Ex-Gründer (Arbeitslos)',
+            job_search_btn: '🔍 Arbeit suchen',
+            job_temp_title: 'ZEITARBEIT!',
+            job_contract_title: 'VERTRAG UNTERSCHRIEBEN!',
+            job_temp_subtitle: 'Zeitarbeit',
+            job_contract_subtitle: 'Neue Karriere',
+            job_duration_months: '⏱ {months} Monate',
+
+            // Modal Buttons
+            btn_ok: 'OK',
 
             // Save/Load specific
             save_slot_1: 'Slot 1',
@@ -2875,6 +3157,57 @@ const I18n = {
             edu_start_success: 'Eingeschrieben: {name}',
             edu_complete_msg: 'Du hast dein Studium abgeschlossen. Jetzt hast du Zugang zu Stellen mit mehr Verantwortung und Gehalt.',
             comp_create_invalid: 'Ungültige Konfiguration.',
+
+            // Company Business Types
+            biz_cafe: 'Café',
+            biz_retail_clothing: 'Bekleidungsgeschäft',
+            biz_marketing_agency: 'Marketing-Agentur',
+            biz_tech_startup: 'SaaS-Startup',
+
+            // Company Locations
+            loc_suburbs: 'Vorort',
+            loc_downtown: 'Innenstadt',
+            loc_business_district: 'Geschäftsviertel',
+
+            // Company Providers
+            prov_cheap: 'Billig-Großhändler',
+            prov_standard: 'Standard-Händler',
+            prov_premium: 'Premium-Importeur',
+
+            // Company Marketing Channels
+            mkt_none: 'Keine Werbung',
+            mkt_social: 'Soziale Medien',
+            mkt_local: 'Lokale Medien',
+            mkt_influencers: 'Influencer-Kampagne',
+
+            // Temporary Jobs (Gigs)
+            gig_cromos: 'Sammelkarten verkaufen',
+            gig_cromos_desc: 'Kleiner Schulhof-Handel.',
+            gig_wallapop: 'Online verkaufen',
+            gig_wallapop_desc: 'Den Keller aufräumen.',
+            gig_limpiar: 'Häuser putzen',
+            gig_limpiar_desc: 'Einmalige Hausarbeit.',
+            gig_perros: 'Hunde ausführen',
+            gig_perros_desc: 'Mit Bello und Freunden spazieren.',
+            gig_publicidad: 'Flyer verteilen',
+            gig_publicidad_desc: 'Werbung in der Nachbarschaft.',
+            gig_ninos: 'Babysitten',
+            gig_ninos_desc: 'Wochenend-Babysitter.',
+            gig_mudanzas: 'Umzugshelfer',
+            gig_mudanzas_desc: 'Schwere Kisten tragen.',
+            gig_misterioso: 'Testkäufer',
+            gig_misterioso_desc: 'Geschäfte bewerten.',
+            gig_transcribir: 'Audio transkribieren',
+            gig_transcribir_desc: 'Online-Freelance-Arbeit.',
+            gig_encuestador: 'Umfragen machen',
+            gig_encuestador_desc: 'Fragen auf der Straße stellen.',
+            gig_dj_fiestas: 'DJ Kinderfeste',
+            gig_dj_fiestas_desc: 'Musik und Ballontiere.',
+            gig_monitor: 'Pausenaufsicht',
+            gig_monitor_desc: 'Den Schulhof beaufsichtigen.',
+            gig_cesped: 'Rasen mähen',
+            gig_cesped_desc: 'Einfache Gartenarbeit.',
+
             demand_ignore: 'Vorerst ignorieren',
             stock_buy_success: 'Du hast {qty} Aktien von {name} gekauft',
             stock_sell_success: 'Du hast {qty} Aktien von {name} verkauft',
