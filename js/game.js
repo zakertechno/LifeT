@@ -5092,7 +5092,9 @@ const UI = {
             let next = 'es';
             if (current === 'es') next = 'en';
             else if (current === 'en') next = 'de';
-            else if (current === 'de') next = 'es';
+            else if (current === 'de') next = 'zh';
+            else if (current === 'zh') next = 'ru';
+            else if (current === 'ru') next = 'es';
 
             I18n.setLanguage(next);
             updateBtn();
