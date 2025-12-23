@@ -5152,7 +5152,7 @@ const UI = {
         // Navigation labels (Mobile)
         setT('nav-label-education', 'nav_education');
         setT('nav-label-market', 'nav_market');
-        setT('nav-label-lifestyle', 'nav_lifestyle');
+        setT('nav-label-lifestyle', 'nav_lifestyle_mobile');
         setT('nav-label-job', 'nav_job');
         setT('nav-label-dashboard', 'nav_dashboard');
         setT('nav-label-holdings', 'nav_holdings');

@@ -189,6 +189,7 @@ const I18n = {
             nav_job: 'Trabajo',
             nav_education: 'Educación',
             nav_lifestyle: 'Estilo de Vida',
+            nav_lifestyle_mobile: 'Gastos',
             nav_holdings: 'Empresas',
 
             // Restricted Access Warnings
@@ -280,7 +281,7 @@ const I18n = {
             asset_breakdown: 'Desglose de Activos',
             total_life_expenses: 'Gastos Totales de tu Vida',
             housing: 'Vivienda',
-            lifestyle: 'Estilo de Vida',
+            lifestyle: 'Gastos',
             education_label: 'Formación',
             total_expenses_label: 'Total Gastos',
             taxes_paid_title: 'Impuestos Pagados',
@@ -1685,6 +1686,7 @@ const I18n = {
             nav_job: 'Job',
             nav_education: 'Education',
             nav_lifestyle: 'Lifestyle',
+            nav_lifestyle_mobile: 'Expenses',
             nav_holdings: 'Companies',
 
             // Restricted Access Warnings
@@ -1787,7 +1789,7 @@ const I18n = {
             total_life_expenses: 'Total Living Expenses',
             housing: 'Housing',
             tier_abbr: 'Lv.',
-            lifestyle: 'Lifestyle',
+            lifestyle: 'Expenses',
             education_label: 'Education',
             total_expenses_label: 'Total Expenses',
             taxes_paid_title: 'Taxes Paid',
@@ -3213,6 +3215,7 @@ const I18n = {
             nav_job: 'Arbeit',
             nav_education: 'Bildung',
             nav_lifestyle: 'Lebensstil',
+            nav_lifestyle_mobile: 'Ausgaben',
             nav_holdings: 'Unternehmen',
 
             // Restricted Access Warnings
@@ -3326,7 +3329,7 @@ const I18n = {
             total_life_expenses: 'Gesamte Lebenshaltungskosten',
             housing: 'Wohnen',
             tier_abbr: 'St.',
-            lifestyle: 'Lebensstil',
+            lifestyle: 'Ausgaben',
             education_label: 'Bildung',
             total_expenses_label: 'Gesamtausgaben',
             taxes_paid_title: 'Gezahlte Steuern',
