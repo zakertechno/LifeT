@@ -5161,7 +5161,7 @@ const UI = {
         // Navigation labels (Desktop)
         setT('d-nav-label-dashboard', 'nav_dashboard', '📊 ');
         setT('d-nav-label-education', 'nav_education', '🎓 ');
-        setT('d-nav-label-lifestyle', 'nav_lifestyle', '🏘️ '); // Using lifestyle as Housing
+        setT('d-nav-label-lifestyle', 'nav_lifestyle', '💸 ');
         setT('d-nav-label-job', 'nav_job', '💼 ');
         setT('d-nav-label-bank', 'nav_bank', '🏦 ');
         setT('d-nav-label-real-estate', 'nav_real_estate', '🏘️ ');
