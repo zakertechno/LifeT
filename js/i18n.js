@@ -12,7 +12,7 @@ const I18n = {
         // ============================================
         es: {
             // General UI
-            game_title: 'El Juego de Sergio',
+            game_title: 'Life Inc.',
             next_month: 'Siguiente Mes',
             save_game: 'Guardar',
             load_game: 'Cargar',
@@ -1162,7 +1162,7 @@ const I18n = {
             job_tres_deporte_desc: 'En TRES DEPORTE no hay ascensos, pero puedes pedir aumento cada 2 meses.',
             endgame_death_title: 'MEMENTO MORI',
             endgame_congrats: '¡Impresionante carrera!',
-            endgame_thanks_msg: 'Gracias por jugar a "El Juego de Sergio".',
+            endgame_thanks_msg: 'Gracias por jugar a "Life Inc.".',
             endgame_income_title: 'Ingresos Totales',
             endgame_op_real_estate: 'Operaciones Inmobiliarias',
             re_buy_price: 'Compra',
@@ -1175,7 +1175,7 @@ const I18n = {
 
             // Events
             event_communist_title: 'EXPROPIACIÓN ESTATAL',
-            event_communist_500k: 'Lamentablemente en el juego de Sergio gobierna el comunismo... y piensa que tienes demasiado dinero. El estado ha decidido expropiarte el 50% de tu dinero.',
+            event_communist_500k: 'Lamentablemente en Life Inc. gobierna el comunismo... y piensa que tienes demasiado dinero. El estado ha decidido expropiarte el 50% de tu dinero.',
             event_communist_1m: 'Has alcanzado el millón de euros. Lástima que eso sea considerado "riqueza indecente". Se te aplicará un "ajuste patrimonial" del 60%.',
             event_communist_3m: 'Hemos notado que tu cuenta bancaria parece la de un burgués capitalista. Contribución solidaria obligatoria del 70%.',
             event_communist_6m: 'El Comité Central ha detectado que posees una cantidad obscena de capital. Redistribuimos el 90% en nombre de la igualdad social.',
@@ -1509,7 +1509,7 @@ const I18n = {
         // ============================================
         en: {
             // General UI
-            game_title: "Sergio's Game",
+            game_title: 'Life Inc.',
             next_month: 'Next Month',
             save_game: 'Save',
             load_game: 'Load',
@@ -3016,7 +3016,7 @@ const I18n = {
         // ============================================
         de: {
             // General UI
-            game_title: 'Sergios Spiel',
+            game_title: 'Life Inc.',
             next_month: 'Nächster Monat',
             save_game: 'Speichern',
             load_game: 'Laden',
