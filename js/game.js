@@ -1923,9 +1923,9 @@ const CompanyModule = {
         let nextLimit = 0;
         let baseCost = 0;
 
-        if (co.maxStaff === 5) { nextLimit = 10; baseCost = 15000; }
-        else if (co.maxStaff === 10) { nextLimit = 15; baseCost = 30000; }
-        else if (co.maxStaff === 15) { nextLimit = 20; baseCost = 60000; }
+        if (co.maxStaff === 5) { nextLimit = 10; baseCost = 45000; }
+        else if (co.maxStaff === 10) { nextLimit = 15; baseCost = 90000; }
+        else if (co.maxStaff === 15) { nextLimit = 20; baseCost = 180000; }
         else return { success: false, message: t('office_is_max') };
 
         // Ensure next limit doesn't exceed location max
@@ -2018,7 +2018,7 @@ const CompanyModule = {
         const co = GameState.ownedCompanies[index];
         if (!co) return { success: false, message: t('company_not_found') };
 
-        const valuation = Math.floor(co.baselineProfit * 12 * 5); // 5x Annual Profit
+        const valuation = Math.floor(co.baselineProfit * 12 * 3); // 3x Annual Profit
         const taxRate = 0.25;
         const taxes = Math.floor(valuation * taxRate);
         const netAmount = valuation - taxes;
@@ -2082,7 +2082,7 @@ const CompanyModule = {
                     modalTitle,
                     modalMsg,
                     [{
-                        text: t('try_again_btn'),
+                        text: t('manage_salaries_btn'),
                         style: 'primary',
                         fn: () => {
                             // Go to Staff Tab
@@ -2400,17 +2400,17 @@ const CompanyModule = {
         const liquidationCash = co.cash;
         const totalExit = valuation + liquidationCash;
 
-        const message = `Beneficio Anual: ${formatCurrency(annualProfit)}
-Multiplicador Mejoras: x${upgradeMult}
+        const message = `${t('sell_annual_profit')}: ${formatCurrency(annualProfit)}
+${t('sell_upgrade_mult')}: x${upgradeMult}
 
-Valoración: ${formatCurrency(valuation)}
-Caja Actual: ${formatCurrency(liquidationCash)}
+${t('sell_valuation')}: ${formatCurrency(valuation)}
+${t('sell_liquidation_cash')}: ${formatCurrency(liquidationCash)}
 
-TOTAL OPERACIÓN: ${formatCurrency(totalExit)}
+${t('sell_total_op')}: ${formatCurrency(totalExit)}
 
-¿Vender empresa y salir?`;
+${t('sell_confirm_desc')}`;
 
-        const confirmed = await showGameConfirm(message, '💰 Oferta de Compra', t('sell'), t('cancel'));
+        const confirmed = await showGameConfirm(message, t('sell_offer_title'), t('sell'), t('cancel'));
         if (!confirmed) return { success: false, message: t('company_op_cancelled') };
 
         GameState.cash += totalExit;
@@ -2420,6 +2420,65 @@ TOTAL OPERACIÓN: ${formatCurrency(totalExit)}
         JobSystem.currentCareerPath = 'none';
 
         return { success: true, message: t('company_sold_success').replace('{amount}', formatCurrency(totalExit)) };
+    },
+
+    canAutomate(co) {
+        if (!co) return { can: false, missing: [] };
+        const loc = this.locations[co.locationId];
+        const locationMaxStaff = loc?.maxStaff || 15;
+        const missing = [];
+
+        const cash = Number(co.cash) || 0;
+        const profit = Number(co.profitLastMonth) || 0;
+        const salary = Number(co.ceoSalary) || 0;
+        const staffCount = (co.staff || []).length;
+
+        if (cash < 150000) missing.push(t('msg_cash_150k_required'));
+        if (staffCount < locationMaxStaff) missing.push(t('msg_full_capacity_required'));
+        if (salary <= 0) missing.push(t('msg_ceo_salary_required'));
+        if (profit < 1000) missing.push(t('msg_min_profit_automate'));
+
+        return {
+            can: missing.length === 0,
+            missing: missing,
+            locationMaxStaff: locationMaxStaff
+        };
+    },
+
+    automate() {
+        if (!GameState.company) return { success: false, message: t('company_not_found') };
+        const co = GameState.company;
+        const status = this.canAutomate(co);
+
+        if (!status.can) {
+            return { success: false, message: status.missing.join('\n') };
+        }
+
+        // Prepare Holding Object
+        const holding = {
+            name: co.name,
+            typeId: co.typeId,
+            locationId: co.locationId,
+            baselineProfit: co.profitLastMonth,
+            profitLastMonth: co.profitLastMonth,
+            ceoSalary: co.ceoSalary,
+            financialHistory: [...(co.financialHistory || [])],
+            age: co.age
+        };
+
+        if (!GameState.ownedCompanies) GameState.ownedCompanies = [];
+        GameState.ownedCompanies.push(holding);
+
+        // Reset State
+        GameState.company = null;
+        GameState.jobTitle = t('job_investor') || 'Inversor / Propietario';
+        GameState.salary = 0;
+        JobSystem.currentCareerPath = 'none';
+
+        return {
+            success: true,
+            message: t('company_automated_success', { name: co.name })
+        };
     }
 };
 
@@ -2935,6 +2994,15 @@ const JobSystem = {
                 return { success: false, requiresConfirmation: true, message: t('company_close_required') };
             }
             GameState.company = null;
+        }
+
+        // Check if player already has a job (salary > 0) and confirm switch
+        if (GameState.salary > 0 && !force) {
+            return {
+                success: false,
+                requiresJobConfirmation: true,
+                currentJob: GameState.jobTitle
+            };
         }
 
         this.switchJobEnhanced(targetPath, targetJob);
@@ -4410,14 +4478,14 @@ const TutorialSystem = {
         this.lockScroll();
         setTimeout(() => {
             // 1. Net Worth
-            const netWorth = document.querySelector('.metric-card.net-worth');
+            const netWorth = document.querySelector('.net-worth-card');
             if (netWorth) {
-                this.addHighlight('.metric-card.net-worth');
+                this.addHighlight('.net-worth-card');
                 netWorth.scrollIntoView({ behavior: 'auto', block: 'center' });
             }
 
             this.showTooltip(
-                '.metric-card.net-worth',
+                '.net-worth-card',
                 `🏛️ ${t('net_worth')}`,
                 t('tutorial_net_worth_msg'),
                 t('next'),
@@ -4427,14 +4495,14 @@ const TutorialSystem = {
 
                     // 2. Cash
                     setTimeout(() => {
-                        const cash = document.querySelector('.metric-card.cash');
+                        const cash = document.querySelector('.dashboard-cash-card');
                         if (cash) {
-                            this.addHighlight('.metric-card.cash');
+                            this.addHighlight('.dashboard-cash-card');
                             cash.scrollIntoView({ behavior: 'auto', block: 'center' });
                         }
 
                         this.showTooltip(
-                            '.metric-card.cash',
+                            '.dashboard-cash-card',
                             `💵 ${t('cash')}`,
                             t('tutorial_cash_msg'),
                             t('next'),
@@ -4444,14 +4512,14 @@ const TutorialSystem = {
 
                                 // 3. Flow
                                 setTimeout(() => {
-                                    const mFlow = document.querySelector('.metric-card.monthly-flow');
+                                    const mFlow = document.querySelector('.monthly-flow-card');
                                     if (mFlow) {
-                                        this.addHighlight('.metric-card.monthly-flow');
+                                        this.addHighlight('.monthly-flow-card');
                                         mFlow.scrollIntoView({ behavior: 'auto', block: 'center' });
                                     }
 
                                     this.showTooltip(
-                                        '.metric-card.monthly-flow',
+                                        '.monthly-flow-card',
                                         `📉 ${t('monthly_flow')}`,
                                         t('tutorial_flow_msg'),
                                         t('understood'),
@@ -5310,17 +5378,17 @@ const UI = {
             </div>
 
             <div class="kpi-row">
-                <div class="kpi-card gold" style="flex:1.5; min-width: 200px;">
+                <div class="kpi-card gold net-worth-card" style="flex:1; min-width: 200px;">
                     <div class="kpi-icon gold">👑</div>
                     <span class="kpi-label">${t('net_worth')}</span>
                     <span class="kpi-value gold lg">${formatCurrency(nw)}</span>
                 </div>
-                <div class="kpi-card green" style="flex:1.5; min-width: 200px;">
+                <div class="kpi-card green dashboard-cash-card" style="flex:1; min-width: 200px;">
                     <div class="kpi-icon green">💵</div>
                     <span class="kpi-label">${t('cash_box')}</span>
                     <span class="kpi-value green lg">${formatCurrency(cash)}</span>
                 </div>
-                <div class="kpi-card ${monthlyFlow >= 0 ? 'green' : 'red'}" style="flex:1; min-width: 160px;">
+                <div class="kpi-card ${monthlyFlow >= 0 ? 'green' : 'red'} monthly-flow-card" style="flex:1; min-width: 160px;">
                     <div class="kpi-icon ${monthlyFlow >= 0 ? 'green' : 'red'}">${monthlyFlow >= 0 ? '📈' : '📉'}</div>
                     <span class="kpi-label">${t('monthly_flow')}</span>
                     <span class="kpi-value ${monthlyFlow >= 0 ? 'green' : 'red'}">${monthlyFlow >= 0 ? '+' : ''}${formatCurrency(monthlyFlow)}</span>
@@ -7800,9 +7868,9 @@ const UI = {
                     btnSell.onmouseenter = () => { btnSell.style.background = '#ef4444'; btnSell.style.color = 'white'; };
                     btnSell.onmouseleave = () => { btnSell.style.background = 'rgba(239, 68, 68, 0.1)'; btnSell.style.color = '#ef4444'; };
 
-                    div.querySelector('.btn-sell-passive').onclick = () => {
+                    btnSell.onclick = () => {
                         const annualProfit = co.baselineProfit * 12;
-                        const valuation = annualProfit * 5;
+                        const valuation = annualProfit * 3;
 
                         UI.showModal(t('company_sell_title'), `
                             <div style="text-align:center;">
@@ -7820,7 +7888,7 @@ const UI = {
                                     </div>
                                     <div style="border-top:1px dashed #475569; margin:10px 0;"></div>
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-                                        <span style="color:#fbbf24; font-weight:700; text-transform:uppercase; font-size:0.9rem;">VALORACIÓN (x5)</span>
+                                        <span style="color:#fbbf24; font-weight:700; text-transform:uppercase; font-size:0.9rem;">VALORACIÓN (x3)</span>
                                         <span style="color:#fbbf24; font-weight:800; font-size:1.3rem;">${formatCurrency(valuation)}</span>
                                     </div>
                                 </div>
@@ -8344,6 +8412,26 @@ const UI = {
                     card.querySelector('.btn-apply-small').onclick = () => {
                         const performApply = (force = false) => {
                             const res = JobSys.applyToJob(vac.title, force);
+                            if (res.requiresJobConfirmation) {
+                                const currentJobName = getJobTranslation(res.currentJob);
+                                UI.showModal(
+                                    t('msg_confirm_switch_job_title'),
+                                    `<div style="text-align: center;">
+                                        <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                                        <div style="background: linear-gradient(145deg, rgba(239, 68, 68, 0.1), rgba(185, 28, 28, 0.05)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                                            <p style="color: #cbd5e1; font-size: 1.1rem; line-height: 1.5; margin: 0;">
+                                                ${t('msg_confirm_switch_job_desc').replace('{currentJob}', `<span style="color: #60a5fa; font-weight: 700;">${currentJobName}</span>`)}
+                                            </p>
+                                        </div>
+                                    </div>`,
+                                    [
+                                        { text: t('cancel'), style: 'secondary', fn: null },
+                                        { text: t('confirm_switch_btn'), style: 'danger', fn: () => performApply(true) }
+                                    ],
+                                    true
+                                );
+                                return;
+                            }
                             if (res.requiresConfirmation) {
                                 UI.showModal(t('msg_close_company_title'),
                                     `<div style="text-align:center;">
@@ -8478,6 +8566,26 @@ const UI = {
                     card.querySelector('.btn-apply-small').onclick = () => {
                         const performApply = (force = false) => {
                             const res = JobSys.applyToJob(vac.title, force);
+                            if (res.requiresJobConfirmation) {
+                                const currentJobName = getJobTranslation(res.currentJob);
+                                UI.showModal(
+                                    t('msg_confirm_switch_job_title'),
+                                    `<div style="text-align: center;">
+                                        <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                                        <div style="background: linear-gradient(145deg, rgba(239, 68, 68, 0.1), rgba(185, 28, 28, 0.05)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                                            <p style="color: #cbd5e1; font-size: 1.1rem; line-height: 1.5; margin: 0;">
+                                                ${t('msg_confirm_switch_job_desc').replace('{currentJob}', `<span style="color: #60a5fa; font-weight: 700;">${currentJobName}</span>`)}
+                                            </p>
+                                        </div>
+                                    </div>`,
+                                    [
+                                        { text: t('cancel'), style: 'secondary', fn: null },
+                                        { text: t('confirm_switch_btn'), style: 'danger', fn: () => performApply(true) }
+                                    ],
+                                    true
+                                );
+                                return;
+                            }
                             if (res.requiresConfirmation) {
                                 UI.showModal(t('msg_close_company_title'),
                                     `<div style="text-align:center;">
@@ -8715,9 +8823,30 @@ const UI = {
                                             <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">💵 ${t('comp_hero_cash')}</div>
                                             <div style="font-size: 1.2rem; font-weight: 800; color: #4ade80;">${formatCurrency(co.cash)}</div>
                                         </div>
-                                    <div style="background: linear-gradient(145deg, ${co.profitLastMonth >= 0 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)'}, transparent); padding: 12px 18px; border-radius: 12px; border: 1px solid ${co.profitLastMonth >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; text-align: center; min-width: 100px;">
+                                        <div style="background: linear-gradient(145deg, ${co.profitLastMonth >= 0 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)'}, transparent); padding: 12px 18px; border-radius: 12px; border: 1px solid ${co.profitLastMonth >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; text-align: center; min-width: 100px;">
                                             <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 ${t('comp_hero_profit')}</div>
                                             <div style="font-size: 1.2rem; font-weight: 800; color: ${co.profitLastMonth >= 0 ? '#4ade80' : '#f87171'};">${co.profitLastMonth >= 0 ? '+' : ''}${formatCurrency(co.profitLastMonth)}</div>
+                                        </div>
+
+                                        <!-- Action Buttons (Header) -->
+                                        <div style="display: flex; gap: 10px;">
+                                            ${(() => {
+                        const status = CompanyModule.canAutomate(co);
+                        const canAuto = status.can;
+                        const icon = canAuto ? '👑' : '🔒';
+                        const label = canAuto ? t('automate_btn') : t('automate_btn_locked');
+                        const pulseClass = canAuto ? 'ready-pulse' : '';
+                        const btnStyle = canAuto
+                            ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);'
+                            : 'background: #334155; color: #64748b; opacity: 0.8;';
+
+                        return `
+                                                    <button id="btn-automate-holding-header" class="${pulseClass}" style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 18px; border-radius: 12px; font-weight: 800; font-size: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; ${btnStyle} min-height: 56px; min-width: 110px;">
+                                                        <span style="font-size: 1.1rem;">${icon}</span>
+                                                        <div>${label}</div>
+                                                    </button>
+                                                `;
+                    })()}
                                         </div>
                                     </div>
                                 </div>
@@ -8747,6 +8876,46 @@ const UI = {
                         </div>
                     `;
                 contentContainer.appendChild(coDash);
+
+                // Attach Header Listeners
+                const btnAutoHeader = document.getElementById('btn-automate-holding-header');
+                if (btnAutoHeader) {
+                    btnAutoHeader.onclick = async () => {
+                        const status = CompanyModule.canAutomate(co);
+
+                        if (!status.can) {
+                            const containerHtml = `
+                                <div style="text-align: center; margin-bottom: 5px;">
+                                    <div style="font-size: 2.5rem; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));">👑</div>
+                                    <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.4; margin-bottom: 15px;">${t('automate_req_title')}</p>
+                                </div>
+                                <div style="background: rgba(30, 41, 59, 0.7); border-radius: 16px; padding: 20px; border: 1px solid rgba(251, 191, 36, 0.2); margin-top: 10px;">
+                                    ${status.missing.map(m => `
+                                        <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; color: #cbd5e1; font-size: 0.85rem; text-align: left;">
+                                            <div style="color: #fbbf24; background: rgba(251, 191, 36, 0.1); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem;">•</div>
+                                            <span style="flex: 1;">${m}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                            return showGameAlert(containerHtml, 'warning', t('warning') || 'Aviso');
+                        }
+
+                        const msg = t('automate_confirm_msg') || '¿Quieres automatizar este negocio? Dejarás de gestionarlo directamente y pasará a generar ingresos pasivos en tu Holding como inversión. Se calculará en base a los beneficios de la empresa de los últimos meses.';
+                        const confirmed = await showGameConfirm(msg, t('automate_confirm_title') || 'Automatizar Negocio', t('confirm'), t('cancel'));
+                        if (!confirmed) return;
+
+                        const r = CompanyModule.automate();
+                        if (r && r.success) {
+                            showGameAlert(r.message, 'success');
+                            UI.updateHeader();
+                            UI.updateJob(JobSystem);
+                            UI.updateDashboard();
+                        } else {
+                            showGameAlert(r.message, 'error');
+                        }
+                    };
+                }
 
 
                 contentContainer.querySelectorAll('.tab-btn').forEach(btn => {
@@ -9756,19 +9925,19 @@ const UI = {
                                             <h4 class="staff-role-title">🔍 ${t('comp_impact_label')}</h4>
                                             <div class="analysis-box">
                                                 <div class="data-row">
-                                                    <span>Natural</span>
+                                                    <span>${t('impact_natural')}</span>
                                                     <span>${(comp.organic || 1).toFixed(1)}x</span>
                                                 </div>
                                                 <div class="data-row strong">
-                                                    <span>Marketing</span>
+                                                    <span>${t('marketing')}</span>
                                                     <span>${(comp.marketing || 1).toFixed(1)}x</span>
                                                 </div>
                                                 <div class="data-row">
-                                                    <span>Reputación</span>
+                                                    <span>${t('comp_reputation')}</span>
                                                     <span>${(comp.reputation || 1).toFixed(1)}x</span>
                                                 </div>
                                                 <div style="border-top:1px solid #334155; margin-top:10px; padding-top:10px; display:flex; justify-content:space-between; color:#fbbf24; font-weight:700;">
-                                                    <span>Total</span>
+                                                    <span>${t('impact_total')}</span>
                                                     <span>${((comp.traffic || 1) * 100).toFixed(0)}%</span>
                                                 </div>
                                             </div>
@@ -9963,6 +10132,7 @@ const UI = {
                         showGameAlert(t('comp_ceo_salary_updated_msg', { amount: formatCurrency(val) }), 'success', t('comp_salary_updated_title'));
                         UI.updateJob(JobSystem);
                     };
+
                     window.sellCompanyAction = async () => {
                         const r = await CompanyModule.sellCompany();
                         if (r && r.success) {
@@ -9972,11 +10142,11 @@ const UI = {
                             UI.updateDashboard();
                         }
                     };
+
                 }
             }
         } catch (e) {
             console.error("UI Error:", e);
-            console.error('UI Error:', e.message);
         }
     },
 
@@ -9990,7 +10160,7 @@ const UI = {
             const icon = '🎁';
 
             let bdayMsg = `
-                <div style="text-align: center; margin-bottom: 20px;">
+                        <div style = "text-align: center; margin-bottom: 20px;" >
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
                     <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('happy_birthday')}</h3>
                 </div>
@@ -10007,7 +10177,7 @@ const UI = {
                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
                     ${t('family_gift_msg')}
                 </p>
-            `;
+`;
             UI.showModal(' ', bdayMsg, [{ text: t('thanks_btn'), style: 'primary', fn: null }], true);
             UI.playCoinSound();
         }
@@ -10104,7 +10274,7 @@ function nextTurn() {
         expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
         GameState.cash -= expropriationAmount;
         expropriationTriggered = true;
-        expropriationMessage = t('event_communist_6m');
+        expropriationMessage = t('event_wealth_tax_6m');
     }
     // Tier 3
     else if (GameState.cash >= 3000000 && !GameState.expropriation3MDone) {
@@ -10113,7 +10283,7 @@ function nextTurn() {
         GameState.cash -= expropriationAmount;
         GameState.expropriation3MDone = true;
         expropriationTriggered = true;
-        expropriationMessage = t('event_communist_3m');
+        expropriationMessage = t('event_wealth_tax_3m');
     }
     // Tier 2
     else if (GameState.cash >= 1000000 && !GameState.expropriation1MDone) {
@@ -10122,7 +10292,7 @@ function nextTurn() {
         GameState.cash -= expropriationAmount;
         GameState.expropriation1MDone = true;
         expropriationTriggered = true;
-        expropriationMessage = t('event_communist_1m');
+        expropriationMessage = t('event_wealth_tax_1m');
     }
     // Tier 1
     else if (GameState.cash >= 500000 && !GameState.expropriation500kDone) {
@@ -10131,36 +10301,35 @@ function nextTurn() {
         GameState.cash -= expropriationAmount;
         GameState.expropriation500kDone = true;
         expropriationTriggered = true;
-        expropriationMessage = t('event_communist_500k');
+        expropriationMessage = t('event_wealth_tax_500k');
     }
 
     // Show Modal
     if (expropriationTriggered) {
         setTimeout(() => {
             // Msg
-            const themeColor = '#ef4444'; // Red
-            const icon = '☭';
+            const themeColor = '#f97316'; // Orange/Amber for Fiscal Warning (Neutral/Caution)
+            const icon = '🏛️';
 
             let exproMsg = `
-                <div style="text-align: center; margin-bottom: 20px;">
+    <div style = "text-align: center; margin-bottom: 20px;" >
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('event_communist_title')}</h3>
+                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('event_wealth_tax_title')}</h3>
                 </div>
 
-                <div style="background: linear-gradient(145deg, rgba(69, 10, 10, 0.8), rgba(30, 20, 20, 0.9)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('rev_tax_label')}</div>
+                <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('tax_policy_label')}</div>
                     <div style="font-size: 1.6rem; font-weight: 800; color: #f87171; margin-bottom: 15px;">-${formatCurrency(expropriationAmount)}</div>
                     
                     <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                        <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('common_good_label')}</span>
+                        <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('fiscal_contribution_label')}</span>
                     </div>
                 </div>
 
                 <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                    ${t('state_expro_desc')}
-                </p>
-                <p style="text-align: center; color: #fbbf24; font-size: 0.9rem; margin-top: 15px; font-style: italic;">
-                    "${expropriationMessage}"
+                    ${expropriationMessage}
+                    <br/><br/>
+                    <small style="color:#64748b">${t('wealth_tax_desc')}</small>
                 </p>
             `;
 
@@ -10331,7 +10500,7 @@ function nextTurn() {
                 `📋 ${t('tax_return_year')} ` + (GameState.year - 1),
                 breakdown,
                 [{
-                    text: `💸 ${t('pay_taxes')}`,
+                    text: `💸 ${t('pay_taxes')} `,
                     style: 'danger',
                     fn: () => {
                         // Confirm Pay

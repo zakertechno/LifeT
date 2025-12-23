@@ -429,6 +429,24 @@
             transform: scale(1.02);
         }
 
+        @keyframes pulseGlowGold {
+            0% {
+                box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(251, 191, 36, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+            }
+        }
+
+        .ready-pulse {
+            animation: pulseGlowGold 2s infinite;
+        }
+
         /* Portfolio & Trade Panel */
         .portfolio-panel {
             display: flex;
@@ -592,19 +610,7 @@
         }
 
         /* Course Level Badge */
-        .course-level-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(168, 85, 247, 0.2);
-            color: #c4b5fd;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+
 
         /* Modal Styles */
         .modal {
@@ -754,24 +760,9 @@
             }
         }
 
-        .traffic-viz {
-            height: 6px;
-            background: #334155;
-            border-radius: 3px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
 
-        .traffic-fill {
-            height: 100%;
-            background: var(--accent-color);
-        }
 
-        .wiz-summary-panel {
-            background: #1e293b;
-            border-left: 1px solid #334155;
-            padding: 30px;
-        }
+
 
         .company-tabs {
             display: flex;
@@ -804,26 +795,9 @@
         }
 
         /* Job View */
-        .job-content-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
 
-        @media (max-width: 768px) {
-            .job-content-container {
-                grid-template-columns: 1fr;
-            }
-        }
 
-        .career-path-container,
-        .job-search-section,
-        .holding-section {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-        }
+
 
         /* Company Dashboard */
         .company-dashboard {
@@ -841,37 +815,9 @@
             border: 1px solid #334155;
         }
 
-        .company-finance-summary {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
 
-        .fin-box {
-            background: #0f172a;
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
 
-        .fin-box .label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
 
-        .fin-box .val {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .val.green {
-            color: var(--success-color);
-        }
-
-        .val.red {
-            color: var(--danger-color);
-        }
 
         .staff-header {
             display: flex;
@@ -895,62 +841,11 @@
             cursor: pointer;
         }
 
-        /* Inner Company Tab Styles */
-        .strategy-section,
-        .staff-section,
-        .finance-actions {
-            animation: fadeIn 0.3s ease-in-out;
-        }
 
-        .control-group {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            margin-bottom: 15px;
-        }
 
-        .control-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
 
-        .control-group input[type="number"] {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            padding: 8px;
-            border-radius: 4px;
-            font-family: var(--font-main);
-        }
 
-        .control-group button {
-            padding: 8px 15px;
-            background: var(--accent-color);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #0f172a;
-        }
 
-        .btn-hire {
-            background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-            color: var(--text-primary);
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.85rem;
-        }
-
-        .btn-hire:hover {
-            background: var(--accent-color);
-            color: #0f172a;
-        }
 
         .btn-sm {
             padding: 4px 10px;
@@ -965,108 +860,20 @@
 
 
         /* Layout Updates */
-        .wizard-progress {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
 
-        .step-dot {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            border: 2px solid #334155;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--text-secondary);
-            z-index: 1;
-        }
 
-        .step-dot.active {
-            border-color: var(--accent-color);
-            background: var(--accent-color);
-            color: #0f172a;
-        }
 
-        .step-line {
-            height: 2px;
-            width: 100px;
-            background: #334155;
-            margin: 0 -10px;
-        }
 
-        .wizard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
 
-        .wizard-option {
-            background: var(--card-bg);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
 
-        .wizard-option:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-color);
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
-        }
 
-        .wizard-option.selected {
-            border-color: var(--success-color);
-            background: rgba(74, 222, 128, 0.05);
-            box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
-        }
 
         /* JOB VIEW ENHANCEMENTS */
-        .career-path-container {
-            border: none !important;
-            background: transparent !important;
-            padding: 0 !important;
-        }
 
-        .promotion-status {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            margin-bottom: 20px;
-            position: relative;
-        }
 
-        .promotion-status::before {
-            content: '🎓 TU CARRERA';
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: var(--accent-color);
-            color: #0f172a;
-            font-size: 0.7rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
 
-        .next-promotion-card {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
+
+
 
         /* Job Peak Card - Max Career Level */
         .job-peak-card {
@@ -1577,67 +1384,12 @@
         }
 
         /* DASHBOARD REDESIGN */
-        .fin-health-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
 
-        .fin-card {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            text-align: center;
-            transition: transform 0.2s;
-        }
 
-        .fin-card:hover {
-            transform: translateY(-2px);
-            border-color: #4ade80;
-        }
 
-        .fin-label {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .fin-value {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: white;
-        }
 
         /* Mobile Dashboard */
-        @media (max-width: 768px) {
-            .fin-health-grid {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 12px !important;
-            }
 
-            .fin-card {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                text-align: left !important;
-                padding: 18px !important;
-                margin-bottom: 0 !important;
-            }
-
-            .fin-label {
-                margin-bottom: 0 !important;
-                font-size: 0.95rem !important;
-            }
-
-            .fin-value {
-                font-size: 1.2rem !important;
-            }
-        }
 
         /* Mobile Fixes */
         @media (max-width: 768px) {
@@ -1791,16 +1543,7 @@
             padding-bottom: 20px;
         }
 
-        .job-req-tag {
-            background: #0f172a;
-            color: #94a3b8;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            border: 1px solid #334155;
-            display: inline-block;
-            margin-top: 5px;
-        }
+
 
         /* Dashboard Styles */
         .dashboard-container {
@@ -1986,35 +1729,7 @@
             color: #fff;
         }
 
-        .requirements-list {
-            margin-bottom: 15px;
-        }
 
-        .req-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #1e293b;
-            font-size: 0.95rem;
-        }
-
-        .req-item:last-child {
-            border-bottom: none;
-        }
-
-        .req-met {
-            color: #94a3b8;
-        }
-
-        .req-unmet {
-            color: #f87171;
-        }
-
-        /* Warning color for unmet */
-        .req-met .req-icon {
-            filter: grayscale(0);
-        }
 
         /* Action Buttons */
         .btn-action-primary {
@@ -2291,28 +2006,7 @@
             margin-top: 40px;
         }
 
-        /* Intro Banner */
-        .intro-banner {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid #38bdf8;
-            border-radius: 12px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.1);
-        }
 
-        .intro-banner::before {
-            content: '🎓';
-            position: absolute;
-            right: -15px;
-            top: -15px;
-            font-size: 8rem;
-            opacity: 0.05;
-            transform: rotate(15deg);
-            pointer-events: none;
-        }
 
         /* --- Global Dashboard --- */
 
@@ -2642,16 +2336,7 @@
         }
 
         /* Market Tab */
-        .market-hero {
-            background: #0f172a;
-            border-bottom: 1px solid #334155;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
+
 
         /* Edu Tab */
         .edu-hero {
@@ -2665,12 +2350,7 @@
             gap: 20px;
         }
 
-        .edu-icon {
-            font-size: 3rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 50%;
-        }
+
 
         .edu-progress-container {
             flex: 1;
@@ -2765,47 +2445,14 @@
         }
 
 
-        .course-level {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: #94a3b8;
-            letter-spacing: 1px;
-        }
+
 
         /* Summary Tab */
-        .summary-kpi-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
 
-        .kpi-box,
-        .kpi-card {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            text-align: center;
-        }
 
-        .kpi-label {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
 
-        .kpi-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #fff;
-        }
 
-        .kpi-sub {
-            font-size: 0.8rem;
-            color: #64748b;
-        }
+
 
         /* Mobile Opts */
         #bottom-nav {
@@ -3059,25 +2706,11 @@
                 gap: 15px;
             }
 
-            .company-finance-summary {
-                width: 100%;
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 10px;
-            }
 
-            .fin-box {
-                padding: 8px 5px;
-            }
 
-            .fin-box .val {
-                font-size: 0.9rem;
-            }
 
-            #btn-automate {
-                padding: 8px 5px;
-                font-size: 0.7rem !important;
-            }
+
+
 
             .company-tabs {
                 padding-bottom: 5px;
@@ -4251,21 +3884,9 @@
             border-color: #ef4444;
         }
 
-        .hire-panel {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px dashed #475569;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
 
-        .hire-grid {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+
+
 
         /* --- Strategy --- */
         .strategy-grid {
@@ -4312,84 +3933,16 @@
             margin-bottom: 10px;
         }
 
-        .invest-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
 
-        .invest-card {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid #475569;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 15px;
-            transition: transform 0.2s;
-        }
+
+
 
         .invest-card:hover {
             transform: translateY(-2px);
             border-color: #fbbf24;
         }
 
-        /* --- FINANCE TAB --- */
-        .fin-panel {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
 
-        .fin-section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .fin-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .fin-control-group {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            margin-top: 15px;
-        }
-
-        .comp-input-lg {
-            background: #0f172a;
-            border: 1px solid #475569;
-            padding: 12px;
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            flex: 1;
-        }
-
-        .btn-action-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-action-danger:hover {
-            background: #dc2626;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-        }
 
         /* Mobile Adjustments for Dashboard */
         @media (max-width: 768px) {
@@ -4401,10 +3954,7 @@
                 grid-template-columns: 1fr;
             }
 
-            .fin-control-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
+
         }
 
         /* STOCK MODAL MOBILE FIX */
@@ -4801,40 +4351,12 @@
         }
 
         /* --- Cards --- */
-        .card-premium {
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 20px;
-        }
 
-        .card-stat {
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            min-width: 140px;
-        }
+
+
 
         /* --- Glow --- */
-        .glow-success {
-            text-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
-            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.4));
-        }
 
-        .glow-danger {
-            text-shadow: 0 0 15px rgba(248, 113, 113, 0.3);
-            filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.4));
-        }
-
-        .glow-warning {
-            text-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
-            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));
-        }
-
-        .glow-accent {
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
-        }
 
         /* Inline Extractions */
 
