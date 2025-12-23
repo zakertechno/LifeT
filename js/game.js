@@ -5073,8 +5073,8 @@ const UI = {
         const btn = document.getElementById('lang-switch-btn');
         if (!btn) return;
 
-        const flags = { es: '🇪🇸', en: '🇬🇧', de: '🇩🇪' };
-        const labels = { es: 'ES', en: 'EN', de: 'DE' };
+        const flags = { es: '🇪🇸', en: '🇬🇧', de: '🇩🇪', zh: '🇨🇳', ru: '🇷🇺' };
+        const labels = { es: 'ES', en: 'EN', de: 'DE', zh: '中文', ru: 'RU' };
 
         const updateBtn = () => {
             const lang = I18n.currentLang;
@@ -11236,10 +11236,12 @@ try {
                         <h2 class="profile-title">${t('tutorial_welcome')}</h2>
                         
                         <!-- Lang Selector -->
-                        <div id="welcome-lang-selector" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
-                            <button onclick="I18n.setLanguage('es'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇪🇸</button>
-                            <button onclick="I18n.setLanguage('en'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇬🇧</button>
-                            <button onclick="I18n.setLanguage('de'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="de" title="Deutsch" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇩🇪</button>
+                        <div id="welcome-lang-selector" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 15px;">
+                            <button onclick="I18n.setLanguage('es'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇪🇸</button>
+                            <button onclick="I18n.setLanguage('en'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇬🇧</button>
+                            <button onclick="I18n.setLanguage('de'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="de" title="Deutsch" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇩🇪</button>
+                            <button onclick="I18n.setLanguage('zh'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="zh" title="中文" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇨🇳</button>
+                            <button onclick="I18n.setLanguage('ru'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="ru" title="Русский" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇷🇺</button>
                         </div>
                         
                         <div class="profile-features">
