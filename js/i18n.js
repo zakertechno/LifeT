@@ -1,15 +1,10 @@
-/*******************************************************
- * INTERNATIONALIZATION (i18n) MODULE
- * Supports: Spanish (es), English (en), German (de)
- *******************************************************/
+// i18n module
 
 const I18n = {
     currentLang: 'es',
 
     translations: {
-        // ============================================
-        // SPANISH (Default)
-        // ============================================
+        // Español
         es: {
             // General UI
             game_title: 'Life Inc.',
@@ -1505,9 +1500,7 @@ const I18n = {
             congratulations: '¡FELICIDADES!'
         },
 
-        // ============================================
-        // ENGLISH
-        // ============================================
+        // English
         en: {
             // General UI
             game_title: 'Life Inc.',
@@ -3013,9 +3006,7 @@ const I18n = {
             congratulations: 'CONGRATULATIONS!'
         },
 
-        // ============================================
-        // GERMAN
-        // ============================================
+        // Deutsch
         de: {
             // General UI
             game_title: 'Life Inc.',

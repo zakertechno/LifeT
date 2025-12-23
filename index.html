@@ -57,13 +57,11 @@
         </div>
     </div>
 
-    <!-- Company Creation Wizard Modal -->
-    <!-- PREMIUM Company Creation Wizard (Marketing Expert Edition) -->
-    <!-- PREMIUM Company Creation Wizard (Marketing Expert Edition) -->
+    <!-- Wizard Modal -->
     <div id="company-wizard-modal" class="modal wizard-mode">
         <div class="wizard-content">
 
-            <!-- Header -->
+            <!-- Wizard Head -->
             <div class="wizard-header">
                 <div class="wizard-title-group">
                     <div class="wizard-icon">🚀</div>
@@ -77,10 +75,10 @@
             </div>
 
             <div class="wizard-body">
-                <!-- Main Content Area -->
+                <!-- Wizard Body -->
                 <div class="wizard-main">
 
-                    <!-- Progress Tracker -->
+                    <!-- Progress -->
                     <div class="wizard-progress">
                         <div class="progress-step">
                             <div class="step-badge active">1</div>
@@ -98,7 +96,7 @@
                         </div>
                     </div>
 
-                    <!-- STEP 1: MODEL & CONCEPT -->
+                    <!-- Step: Model -->
                     <div id="wizard-step-1" class="wizard-step active">
                         <h3 id="wiz-step-1-header" class="step-header">
                             <span class="wiz-icon-lg">📋</span> Define tu Modelo de Negocio
@@ -118,7 +116,7 @@
                         </div>
                     </div>
 
-                    <!-- STEP 2: LOCATION STRATEGY -->
+                    <!-- Step: Location -->
                     <div id="wizard-step-2" class="wizard-step wiz-step-hidden">
                         <h3 id="wiz-step-2-header" class="step-header">
                             <span class="wiz-icon-lg">📍</span> Estrategia de Ubicación (HQ)
@@ -127,11 +125,11 @@
                             sede. El tráfico determina tu techo de ingresos inicial.</p>
 
                         <div id="wiz-loc-grid" class="wiz-cards-grid loc-grid">
-                            <!-- Injected JS -->
+                            <!-- Dynamic -->
                         </div>
                     </div>
 
-                    <!-- MOBILE NAVIGATION BUTTONS -->
+                    <!-- Mobile Nav -->
                     <div id="mobile-wiz-buttons" class="mobile-wiz-buttons wiz-step-hidden">
                         <button id="btn-wiz-back-mobile" class="btn-wiz-back">← </button>
                         <button id="btn-wiz-next-mobile" class="btn-wiz-next"> </button>
@@ -139,7 +137,7 @@
 
                 </div>
 
-                <!-- Sidebar: Investment Summary -->
+                <!-- Sidebar Summary -->
                 <div class="wizard-sidebar">
                     <h4 id="wiz-sidebar-title" class="sidebar-title">
                         <span class="wiz-icon-md">💰</span> Resumen de Capital
@@ -182,9 +180,9 @@
 
 
     <div id="app" style="display: none;">
-        <!-- Game Title - Premium Design -->
+        <!-- Game Title -->
         <div id="top-bar-container">
-            <!-- Border decoration handled by CSS ::after -->
+            <!-- Border via CSS -->
 
             <button id="desktop-home-btn" class="home-btn desktop-only-btn desktop-btn-left"
                 onclick="document.querySelector('.nav-btn[data-view=&quot;dashboard&quot;]').click()">
@@ -219,7 +217,7 @@
         </div>
 
         <header class="app-header">
-            <!-- LEFT: Save + Home stacked -->
+            <!-- Left Controls -->
             <div class="header-left">
                 <button class="save-btn" onclick="PersistenceModule.showSaveModal()">
                     <span>💾</span>
@@ -239,7 +237,7 @@
                 </button>
             </div>
 
-            <!-- RIGHT: Money Display -->
+            <!-- Right Stats -->
             <div class="header-right">
                 <div class="money-card">
                     <span class="money-icon">💵</span>
@@ -471,9 +469,9 @@
     <!-- Game Logic -->
     <script src="js/game.js"></script>
 
-    <!-- Twemoji Initialization - Only on Windows/Linux (Mac uses native Apple emojis) -->
+    <!-- Twemoji Logic -->
     <script>
-        // Use local Twemoji icons for consistent cross-platform look
+        // Twemoji Init
         if (typeof twemoji !== 'undefined') {
             // Parse initial document
             twemoji.parse(document.body, {
@@ -482,7 +480,7 @@
                 base: 'assets/'  // Result: assets/emoji/
             });
 
-            // Re-parse on DOM changes (for dynamic content)
+            // Dynamic Observer
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     mutation.addedNodes.forEach((node) => {

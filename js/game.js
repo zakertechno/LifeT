@@ -1,11 +1,9 @@
-/*******************************************************
- * ENDGAME SYSTEM (YEAR 50)
- *******************************************************/
+// Endgame
 
 function showEndgameModal() {
     const stats = GameState.lifetimeStats;
 
-    // Calculate real estate profit
+    // Calc RE profit
     const realEstateProfit = (stats.realEstate && stats.realEstate.totalSales && stats.realEstate.totalPurchases)
         ? stats.realEstate.totalSales - stats.realEstate.totalPurchases
         : 0;
@@ -143,16 +141,16 @@ function resetGame() {
 
 
 
-// Helper for dynamic translations
+
 function getJobTranslation(jobTitle) {
     if (!jobTitle) return '';
 
-    // Handle Unemployed
+    // Unemployed
     if (jobTitle === 'Desempleado' || jobTitle === 'Unemployed') {
         return t('unemployed');
     }
 
-    // Handle CEO / Company founder special names
+    // CEO/Founder titles
     if (jobTitle.includes('CEO de')) {
         return jobTitle.replace('CEO de', t('ceo_of') || 'CEO of');
     }
@@ -161,7 +159,7 @@ function getJobTranslation(jobTitle) {
         return t('ex_founder_unemployed') || jobTitle;
     }
 
-    // Try mapping from i18n.js
+    // Map
     if (typeof JOB_TRANSLATION_MAP !== 'undefined') {
         const key = JOB_TRANSLATION_MAP[jobTitle];
         if (key) {
@@ -175,39 +173,24 @@ function getJobTranslation(jobTitle) {
 
 function getCourseTranslation(courseId) {
     if (!courseId) return { name: '', desc: '' };
-    // Try to translate if keys exist (course_ID), otherwise fallback
+    // Translate or fallback
     const nameKey = `course_${courseId}`;
     const descKey = `course_${courseId}_desc`;
 
-    // Check if translation exists (simple check if it returns key)
+    // Exists check
     const name = t(nameKey);
     const desc = t(descKey);
 
     const hasName = name !== nameKey;
 
     return {
-        name: hasName ? name : null, // null will trigger fallback to course.name
+        name: hasName ? name : null, // Fallback trigger
         desc: hasName ? desc : null
     };
 }
 
-/*******************************************************
- * STATE
- *******************************************************/
-/**
- * Global game state object containing all player data.
- * @typedef {Object} GameStateType
- * @property {string} playerName - Player's display name
- * @property {number} month - Current month (1-12)
- * @property {number} year - Current game year (1-50)
- * @property {number} cash - Available cash in euros
- * @property {number} netWorth - Total net worth (assets - liabilities)
- * @property {number} salary - Monthly salary from job
- * @property {number} expenses - Monthly lifestyle expenses
- * @property {Object} inventory - Player's assets (stocks, realEstate)
- * @property {Array} loans - Active loans
- * @property {Object} lifetimeStats - Statistics for endgame summary
- */
+// State
+// Global State
 const GameState = {
     playerName: 'Inversor',
     month: 1,
@@ -232,9 +215,9 @@ const GameState = {
     // Phase 2
     age: 16,
     education: ['ESO'],
-    currentGigs: [], // Persist monthly gigs
+    currentGigs: [], // Monthly gigs
     isStudying: false,
-    currentCourse: null, // { name: 'FP Informática', remainingMonths: 12, costMonthly: 0 }
+    currentCourse: null, // { name, remaining, cost }
     history: {
         netWorth: [500],
         cash: [500],
@@ -252,8 +235,8 @@ const GameState = {
         forceHousing: false
     },
 
-    // TUTORIAL SYSTEM - Obligatory guided tutorial
-    tutorialStep: 0,  // 0=start, 1-8=steps, 99=completed
+    // Tutorial System
+    tutorialStep: 0,  // 0: Start, 1-8: Steps, 99: Done
     tutorialFlags: {
         educationChosen: false,
         wentToWorkFirst: false,
@@ -263,10 +246,10 @@ const GameState = {
         acceptedFirstRealJob: false,
         independent: false,
         tutorialComplete: false,
-        momKickedOut: false // New permanent flag
+        momKickedOut: false // Permanent
     },
 
-    // ANNUAL INCOME TRACKING FOR TAXES
+    // Taxable Income
     currentYearIncome: {
         salary: 0,
         rental: 0,
@@ -281,20 +264,20 @@ const GameState = {
     },
     taxWarningShown: false,
 
-    // EXPROPRIATION TRACKING
+    // Expropriation
     expropriation500kDone: false,
     expropriation1MDone: false,
     expropriation3MDone: false,
 
-    // LIFETIME STATISTICS (for endgame summary)
+    // Lifetime Stats
     lifetimeStats: {
         totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
         totalExpenses: { lifestyle: 0, housing: 0, education: 0 },
         totalTaxesPaid: 0,
         realEstate: {
-            totalPurchases: 0,  // Total spent buying properties that were sold
-            totalSales: 0,      // Total received from selling properties
-            propertiesSold: 0   // Count of properties sold
+            totalPurchases: 0,  // Purchases
+            totalSales: 0,      // Sales
+            propertiesSold: 0   // Sold Count
         }
     },
 
@@ -303,26 +286,21 @@ const GameState = {
     monthsInCurrentJob: 0,
     monthsSinceLastRaise: 0,
 
-    // Story & Unlocks
+    // Unlocks
     totalMonths: 0,
     expensesUnlocked: false,
-    stockUnlocked: false, // Unlocked when netWorth >= 30000
-    bankUnlocked: false, // Unlocked when Year 3, Month 6
-    // Cache for performance optimization
+    stockUnlocked: false, // >30k NW
+    bankUnlocked: false, // Y3 M6
+    // Cache
     _netWorthCache: null,
     _netWorthCacheTurn: -1,
 };
 
-/**
- * Calculate net worth with caching to avoid redundant calculations.
- * Cache invalidates when month/year changes.
- * @param {boolean} forceRecalc - Force recalculation ignoring cache
- * @returns {number} Current net worth
- */
+// Calc Net Worth
 function updateNetWorth(forceRecalc = false) {
     const currentTurn = GameState.year * 12 + GameState.month;
 
-    // Return cached value if valid and not forced
+    // Check Cache
     if (!forceRecalc && GameState._netWorthCache !== null && GameState._netWorthCacheTurn === currentTurn) {
         return GameState._netWorthCache;
     }
@@ -343,24 +321,19 @@ function updateNetWorth(forceRecalc = false) {
 
     GameState.netWorth = assets - liabilities;
 
-    // Update cache
+    // Update Cache
     GameState._netWorthCache = GameState.netWorth;
     GameState._netWorthCacheTurn = currentTurn;
 
     return GameState.netWorth;
 }
 
-/*******************************************************
- * CHART MODULE (Simple Canvas Header)
- *******************************************************/
-/*******************************************************
- * CHART MODULE (Premium Chart.js)
- *******************************************************/
+// Chart
 const ChartModule = {
     instance: null,
 
     drawChart(canvasId, history, visibility = { netWorth: true, cash: true, debt: true }) {
-        // Defensive check - if Chart.js failed to load, skip gracefully
+        // Check Lib
         if (typeof Chart === 'undefined') {
             console.warn('Chart.js not loaded - skipping chart rendering');
             return;
@@ -368,7 +341,7 @@ const ChartModule = {
 
         const ctx = document.getElementById(canvasId).getContext('2d');
 
-        // Destroy previous to avoid overlay
+        // Reset Canvas
         if (this.instance) {
             this.instance.destroy();
         }
@@ -438,7 +411,7 @@ const ChartModule = {
                 },
                 plugins: {
                     legend: {
-                        display: false // Hide default legend, we'll use custom
+                        display: false // Custom Legend
                     },
                     tooltip: {
                         mode: 'index',
@@ -459,7 +432,7 @@ const ChartModule = {
                         grid: { color: '#334155' },
                         ticks: {
                             color: '#94a3b8',
-                            callback: (val) => formatCurrency(val, 0) // Force integer
+                            callback: (val) => formatCurrency(val, 0) // Integer
                         }
                     }
                 }
@@ -467,7 +440,7 @@ const ChartModule = {
         });
     },
     drawStockChart(canvasId, stock, timeframe) {
-        // Defensive check - if Chart.js failed to load, skip gracefully
+        // Check Lib
         if (typeof Chart === 'undefined') {
             console.warn('Chart.js not loaded - skipping stock chart rendering');
             return;
@@ -482,7 +455,7 @@ const ChartModule = {
         let labels = Array.from({ length: data.length }, (_, i) => i);
 
         // Limit data
-        if (timeframe !== 999) { // 999 = MAX
+        if (timeframe !== 999) { // 999: Max
             data = data.slice(-timeframe);
             labels = labels.slice(-timeframe);
         }
@@ -515,24 +488,22 @@ const ChartModule = {
                 plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
                 scales: {
                     x: { display: false },
-                    y: { display: false } // Minimalist sparkline style or show ticks? User said "historial", imply detail.
-                    // Let's show Y ticks for readability
+                    y: { display: false } // Minimalist
+                    // Y ticks enabled
                 }
             }
         });
     }
 };
 
-/*******************************************************
- * PERSISTENCE MODULE
- *******************************************************/
+// Persistence
 const PersistenceModule = {
     SAVE_KEY_AUTO: 'inversion_game_auto',
     SAVE_KEY_SLOT1: 'inversion_game_slot1',
     SAVE_KEY_SLOT2: 'inversion_game_slot2',
-    SAVE_KEY: 'inversion_game_auto', // Default for backwards compatibility
+    SAVE_KEY: 'inversion_game_auto', // Legacy Default
 
-    // Get all available saves
+    // Get Saves
     getAllSaves() {
         const saves = [];
         const keys = [
@@ -566,13 +537,13 @@ const PersistenceModule = {
         return saves;
     },
 
-    // Save to specific slot
+    // Save Slot
     saveToSlot(slotKey) {
         try {
             const dataToSave = {
                 ...GameState,
                 savedAt: new Date().toISOString(),
-                language: I18n.currentLang // Save language preference
+                language: I18n.currentLang // Save Lang
             };
             const data = JSON.stringify(dataToSave);
             localStorage.setItem(slotKey, data);
@@ -582,17 +553,17 @@ const PersistenceModule = {
         }
     },
 
-    // Load from specific slot
+    // Load Slot
     loadFromSlot(slotKey) {
         try {
             const data = localStorage.getItem(slotKey);
             if (!data) return { success: false, message: t('msg_load_no_save') };
             const loadedState = JSON.parse(data);
 
-            // Restore language if saved
+            // Restore Lang
             if (loadedState.language) {
                 I18n.setLanguage(loadedState.language);
-                // We also update the welcome screen if it happens to be visible (edge case)
+                // Refresh Welcome
                 if (window.updateWelcomeScreen) window.updateWelcomeScreen();
             }
 
@@ -603,27 +574,27 @@ const PersistenceModule = {
         }
     },
 
-    // Auto-save (used by the game loop)
+    // Auto-save
     saveGame() {
         return this.saveToSlot(this.SAVE_KEY_AUTO);
     },
 
-    // Load from auto-save (backwards compatibility)
+    // Load Auto
     loadGame() {
         return this.loadFromSlot(this.SAVE_KEY_AUTO);
     },
 
-    // Check if any save exists
+    // Check Exists
     checkSave() {
         return this.getAllSaves().length > 0;
     },
 
-    // Delete a specific slot
+    // Delete Slot
     deleteSlot(slotKey) {
         localStorage.removeItem(slotKey);
     },
 
-    // Clear all saves
+    // Clear All
     resetGame() {
         localStorage.removeItem(this.SAVE_KEY_AUTO);
         localStorage.removeItem(this.SAVE_KEY_SLOT1);
@@ -631,7 +602,7 @@ const PersistenceModule = {
         location.reload();
     },
 
-    // Exit Game
+    // Exit
     exitGame() {
         UI.showModal(
             t('exit_game_title') || 'Salir del Juego',
@@ -650,7 +621,7 @@ const PersistenceModule = {
         );
     },
 
-    // Show save slots modal for manual saving
+    // Save Modal
     showSaveModal() {
         const saves = this.getAllSaves();
         const slot1 = saves.find(s => s.key === this.SAVE_KEY_SLOT1);
@@ -767,18 +738,15 @@ const PersistenceModule = {
 
     saveAndNotify(slotKey) {
         const result = this.saveToSlot(slotKey);
-        // Use 'this.saveToSlot' was called above, so we know 'this' refers to PersistenceModule or we can use the global object if context is lost
-        // But since we are inside an object method:
+
         document.querySelector('.custom-modal-overlay')?.remove();
         UI.showToast(result.success ? t('msg_saved_title') : t('msg_error_title'), result.message, result.success ? 'success' : 'error');
     }
 };
 
-/*******************************************************
- * GAME BALANCE (New "Status Ladder" System)
- *******************************************************/
+// Balance
 const GameBalance = {
-    // Maps Housing ID to Tier Level (0-12)
+    // Housing Tier (0-12)
     getHousingTier() {
         if (!GameState.lifestyle || !GameState.lifestyle.housing) return 0;
         const h = GameState.lifestyle.housing;
@@ -809,10 +777,10 @@ const GameBalance = {
             if (currentH < req.housing) return { success: false, message: `Necesitas vivienda Nivel ${req.housing + 1}.` };
         }
 
-        // Handle both 'vehicle' (legacy) and 'transport' keys
+        // Legacy vehicle/transport
         const reqTransport = req.transport !== undefined ? req.transport : req.vehicle;
         if (reqTransport !== undefined) {
-            const currentV = this.getCombinedTier('transport'); // Use 'transport' category
+            const currentV = this.getCombinedTier('transport'); // Transport Category
             if (currentV < reqTransport) return { success: false, message: `Necesitas transporte Nivel ${reqTransport + 1}.` };
         }
 
@@ -832,13 +800,13 @@ const GameBalance = {
     },
 
     getCombinedTier(category) {
-        // Map common request keys to internal lifestyle keys
+        // Map keys
         let lifestyleKey = category;
         if (category === 'vehicle') lifestyleKey = 'transport'; // Alias
         if (!GameState.lifestyle || !GameState.lifestyle[lifestyleKey]) return 0;
         const id = GameState.lifestyle[lifestyleKey];
 
-        // Order matches LifestyleModule definition
+        // Matches LifestyleModule
         const orders = {
             vehicle: ['walk', 'skate', 'bike', 'scooter_el', 'public', 'moto_125', 'moto_big', 'car_old', 'car_new', 'car_premium', 'car_sport', 'supercar', 'chofer'],
             transport: ['walk', 'skate', 'bike', 'scooter_el', 'public', 'moto_125', 'moto_big', 'car_old', 'car_new', 'car_premium', 'car_sport', 'supercar', 'chofer'], // Alias
@@ -847,10 +815,7 @@ const GameBalance = {
             food: ['scraps', 'noodles', 'junk', 'cooking_basic', 'cooking', 'menu', 'bio', 'delivery', 'rest_nice', 'chef', 'michelin']
         };
 
-        // Use the original category for lookup in orders or the mapped one?
-        // My orders object uses 'vehicle' AND 'transport' just to be safe.
-        // Actually orders object keys should match the input to getCombinedTier OR the mapped key. 
-        // Let's use mapped key logic.
+
 
         const usedKey = orders[category] ? category : lifestyleKey;
 
@@ -862,8 +827,7 @@ const GameBalance = {
     getLimits() {
         const tier = this.getHousingTier();
 
-        // 1. STOCK MARKET CAP
-        // Exponential Curve: Base 10k -> Unlimited
+        // Stock Caps
         const stockCaps = [
             5000,       // Tier 0 (Parents)
             7500,       // Tier 1 (Sofa)
@@ -880,7 +844,7 @@ const GameBalance = {
             Infinity    // Tier 12 (Mansion)
         ];
 
-        // 2. REAL ESTATE CAP (Max properties owned)
+        // Real Estate Cap (Max owned properties)
         const reCaps = [
             2,  // Tier 0
             2,  // Tier 1
@@ -905,9 +869,7 @@ const GameBalance = {
     }
 };
 
-/*******************************************************
- * STOCK MARKET
- *******************************************************/
+// --- Stock Market ---
 const StockMarket = {
     stocks: [
         { symbol: 'SP500', name: 'S&P 500', price: 4500.00, trend: 0.00, history: [], volatility: 0.08, type: 'index' },
@@ -938,14 +900,14 @@ const StockMarket = {
     },
 
     assignAnnualTargets() {
-        // Get only non-index stocks (exclude SP500 and NDX)
+        // Filter stocks
         const regularStocks = this.stocks.filter(s => !s.type || s.type !== 'index');
 
         // Shuffle companies randomly
         const shuffled = [...regularStocks].sort(() => Math.random() - 0.5);
 
         // Assign performance tiers
-        // Tier 1: 2 companies with 60-80% annual return
+        // Tier 1
         shuffled[0].annualTarget = 0.60 + Math.random() * 0.20;
         shuffled[1].annualTarget = 0.60 + Math.random() * 0.20;
 
@@ -975,12 +937,12 @@ const StockMarket = {
             let totalChange = 0;
 
             if (stock.type === 'index') {
-                // INDEX LOGIC: Mean reversion to +9% annual (~0.72% monthly)
+                // Index Logic
                 const targetMonthlyReturn = 0.0072; // ~9% APY
                 const fluctuation = (Math.random() * stock.volatility) - (stock.volatility / 2);
                 totalChange = targetMonthlyReturn + fluctuation;
             } else {
-                // REGULAR STOCK LOGIC WITH ANNUAL TARGETS
+                // Regular stock logic with annual targets
                 if (!stock.annualTarget) {
                     // Initialize if not set (first time)
                     stock.annualTarget = 0;
@@ -1021,7 +983,7 @@ const StockMarket = {
 
         const cost = stock.price * qty;
 
-        // CALCULATE CURRENT PORTFOLIO VALUE
+        // Calculate current portfolio value
         let currentPortfolioValue = 0;
         GameState.inventory.stocks.forEach(p => {
             const s = this.getStock(p.symbol);
@@ -1030,7 +992,7 @@ const StockMarket = {
             }
         });
 
-        // CHECK PORTFOLIO LIMIT (Game Balance)
+        // Limit
         const limits = GameBalance.getLimits();
         const portfolioLimit = limits.stockCap;
 
@@ -1068,14 +1030,14 @@ const StockMarket = {
 
         GameState.cash += saleValue;
 
-        // TRACK STOCK GAINS FOR TAXES (only if profit)
+        // Track stock gains for taxes (only if profit)
         if (profit > 0) {
             if (!GameState.currentYearIncome) {
                 GameState.currentYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
             }
             GameState.currentYearIncome.stocks += profit;
 
-            // LIFETIME TRACKING - DEFENSIVE INIT
+            // Lifetime tracking - DEFENSIVE INIT
             if (!GameState.lifetimeStats) {
                 GameState.lifetimeStats = {
                     totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
@@ -1135,7 +1097,7 @@ const Portfolio = {
 
             gameState.cash += totalReturn;
 
-            // TRACK STOCK GAINS FOR TAXES (only if profit, after commission)
+            // Track stock gains for taxes (only if profit, after commission)
             const netProfit = profit - commission;
             if (netProfit > 0) {
                 if (!GameState.currentYearIncome) {
@@ -1143,7 +1105,7 @@ const Portfolio = {
                 }
                 GameState.currentYearIncome.stocks += netProfit;
 
-                // LIFETIME TRACKING - DEFENSIVE INIT
+                // Lifetime tracking - DEFENSIVE INIT
                 if (!GameState.lifetimeStats) {
                     GameState.lifetimeStats = {
                         totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
@@ -1169,9 +1131,7 @@ const Portfolio = {
     }
 };
 
-/*******************************************************
- * BANK
- *******************************************************/
+// --- Bank ---
 const Bank = {
     INTEREST_RATES: {
         personal: 0.12,
@@ -1288,7 +1248,7 @@ const Bank = {
                 GameState.cash -= loan.monthlyPayment;
                 totalPaid += loan.monthlyPayment;
 
-                // LIFETIME HOUSING EXPENSE TRACKING (mortgages only)
+                // Lifetime housing expense tracking (mortgages only)
                 if (loan.isMortgage) {
                     if (!GameState.lifetimeStats) {
                         GameState.lifetimeStats = {
@@ -1323,9 +1283,7 @@ const Bank = {
     }
 };
 
-/*******************************************************
- * REAL ESTATE
- *******************************************************/
+// --- Real Estate ---
 const RealEstate = {
     availableProperties: [],
     PROPERTY_TYPES: {
@@ -1419,7 +1377,7 @@ const RealEstate = {
     },
 
     nextTurn() {
-        // 1. Cycle Market: Remove oldest available, add new one
+        // Cycle monthly market listings
         if (this.availableProperties.length > 0) {
             // Assuming index 0 is oldest due to push order
             this.availableProperties.shift();
@@ -1442,7 +1400,7 @@ const RealEstate = {
         const propertyIndex = this.availableProperties.findIndex(p => p.id === propertyId);
         if (propertyIndex === -1) return { success: false, message: t('re_prop_not_found') };
 
-        // CHECK REAL ESTATE CAP (Game Balance)
+        // Cap
         const limits = GameBalance.getLimits();
         const ownedCount = GameState.inventory.realEstate.length;
         if (ownedCount >= limits.reCap) {
@@ -1503,11 +1461,11 @@ const RealEstate = {
         }
 
         const netProfit = marketValue - mortgageCost;
-        const actualProfit = marketValue - purchasePrice; // True profit (sale - purchase)
+        const actualProfit = marketValue - purchasePrice; // Net Profit
 
         GameState.cash += netProfit;
 
-        // LIFETIME REAL ESTATE TRACKING
+        // Lifetime real estate tracking
         if (!GameState.lifetimeStats) {
             GameState.lifetimeStats = {
                 totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
@@ -1544,9 +1502,7 @@ const RealEstate = {
 };
 RealEstate.generateListings();
 
-/*******************************************************
- * EDUCATION SYSTEM
- *******************************************************/
+// --- Lifestyle ---
 const LifestyleModule = {
     categories: {
         housing: {
@@ -1656,13 +1612,13 @@ const LifestyleModule = {
     setOption(category, id) {
         if (!GameState.lifestyle) return { success: false };
 
-        // Check if already selected
+        // Check Selected
         if (GameState.lifestyle[category] === id) return { success: false, message: t('lifestyle_already_selected') };
 
         const item = this.getItem(category, id);
         if (!item) return { success: false, message: t('lifestyle_invalid_option') };
 
-        // UPFRONT COST LOGIC
+        // Upfront cost logic
         let upfront = 0;
         if (item.deposit) upfront += item.deposit;
         if (item.purchaseCost) upfront += item.purchaseCost;
@@ -1671,7 +1627,7 @@ const LifestyleModule = {
             return { success: false, message: `${t('msg_not_enough_cash')}. ${t('upfront_payment')}: ${formatCurrency(upfront)}` };
         }
 
-        // DEDUCT & SET
+        // Deduct & SET
         GameState.cash -= upfront;
         GameState.lifestyle[category] = id;
         GameState.expenses = this.calculateTotal();
@@ -1721,7 +1677,7 @@ const EducationModule = {
     startCourse(courseId) {
         if (GameState.currentCourse) return { success: false, message: t('edu_already_studying') };
         const course = this.courses.find(c => c.id === courseId);
-        const cost = course.cost; // Changed from costYear to cost
+        const cost = course.cost;
         if (GameState.cash < cost) return { success: false, message: t('edu_no_funds') };
 
         // Strict Requirement Check
@@ -1732,7 +1688,7 @@ const EducationModule = {
 
         GameState.cash -= cost;
 
-        // LIFETIME EDUCATION EXPENSE TRACKING
+        // Lifetime education expense tracking
         if (!GameState.lifetimeStats) {
             GameState.lifetimeStats = {
                 totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
@@ -1782,7 +1738,7 @@ const EducationModule = {
             return; // Tutorial handles the modal
         }
 
-        // PREMIUM COURSE COMPLETION MESSAGE
+        // Course completion message
         const themeColor = '#818cf8'; // Indigo
         const icon = '🎓';
 
@@ -1833,9 +1789,7 @@ const EducationModule = {
     }
 };
 
-/*******************************************************
- * COMPANY MODULE (Entrepreneurship Mode)
- *******************************************************/
+// --- Company ---
 const CompanyModule = {
     // Configuration
     businessTypes: {
@@ -1894,7 +1848,7 @@ const CompanyModule = {
             // Assets / Levels
             marketingLevel: 1,
             productLevel: 1,
-            maxStaff: 5, // TIER 1 CAP
+            maxStaff: 5, // Tier 1 CAP
 
             // Decisions
             marketingChannel: 'none',
@@ -1957,7 +1911,7 @@ const CompanyModule = {
         const loc = this.locations[co.locationId];
         const locationMaxStaff = loc?.maxStaff || 15;
 
-        // Check if already at location max
+        // Loc Max
         if (co.maxStaff >= locationMaxStaff) {
             return { success: false, message: t('office_max_location', { loc: t('loc_' + co.locationId), max: locationMaxStaff }) };
         }
@@ -2072,8 +2026,8 @@ const CompanyModule = {
         GameState.cash += netAmount;
         GameState.ownedCompanies.splice(index, 1);
 
-        // Track tax payment if needed, or just deduct it.
-        // Returning detailed message for the user.
+        // Tax deduction
+        // Return detail
         return {
             success: true,
             message: t('company_sold_msg', {
@@ -2088,7 +2042,7 @@ const CompanyModule = {
         if (GameState.company) {
             this.processCompany(GameState.company, true);
 
-            // CHECK FOR SALARY DEMANDS (Modal)
+            // Salary Demands
             if (GameState.company.tempSalaryDemands && GameState.company.tempSalaryDemands.length > 0) {
                 const demands = GameState.company.tempSalaryDemands;
                 const count = demands.length;
@@ -2123,10 +2077,7 @@ const CompanyModule = {
                     </div>
                 `;
 
-                // Use setTimeout to ensure it appears after other turn events if needed, 
-                // but direct call is usually fine.
-                // We use showModal queueing or just show it.
-                // Since this is critical, we force it.
+                // Critical Demand
                 UI.showModal(
                     modalTitle,
                     modalMsg,
@@ -2134,13 +2085,11 @@ const CompanyModule = {
                         text: t('try_again_btn'),
                         style: 'primary',
                         fn: () => {
-                            // 1. Navigate to Company View
+                            // Go to Staff Tab
                             const btn = document.querySelector('.b-nav-item[data-view="company"]'); // Mobile
                             if (btn) btn.click();
                             const dBtn = document.querySelector('.nav-btn[data-view="company"]'); // Desktop
                             if (dBtn) dBtn.click();
-
-                            // 2. Click "Personal" Tab after render
                             setTimeout(() => {
                                 const staffTab = document.querySelector('button.tab-btn[data-tab="staff"]');
                                 if (staffTab) staffTab.click();
@@ -2159,13 +2108,12 @@ const CompanyModule = {
                 if (co.profitLastMonth > 0) {
                     GameState.cash += co.profitLastMonth;
 
-                    // TRACK COMPANY PROFITS FOR TAXES
+                    // Taxable Profit
                     if (!GameState.currentYearIncome) {
                         GameState.currentYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
                     }
                     GameState.currentYearIncome.company += co.profitLastMonth;
-                    // LIFETIME TRACKING
-                    GameState.lifetimeStats.totalIncome.company += co.profitLastMonth;
+                    // Lifetime Income
                 }
             });
         }
@@ -2174,7 +2122,7 @@ const CompanyModule = {
     processCompany(co, isActive) {
         const type = this.businessTypes[co.typeId];
 
-        // --- PASSIVE LOGIC (Manager) ---
+        // Passive Logic
         if (!isActive) {
             let volatPct = 0.10;
             if (co.typeId === 'retail') volatPct = 0.25;
@@ -2198,7 +2146,7 @@ const CompanyModule = {
             return { profit: monthlyProfit };
         }
 
-        // --- ACTIVE LOGIC ---
+        // Active Logic
         const loc = this.locations[co.locationId];
         const marketing = this.marketingChannels[co.marketingChannel];
         const provider = this.providers[co.providerId];
@@ -2215,7 +2163,7 @@ const CompanyModule = {
                 const growth = ((Math.random() * 0.04) + 0.01) / 2;
                 emp.skill = Math.min(1.0, emp.skill + growth);
             } else {
-                // Expert endgame growth bonus
+                // Expert Bonus
                 const growthRate = (emp.role === t('role_expert') || emp.role === 'Experto') ? 0.006 : 0.005;
                 emp.skill += growthRate;
             }
@@ -2236,7 +2184,7 @@ const CompanyModule = {
             } else {
                 emp.morale = Math.max(0.0, emp.morale - 0.10);
                 co.events.push(t('news_unhappy_employee', { amount: formatCurrency(emp.requiredWage) }));
-                // Collect for modal
+                // Queue Modal
                 co.tempSalaryDemands.push({
                     name: emp.name,
                     role: emp.role || t('role_employee'),
@@ -2303,8 +2251,7 @@ const CompanyModule = {
             if (isActive) GameState.salary = ceoSalary;
         }
 
-        // Do NOT add to GameState.cash here. The main loop does it via GameState.salary.
-        // Just deduct from company.
+        // Handled in Main Loop
 
         const totalExpenses = wageBill + rent + cogs + marketingCost + opEx + ceoSalary;
         const profit = revenue - totalExpenses;
@@ -2412,7 +2359,7 @@ const CompanyModule = {
         GameState.company.cash -= amount;
         GameState.cash += amount;
 
-        // Track for tax declaration (renta)
+        // Tax Declaration
         if (GameState.currentYearIncome) {
             GameState.currentYearIncome.company += amount;
         }
@@ -2476,9 +2423,7 @@ TOTAL OPERACIÓN: ${formatCurrency(totalExit)}
     }
 };
 
-/*******************************************************
- * JOB SYSTEM
- *******************************************************/
+// Jobs
 const BossMessages = {
     positive: [
         "Has superado las expectativas este año. Te lo mereces.",
@@ -2526,7 +2471,7 @@ const BossMessages = {
     ]
 };
 
-// --- GIGS POOL ---
+// Gigs Pool
 const GIGS_POOL = [
     { title: 'Vender cromos', titleKey: 'gig_cromos', descKey: 'gig_cromos_desc', salary: 50, duration: 3, type: 'gig', reqMonths: 0, reqEdu: null },
     { title: 'Ventas en Wallapop', titleKey: 'gig_wallapop', descKey: 'gig_wallapop_desc', salary: 120, duration: 4, type: 'gig', reqMonths: 0, reqEdu: null },
@@ -2543,7 +2488,7 @@ const GIGS_POOL = [
     { title: 'Cortar césped', titleKey: 'gig_cesped', descKey: 'gig_cesped_desc', salary: 140, duration: 4, type: 'gig', reqMonths: 0, reqEdu: null }
 ];
 
-// Helper to get gig translation
+// Gig Translation
 function getGigTranslation(gig) {
     if (gig.titleKey) return t(gig.titleKey);
     return gig.title;
@@ -2551,37 +2496,37 @@ function getGigTranslation(gig) {
 
 const JobSystem = {
     careers: {
-        // --- BASICO ---
+        // Basic
         'unskilled': [
-            { title: 'Reponedor / Auxiliar', salary: 700, reqMonths: 0, reqEdu: ['bachillerato', 'fp_medio'], req: null }, // Entry Level: No reqs
-            { title: 'Cajero / Atención', salary: 1150, reqMonths: 6, reqEdu: null, req: { housing: 3, food: 2, clothes: 2 } }, // Room + Junk + 2nd Hand
-            { title: 'Supervisor de Planta', salary: 1400, reqMonths: 24, reqEdu: null, req: { housing: 4, food: 3, clothes: 3, leisure: 2 } } // Shared + Cooking + Basic + Net
+            { title: 'Reponedor / Auxiliar', salary: 700, reqMonths: 0, reqEdu: ['bachillerato', 'fp_medio'], req: null }, // Entry Level
+            { title: 'Cajero / Atención', salary: 1150, reqMonths: 6, reqEdu: null, req: { housing: 3, food: 2, clothes: 2 } }, // Requirements: Room+
+            { title: 'Supervisor de Planta', salary: 1400, reqMonths: 24, reqEdu: null, req: { housing: 4, food: 3, clothes: 3, leisure: 2 } } // Requirements: Shared+
         ],
 
-        // --- DJ CAREER ---
+        // DJ Career
         'dj': [
             { title: 'DJ Residente de tu casa', salary: 600, reqMonths: 0, reqEdu: null, req: null },
             { title: 'DJ Reggeton', salary: 1400, reqMonths: 2, reqEdu: ['dj_basic'], req: { transport: 4 } }, // Transport T4 (Public)
             { title: 'DJ Residente Reggeton', salary: 1800, reqMonths: 4, reqEdu: ['dj_basic'], req: { clothes: 4 } }, // Clothes T4 (Fast Fash)
             { title: 'DJ Electronica', salary: 2300, reqMonths: 6, reqEdu: ['dj_basic'], req: { food: 5 } }, // Food T5 (Menu)
-            { title: 'DJ Residente Electronica', salary: 2800, reqMonths: 8, reqEdu: ['dj_basic'], req: { leisure: 6 } }, // Leisure T6 (Clubbing)
-            { title: 'DJ Residente Octogono', salary: 3400, reqMonths: 10, reqEdu: ['dj_pioneer'], req: { housing: 7 } }, // Housing T7 (Studio)
-            { title: 'DJ y Productor', salary: 4500, reqMonths: 12, reqEdu: ['dj_pioneer'], req: { transport: 8 } }, // Transport T8 (New Car)
-            { title: 'DJ Productor Sello', salary: 5500, reqMonths: 18, reqEdu: ['dj_pioneer'], req: { clothes: 6 } }, // Clothes T6 (Boutique)
-            { title: 'DJ Residente Studio 77', salary: 5900, reqMonths: 24, reqEdu: ['dj_vinyl'], req: { food: 7 } }, // Food T7 (Delivery)
-            { title: 'DJ Residente Kapitol', salary: 7100, reqMonths: 30, reqEdu: ['dj_vinyl'], req: { leisure: 8 } }, // Leisure T8 (VIP)
-            { title: 'DJ Residente Ibiza', salary: 10750, reqMonths: 36, reqEdu: ['dj_pro'], req: { housing: 11 } }, // Housing T11 (Penthouse)
-            { title: 'DJ Residente Berghain', salary: 15000, reqMonths: 48, reqEdu: ['dj_pro'], req: { transport: 11 } }, // Transport T11 (Supercar)
+            { title: 'DJ Residente Electronica', salary: 2800, reqMonths: 8, reqEdu: ['dj_basic'], req: { leisure: 6 } }, // Leisure T6
+            { title: 'DJ Residente Octogono', salary: 3400, reqMonths: 10, reqEdu: ['dj_pioneer'], req: { housing: 7 } }, // Housing T7
+            { title: 'DJ y Productor', salary: 4500, reqMonths: 12, reqEdu: ['dj_pioneer'], req: { transport: 8 } }, // Transport T8
+            { title: 'DJ Productor Sello', salary: 5500, reqMonths: 18, reqEdu: ['dj_pioneer'], req: { clothes: 6 } }, // Clothes T6
+            { title: 'DJ Residente Studio 77', salary: 5900, reqMonths: 24, reqEdu: ['dj_vinyl'], req: { food: 7 } }, // Food T7
+            { title: 'DJ Residente Kapitol', salary: 7100, reqMonths: 30, reqEdu: ['dj_vinyl'], req: { leisure: 8 } }, // Leisure T8
+            { title: 'DJ Residente Ibiza', salary: 10750, reqMonths: 36, reqEdu: ['dj_pro'], req: { housing: 11 } }, // Housing T11
+            { title: 'DJ Residente Berghain', salary: 15000, reqMonths: 48, reqEdu: ['dj_pro'], req: { transport: 11 } }, // Transport T11
             { title: 'DJ Residente FAVRIK', salary: 21500, reqMonths: 60, reqEdu: ['dj_pro'], req: { clothes: 8, food: 9 } }, // Clothes T8 (Suits) + Food T9 (Chef)
             { title: 'DJ Whiteworks', salary: 40000, reqMonths: 72, reqEdu: ['dj_pro'], req: { housing: 12, leisure: 11 } } // Housing T12 (Mansion) + Leisure T11 (Yacht)
         ],
 
-        // --- TRES DEPORTE (Sin ascensos) ---
+        // Tres Deporte (No Promos)
         'tres_deporte': [
             { title: 'TRES DEPORTE', salary: 800, reqMonths: 0, reqEdu: 'bachillerato', req: null }
         ],
 
-        // --- FP ADMINISTRACION ---
+        // FP Admin
         'admin_contable': [
             { title: 'Administrativo contable', salary: 1300, reqMonths: 0, reqEdu: 'fp_admin', req: { housing: 3, clothes: 3, food: 2 } }, // Independent + Basic Look
             { title: 'Administrativo senior', salary: 1700, reqMonths: 12, reqEdu: 'fp_admin', req: { housing: 4, clothes: 4, food: 3, leisure: 2 } }, // Shared + Fast Fashion
@@ -2595,16 +2540,16 @@ const JobSystem = {
             { title: 'Jefe de admi. de clientes', salary: 3000, reqMonths: 60, reqEdu: 'fp_admin', req: { housing: 7, clothes: 6, transport: 5 } }
         ],
         'admin_inmo': [
-            { title: 'Administrativo comercial inmo.', salary: 1300, reqMonths: 0, reqEdu: 'fp_admin', req: { housing: 3, clothes: 4 } }, // Image matters
+            { title: 'Administrativo comercial inmo.', salary: 1300, reqMonths: 0, reqEdu: 'fp_admin', req: { housing: 3, clothes: 4 } }, // High Image
             { title: 'Gestor de operaciones inmo.', salary: 1800, reqMonths: 18, reqEdu: 'fp_admin', req: { housing: 5, clothes: 5, transport: 4 } },
             { title: 'Responsable de oficina inmo.', salary: 2400, reqMonths: 36, reqEdu: 'fp_admin', req: { housing: 7, clothes: 6, transport: 5, leisure: 4 } },
             { title: 'Director de zona', salary: 3200, reqMonths: 72, reqEdu: 'fp_admin', req: { housing: 8, clothes: 7, transport: 6, leisure: 5 } } // Apt Out + Boutique + Moto
         ],
 
-        // --- FP DAM ---
+        // FP DAM
         'prog_apps': [
             { title: 'Programador junior (FP)', salary: 1500, reqMonths: 0, reqEdu: ['fp_dam', 'bootcamp'], req: { housing: 3, leisure: 2, food: 2 } },
-            { title: 'Programador semi‑senior', salary: 2000, reqMonths: 18, reqEdu: ['fp_dam', 'bootcamp'], req: { housing: 5, leisure: 3, food: 3 } }, // Suite + Internet
+            { title: 'Programador semi‑senior', salary: 2000, reqMonths: 18, reqEdu: ['fp_dam', 'bootcamp'], req: { housing: 5, leisure: 3, food: 3 } }, // Suite+
             { title: 'Desarrollador senior', salary: 2700, reqMonths: 36, reqEdu: ['fp_dam', 'bootcamp'], req: { housing: 7, leisure: 5, food: 4, clothes: 4 } }, // Studio + Hobbies
             { title: 'Tech lead', salary: 3800, reqMonths: 72, reqEdu: ['fp_dam', 'bootcamp'], req: { housing: 9, leisure: 6, food: 5, clothes: 5 } } // Apt Center + Active
         ],
@@ -2621,11 +2566,10 @@ const JobSystem = {
             { title: 'Lead mobile / arquitecto', salary: 4000, reqMonths: 84, reqEdu: ['fp_dam', 'bootcamp'], req: { housing: 9, leisure: 6, food: 5, transport: 5 } }
         ],
 
-        // --- FP MANTENIMIENTO ---
-        // --- FP MANTENIMIENTO ---
-        // --- FP MANTENIMIENTO ---
+        // FP Maintenance
+
         'maint_ind': [
-            { title: 'Técnico mantenimiento ind.', salary: 1500, reqMonths: 0, reqEdu: 'fp_maint', req: { housing: 3, food: 3 } }, // Physical job needs food
+            { title: 'Técnico mantenimiento ind.', salary: 1500, reqMonths: 0, reqEdu: 'fp_maint', req: { housing: 3, food: 3 } }, // Physical Job
             { title: 'Técnico senior', salary: 1900, reqMonths: 24, reqEdu: 'fp_maint', req: { housing: 5, food: 4, transport: 4 } },
             { title: 'Jefe de equipo', salary: 2400, reqMonths: 48, reqEdu: 'fp_maint', req: { housing: 6, food: 4, transport: 5, clothes: 3 } },
             { title: 'Responsable de planta', salary: 3300, reqMonths: 84, reqEdu: 'fp_maint', req: { housing: 8, food: 5, transport: 6, clothes: 5 } }
@@ -2643,9 +2587,9 @@ const JobSystem = {
             { title: 'Facility manager', salary: 3200, reqMonths: 84, reqEdu: 'fp_maint', req: { housing: 8, food: 5, transport: 5, clothes: 5 } }
         ],
 
-        // --- GRADO ADE ---
+        // Degree ADE
         'analyst_fin': [
-            { title: 'Analista financiero', salary: 1600, reqMonths: 0, reqEdu: 'grado_ade', req: { housing: 4, clothes: 4, food: 3 } }, // Suit required
+            { title: 'Analista financiero', salary: 1600, reqMonths: 0, reqEdu: 'grado_ade', req: { housing: 4, clothes: 4, food: 3 } }, // Suit Req
             { title: 'Analista senior', salary: 2300, reqMonths: 36, reqEdu: 'grado_ade', req: { housing: 6, clothes: 5, food: 4, transport: 4 } },
             { title: 'Controller financiero', salary: 3000, reqMonths: 60, reqEdu: 'master_fin', req: { housing: 8, clothes: 6, food: 5, transport: 5 } },
             { title: 'Director financiero (CFO)', salary: 4500, reqMonths: 108, reqEdu: 'master_fin', req: { housing: 10, clothes: 8, food: 7, leisure: 7 } } // High Stakes
@@ -2663,9 +2607,9 @@ const JobSystem = {
             { title: 'Director comercial', salary: 4500, reqMonths: 108, reqEdu: 'master_fin', req: { housing: 10, clothes: 8, leisure: 7, food: 6 } }
         ],
 
-        // --- GRADO INFORMATICA ---
+        // Degree CS
         'swe': [
-            { title: 'Ingeniero de software', salary: 1800, reqMonths: 0, reqEdu: 'grado_cs', req: { housing: 4, leisure: 3, food: 3 } }, // High leisure (setup)
+            { title: 'Ingeniero de software', salary: 1800, reqMonths: 0, reqEdu: 'grado_cs', req: { housing: 4, leisure: 3, food: 3 } }, // Setup Req
             { title: 'Software engineer mid', salary: 2500, reqMonths: 24, reqEdu: 'grado_cs', req: { housing: 6, leisure: 5, food: 4 } },
             { title: 'Senior software engineer', salary: 3400, reqMonths: 60, reqEdu: 'grado_cs', req: { housing: 8, leisure: 6, food: 5, clothes: 4 } },
             { title: 'Engineering manager', salary: 4800, reqMonths: 108, reqEdu: 'master_ai', req: { housing: 10, leisure: 8, food: 6, clothes: 6 } } // Exec
@@ -2683,10 +2627,10 @@ const JobSystem = {
             { title: 'Director infraest. cloud', salary: 5000, reqMonths: 120, reqEdu: 'master_ai', req: { housing: 10, leisure: 8, food: 6, transport: 5 } }
         ],
 
-        // --- GRADO CIVIL ---
-        // --- GRADO CIVIL ---
+        // Degree Civil
+
         'ing_obra': [
-            { title: 'Ingeniero de obra', salary: 1700, reqMonths: 0, reqEdu: 'grado_civil', req: { housing: 4, food: 3, transport: 4 } }, // Travel + Food
+            { title: 'Ingeniero de obra', salary: 1700, reqMonths: 0, reqEdu: 'grado_civil', req: { housing: 4, food: 3, transport: 4 } }, // Travel
             { title: 'Jefe de obra', salary: 2400, reqMonths: 36, reqEdu: 'grado_civil', req: { housing: 6, food: 4, transport: 5, clothes: 3 } },
             { title: 'Jefe de proyecto', salary: 3300, reqMonths: 72, reqEdu: 'master_ing', req: { housing: 8, food: 5, transport: 6, clothes: 5 } },
             { title: 'Director construcción', salary: 4700, reqMonths: 120, reqEdu: 'master_ing', req: { housing: 10, food: 6, transport: 7, clothes: 6 } }
@@ -2718,13 +2662,13 @@ const JobSystem = {
     nextTurn() {
         if (GameState.company) return;
 
-        // Handle Gig Expiration
+        // Gig Expiration
         if (GameState.jobType === 'gig') {
             if (GameState.gigRemaining > 0) {
                 GameState.gigRemaining--;
             }
             if (GameState.gigRemaining <= 0) {
-                // Gig finished - Show modal instead of toast for better visibility
+                // Show Modal
                 const expiryMsg = `
                     <div style="text-align: center; margin-bottom: 20px;">
                         <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.4)); animation: bounceIn 0.6s;">🏁</div>
@@ -2752,37 +2696,33 @@ const JobSystem = {
                 GameState.salary = 0;
                 GameState.jobType = 'unemployed';
                 this.currentCareerPath = 'none';
-                UI.updateJob(this); // Refresh UI if open
+                UI.updateJob(this); // Refresh UI
                 return;
             }
         }
 
         if (!GameState.isStudying) {
             this.monthsInCurrentJob += 1;
-            this.monthsSinceLastRaise = (this.monthsSinceLastRaise || 0) + 1; // Track for TRES DEPORTE salary requests
+            this.monthsSinceLastRaise = (this.monthsSinceLastRaise || 0) + 1; // Track Raises
         } else {
             this.monthsInCurrentJob += 0.5;
             this.monthsSinceLastRaise += 0.5;
         }
 
-        // Check for available promotion
+        // Check Promo
         this.checkAvailablePromotion();
 
-        // Generar nuevos gigs para el mes siguiente
-        this.generateMonthlyGigs();
+        // Generate Gigs
     },
 
-    /**
-     * Generate new monthly gigs for the job market.
-     * Only regenerates if player doesn't have an active gig (prevents losing active temporary jobs).
-     */
+    // Generate Gigs
     generateMonthlyGigs() {
-        // Don't regenerate if player has an active gig job
+        // Check Active
         if (GameState.jobType === 'gig' && GameState.gigRemaining > 0) {
-            return; // Keep current gigs list unchanged
+            return; // Skip
         }
 
-        // Shuffle and pick 2 random gigs
+        // Shuffle & Pick
         const shuffled = [...GIGS_POOL].sort(() => 0.5 - Math.random());
         GameState.currentGigs = shuffled.slice(0, 2).map(gig => ({ ...gig, path: 'temporary' }));
     },
@@ -2791,7 +2731,7 @@ const JobSystem = {
         if (this.currentCareerPath === 'entrepreneur' || this.currentCareerPath === 'none' || this.currentCareerPath === 'temporary') return null;
 
         const path = this.careers[this.currentCareerPath];
-        if (!path) return null; // Safe guard
+        if (!path) return null; // Guard
         const currentJobIndex = path.findIndex(j => j.title === GameState.jobTitle);
 
         if (currentJobIndex === -1 || currentJobIndex >= path.length - 1) return null;
@@ -2800,7 +2740,7 @@ const JobSystem = {
     },
 
     promote() {
-        // SPECIAL CASE: TRES DEPORTE - No promotions, but can ask for raise every 2 months
+        // No Promos (Tres Deporte)
         if (GameState.jobTitle === 'TRES DEPORTE') {
             const monthsSinceLastRequest = this.monthsSinceLastRaise || 0;
 
@@ -2811,17 +2751,17 @@ const JobSystem = {
                 };
             }
 
-            // Reset counter
+            // Reset
             this.monthsSinceLastRaise = 0;
 
-            // Boss excuses - using i18n keys for translation
+            // Boss Excuses
             const excuseKeys = Array.from({ length: 30 }, (_, i) => `boss_excuse_${i + 1}`);
             const randomKey = excuseKeys[Math.floor(Math.random() * excuseKeys.length)];
             return { success: false, message: t(randomKey) };
         }
 
 
-        // NORMAL PROMOTION LOGIC
+        // Promotion Logic
         const nextJob = this.getAvailablePromotions();
         if (!nextJob) return { success: false, message: t('job_no_promotions') };
 
@@ -2833,7 +2773,7 @@ const JobSystem = {
             if (!this.checkEducation(nextJob.reqEdu)) return { success: false, message: `Necesitas estudios de tipo: ${nextJob.reqEdu}` };
         }
 
-        // LIFESTYLE REQUIREMENTS (Status Ladder)
+        // Status Ladder
         if (nextJob.req) {
             const lsCheck = GameBalance.checkLifestyleReq(nextJob.req);
             if (!lsCheck.success) {
@@ -2841,12 +2781,11 @@ const JobSystem = {
             }
         }
 
-        // SUCCESSFUL PROMOTION
-        GameState.salary = nextJob.salary;
+        // Success
         GameState.jobTitle = nextJob.title;
         this.monthsInCurrentJob = 0;
 
-        // Reset notification flag
+        // Reset Flag
         GameState.promotionNotified = false;
 
         return { success: true, message: t('promoted_to').replace('{job}', nextJob.title).replace('{salary}', nextJob.salary) };
@@ -2856,13 +2795,13 @@ const JobSystem = {
         if (GameState.jobType === 'gig' || GameState.jobType === 'unemployed') return;
         if (this.currentCareerPath === 'none' || this.currentCareerPath === 'entrepreneur') return;
 
-        // Don't notify if already notified for this level
+        // Check Notified
         if (GameState.promotionNotified) return;
 
         const nextJob = this.getAvailablePromotions();
         if (!nextJob) return;
 
-        // Check requirements
+        // Reqs
         const reqMonths = nextJob.reqMonths;
         const currentMonths = this.monthsInCurrentJob;
         const isTimeOk = currentMonths >= reqMonths;
@@ -2871,7 +2810,7 @@ const JobSystem = {
         if (isTimeOk && isEduOk) {
             GameState.promotionNotified = true;
 
-            // PREMIUM NOTIFICATION
+            // Notif
             const themeColor = '#8b5cf6'; // Violet/Purple for Career
             const icon = '🚀';
 
@@ -2919,7 +2858,7 @@ const JobSystem = {
             return req.some(r => GameState.education.includes(r));
         }
 
-        // Check strict match for new system (e.g. "Grado en ADE")
+        // Strict Match
         if (GameState.education.includes(req)) return true;
 
         // Legacy Fallback (just in case)
@@ -2955,7 +2894,7 @@ const JobSystem = {
     applyToJob(jobTitle, force = false) {
         let targetJob, targetPath;
 
-        // Check Careers
+        // Careers
         for (const [pathKey, jobs] of Object.entries(this.careers)) {
             const found = jobs.find(j => j.title === jobTitle);
             if (found) {
@@ -2965,7 +2904,7 @@ const JobSystem = {
             }
         }
 
-        // Check Gigs
+        // Gigs
         if (!targetJob) {
             targetJob = GIGS_POOL.find(g => g.title === jobTitle);
             targetPath = 'temporary';
@@ -2976,7 +2915,7 @@ const JobSystem = {
             return { success: false, message: `Requisito académico no cumplido: ${targetJob.reqEdu}` };
         }
 
-        // LIFESTYLE CHECK FOR ENTRY LEVEL AND LATERAL MOVES
+        // Lifestyle check for entry level and lateral moves
         if (targetJob.req) {
             const lsCheck = GameBalance.checkLifestyleReq(targetJob.req);
             if (!lsCheck.success) {
@@ -2984,8 +2923,8 @@ const JobSystem = {
             }
         }
 
-        // STRICT EXPERIENCE CHECK
-        // If applying from outside (Vacancy List), you can only enter at level 0 (Entry Level).
+        // Strict experience check
+        // External applicants start at Entry Level
         // Higher positions must be earned via Promotion.
         if (targetJob.reqMonths > 0) {
             return { success: false, message: `Este puesto requiere experiencia interna previa. Debes empezar por un puesto de acceso (Nivel 0) y ascender.` };
@@ -3048,14 +2987,12 @@ const JobSystem = {
     }
 };
 
-/*******************************************************
- * TUTORIAL SYSTEM - Obligatory Guided Tutorial
- *******************************************************/
+// --- Tutorial ---
 const TutorialSystem = {
     overlayElement: null,
     highlightedElements: [],
 
-    // CSS styles for tutorial (injected once)
+    // Css styles for tutorial (injected once)
     injectStyles() {
         if (document.getElementById('tutorial-styles')) return;
         const style = document.createElement('style');
@@ -3197,7 +3134,6 @@ const TutorialSystem = {
         this.highlightedElements = [];
     },
 
-    // Lock scroll to prevent disorientation
     lockScroll() {
         document.body.style.overflow = 'hidden';
     },
@@ -3207,7 +3143,6 @@ const TutorialSystem = {
     },
 
     showTooltip(targetSelectorOrElement, title, message, buttonText, onComplete) {
-        // Remove existing tooltip
         const existing = document.querySelector('.tutorial-tooltip');
         if (existing) existing.remove();
 
@@ -3241,7 +3176,7 @@ const TutorialSystem = {
         let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
         let arrowClass = 'bottom';
 
-        // Check if top flows off screen, if so put below
+        // Position
         if (top < 10) {
             top = targetRect.bottom + offset;
             arrowClass = 'top';
@@ -3269,7 +3204,6 @@ const TutorialSystem = {
         tooltip.style.top = top + 'px';
         tooltip.style.left = left + 'px';
 
-        // Update arrow
         const arrow = tooltip.querySelector('.tutorial-arrow');
         if (arrowClass === 'hidden') {
             arrow.style.display = 'none';
@@ -3277,7 +3211,6 @@ const TutorialSystem = {
             arrow.className = `tutorial-arrow ${arrowClass}`;
         }
 
-        // Button handler
         tooltip.querySelector('button').onclick = () => {
             tooltip.remove();
             if (onComplete) onComplete();
@@ -3289,7 +3222,7 @@ const TutorialSystem = {
         if (existing) existing.remove();
     },
 
-    // STEP 1: Choose Education
+    // Step 1: Choose Education
     step1_ChooseEducation() {
         if (GameState.tutorialFlags.educationChosen) return;
 
@@ -3365,7 +3298,6 @@ const TutorialSystem = {
         `;
         document.body.appendChild(overlay);
 
-        // Button handlers with hover effects
         const bachBtn = overlay.querySelector('#tutorial-choose-bach');
         const fpBtn = overlay.querySelector('#tutorial-choose-fp');
 
@@ -3389,7 +3321,7 @@ const TutorialSystem = {
 
         fpBtn.onclick = () => {
             overlay.remove();
-            // Check if player can afford FP
+            // Affordability
             if (GameState.cash >= 500) {
                 EducationModule.startCourse('fp_medio');
             } else {
@@ -3401,7 +3333,7 @@ const TutorialSystem = {
         };
     },
 
-    // STEP 2: Go to Work tab
+    // Step 2: Go to Work tab
     step2_GoToWork() {
         if (GameState.tutorialFlags.wentToWorkFirst) return;
 
@@ -3455,7 +3387,6 @@ const TutorialSystem = {
             `;
             document.body.appendChild(overlay);
 
-            // Button handler
             const btn = overlay.querySelector('#tutorial-go-work');
             btn.onmouseenter = () => { btn.style.transform = 'translateY(-2px)'; };
             btn.onmouseleave = () => { btn.style.transform = 'translateY(0)'; };
@@ -3470,13 +3401,13 @@ const TutorialSystem = {
         }, 1250);
     },
 
-    // STEP 3: Accept a Gig
+    // Step 3: Accept a Gig
     step3_AcceptGig() {
         if (GameState.tutorialFlags.acceptedFirstGig) return;
 
         GameState.tutorialStep = 3;
 
-        // Show premium styled explanation modal
+        // Show explanation modal
         const themeColor = '#facc15'; // Yellow for temp work
         const icon = '🎒';
 
@@ -3510,7 +3441,7 @@ const TutorialSystem = {
                 text: `✅ ${t('understood')}`,
                 style: 'primary',
                 fn: () => {
-                    // BLOCK everything except the gig section
+                    // Block everything except the gig section
                     this.showOverlay();
                     this.addHighlight('#temp-jobs-section');
 
@@ -3533,7 +3464,7 @@ const TutorialSystem = {
             GameState.tutorialFlags.acceptedFirstGig = true;
             GameState.tutorialStep = 4; // Free play while studying
 
-            // PREMIUM GIG ACCEPTANCE
+            // Acceptance Msg
             const welcomeMsg = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.4)); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">⚡</div>
@@ -3557,7 +3488,6 @@ const TutorialSystem = {
                     // 1. Setup Focus
                     TutorialSystem.showOverlay();
                     TutorialSystem.addHighlight('#next-turn-btn');
-                    TutorialSystem.lockScroll(); // Lock scroll
                     window.scrollTo({ top: 0, behavior: 'smooth' });
 
                     // 2. Show Tooltip (Like Net Worth explanation)
@@ -3580,20 +3510,19 @@ const TutorialSystem = {
         return false;
     },
 
-    // STEP 5: Degree completed
+    // Tutorial: Degree Completion
     onDegreeCompleted(degreeName) {
         if (GameState.tutorialFlags.completedFirstDegree) return;
 
         GameState.tutorialStep = 5;
         GameState.tutorialFlags.completedFirstDegree = true;
 
-        // PREMIUM CELEBRATION MODAL
+        // Celebration modal
         const themeColor = '#4ade80'; // Green/Success (Match text) or Indigo? Plan said Indigo but text uses Green. Let's stick to Green for "Enhorabuena"/Success match.
-        // Actually plan said "Premium Indigo Theme (Academic)". Let's switch to Indigo #818cf8 to match "Course Completed".
-        // Wait, the user specifically mentioned "ENHORABUENA" and the Green checks. I'll use Green (#4ade80) to match the "Success" vibe of the original request's description "✅".
+        // Using Green (#4ade80) for success vibe
 
-        // UPDATED DECISION: Use Indigo (#818cf8) for consistency with "Course Completed" (Step 4/5 boundary), 
-        // BUT keep the success/checks vibe.
+
+        // But keep the success/checks vibe.
 
         const finalTheme = '#818cf8'; // Indigo
         const icon = '🎓';
@@ -3639,17 +3568,17 @@ const TutorialSystem = {
         );
     },
 
-    // STEP 6: Accept Real Job
+    // Tutorial: Accept Real Job
     step6_AcceptRealJob() {
         GameState.tutorialStep = 6;
 
-        // Show explanation modal with visual style restored + blocking behavior
+        // Show explanation modal
         showGameAlert(
             t('tutorial_jobs_unlocked_msg'),
             'success',
             `🎉 ${t('tutorial_jobs_unlocked')}`,
             () => {
-                // BLOCK everything except the market section
+                // Block everything except the market section
                 this.showOverlay();
                 const target = document.querySelector('#regular-jobs-grid');
                 if (target) {
@@ -3683,7 +3612,7 @@ const TutorialSystem = {
         }
     },
 
-    // STEP 7: Explain Job System
+    // Tutorial: Explain Job System
     step7_ExplainJobSystem(jobTitle) {
         const content = `
             <div style="text-align: center; margin-bottom: 20px;">
@@ -3733,9 +3662,8 @@ const TutorialSystem = {
         );
     },
 
-    // STEP 8: Force Housing (Mom kicks you out)
+    // Tutorial: Housing Crisis
     step8_ForceHousing() {
-        // console.log('DEBUG: step8_ForceHousing Triggered');
         if (GameState.tutorialState.forceHousing) return;
         GameState.tutorialStep = 8;
         GameState.tutorialState.forceHousing = true;
@@ -3815,7 +3743,7 @@ const TutorialSystem = {
 
             UI.updateLifestyle(LifestyleModule);
 
-            // BLOCK NAVIGATION, NEXT TURN, AND USER PROFILE
+            // Block navigation, NEXT TURN, AND USER PROFILE
             document.querySelectorAll('.nav-btn, .b-nav-item').forEach(btn => {
                 btn.style.pointerEvents = 'none';
                 btn.style.opacity = '0.5';
@@ -3853,7 +3781,7 @@ const TutorialSystem = {
                 if (sofaBtn) {
                     this.addHighlight(sofaBtn);
                     this.showTooltip(
-                        sofaBtn, // Pass element directly if possible, or selector string
+                        sofaBtn,
                         t('tutorial_emergency_title'),
                         t('tutorial_emergency_msg'),
                         t('understood'),
@@ -3873,7 +3801,7 @@ const TutorialSystem = {
         };
     },
 
-    // STEP 9: Independence Celebration & Summary Tour
+    // Tutorial: Independence Celebration
     step9_Independence() {
         GameState.tutorialStep = 9;
         GameState.tutorialState.forceHousing = false; // Release lock
@@ -3881,7 +3809,7 @@ const TutorialSystem = {
         this.removeHighlights();
         this.hideTooltip();
 
-        // UNBLOCK NAVIGATION, NEXT TURN, AND USER PROFILE
+        // Unblock navigation, NEXT TURN, AND USER PROFILE
         document.querySelectorAll('.nav-btn, .b-nav-item').forEach(btn => {
             btn.style.pointerEvents = 'all';
             btn.style.opacity = '1';
@@ -3898,7 +3826,7 @@ const TutorialSystem = {
             userProfileBtn.style.opacity = '1';
         }
 
-        // 1. Congratulate Modal with Premium Visuals
+        // Congratulation modal
         const themeColor = '#f59e0b'; // Amber/Gold
         const icon = '🔑';
 
@@ -3943,7 +3871,7 @@ const TutorialSystem = {
         );
     },
 
-    // CONTEXTUAL TUTORIALS ROUTER
+    // Contextual tutorials router
     checkContextual(view) {
         // Only run if main tutorial is complete
         if (!GameState.tutorialFlags.tutorialComplete) return;
@@ -3967,7 +3895,7 @@ const TutorialSystem = {
         }
     },
 
-    // 1. Company Summary Tutorial
+    // Tutorial: Company Summary
     tutorial_CompanySummary() {
         if (GameState.tutorialFlags.seenCompanySummary) return;
 
@@ -4005,7 +3933,7 @@ const TutorialSystem = {
                             this.removeHighlights();
                             this.hideTooltip();
 
-                            // STEP 2: News (Novedades) - NEW STEP
+                            // Section: News
                             setTimeout(() => {
                                 const newsCard = document.getElementById('comp-summary-news');
                                 if (newsCard) {
@@ -4021,7 +3949,7 @@ const TutorialSystem = {
                                             this.removeHighlights();
                                             this.hideTooltip();
 
-                                            // STEP 3: General Status
+                                            // Section: General Status
                                             setTimeout(() => {
                                                 const statusCard = document.getElementById('comp-status-card');
                                                 if (statusCard) {
@@ -4052,8 +3980,7 @@ const TutorialSystem = {
                                         }
                                     );
                                 } else {
-                                    // Fallback if news card not found, go directly to status card
-                                    // STEP 2: General Status (original STEP 2)
+                                    // Fallback to status card
                                     setTimeout(() => {
                                         const statusCard = document.getElementById('comp-status-card');
                                         if (statusCard) {
@@ -4085,7 +4012,7 @@ const TutorialSystem = {
                         }
                     );
                 } else {
-                    // Should not happen if comp-summary-tab exists
+                    // Fallback
                     this.hideOverlay();
                     this.unlockScroll();
                 }
@@ -4100,7 +4027,7 @@ const TutorialSystem = {
         }, 200);
     },
 
-    // 2. Company Personnel Tutorial
+    // Tutorial: Personnel
     tutorial_CompanyPersonnel() {
         if (GameState.tutorialFlags.seenCompanyPersonnel) return;
 
@@ -4141,7 +4068,7 @@ const TutorialSystem = {
         }, 200);
     },
 
-    // 3. Company Product Tutorial
+    // Tutorial: Product
     tutorial_CompanyProduct() {
         if (GameState.tutorialFlags.seenCompanyProduct) return;
 
@@ -4151,7 +4078,7 @@ const TutorialSystem = {
         let attempts = 0;
         const check = setInterval(() => {
             attempts++;
-            // NEW ROBUST TARGETING (Stable ID)
+            // Target ID
             const target = document.getElementById('comp-product-dev-card');
 
             if (target) {
@@ -4160,7 +4087,7 @@ const TutorialSystem = {
                 PersistenceModule.saveGame();
                 this.lockScroll();
 
-                // STEP 1: Product Development (I+D)
+                // Step 1: Dev
                 this.addHighlight(target);
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
@@ -4173,7 +4100,7 @@ const TutorialSystem = {
                         this.removeHighlights();
                         this.hideTooltip();
 
-                        // STEP 2: Pricing Strategy
+                        // Step 2: Pricing
                         setTimeout(() => {
                             const pricing = document.getElementById('comp-pricing-card');
                             if (pricing) {
@@ -4189,7 +4116,7 @@ const TutorialSystem = {
                                         this.removeHighlights();
                                         this.hideTooltip();
 
-                                        // STEP 3: Reputation Analysis
+                                        // Step 3: Reputation
                                         setTimeout(() => {
                                             const rep = document.getElementById('comp-reputation-card');
                                             if (rep) {
@@ -4205,7 +4132,7 @@ const TutorialSystem = {
                                                         this.removeHighlights();
                                                         this.hideTooltip();
 
-                                                        // STEP 4: Providers
+                                                        // Step 4: Providers
                                                         setTimeout(() => {
                                                             const prov = document.getElementById('comp-providers-section');
                                                             if (prov) {
@@ -4225,19 +4152,19 @@ const TutorialSystem = {
                                                                     }
                                                                 );
                                                             } else {
-                                                                this.hideOverlay(); // Exit if missing
+                                                                this.hideOverlay(); // Exit Safe
                                                             }
                                                         }, 500);
                                                     }
                                                 );
                                             } else {
-                                                this.hideOverlay(); // Exit if missing
+                                                this.hideOverlay(); // Exit Safe
                                             }
                                         }, 500);
                                     }
                                 );
                             } else {
-                                this.hideOverlay(); // Exit if missing
+                                this.hideOverlay(); // Exit Safe
                             }
                         }, 500);
                     }
@@ -4251,7 +4178,7 @@ const TutorialSystem = {
         }, 200);
     },
 
-    // 4. Company Marketing Tutorial
+    // Tutorial: Marketing
     tutorial_CompanyMarketing() {
         if (GameState.tutorialFlags.seenCompanyMarketing) return;
         GameState.tutorialFlags.seenCompanyMarketing = true;
@@ -4261,13 +4188,13 @@ const TutorialSystem = {
         this.showOverlay();
 
         setTimeout(() => {
-            // Find campaign buttons. They are usually inside a grid in comp-marketing-tab
+            // Find Campaign
             const marketingTab = document.getElementById('comp-marketing-tab');
             const campaigns = marketingTab ? marketingTab.querySelectorAll('button') : [];
 
             if (campaigns.length > 0) {
-                // Highlight the first campaign button or the container
-                const target = campaigns[0].parentElement; // The grid/container
+                // Highlight First
+                const target = campaigns[0].parentElement; // Container
                 if (target) {
                     this.addHighlight(target);
                     target.scrollIntoView({ behavior: 'auto', block: 'center' });
@@ -4292,7 +4219,7 @@ const TutorialSystem = {
         }, 300);
     },
 
-    // 5. Company Finance Tutorial
+    // Tutorial: Finance
     tutorial_CompanyFinance() {
         if (GameState.tutorialFlags.seenCompanyFinance) return;
 
@@ -4302,7 +4229,7 @@ const TutorialSystem = {
         let attempts = 0;
         const check = setInterval(() => {
             attempts++;
-            // New Robust ID Targeting
+            // Target ID
             const target = document.getElementById('comp-finance-movements-card');
 
             if (target) {
@@ -4311,7 +4238,7 @@ const TutorialSystem = {
                 PersistenceModule.saveGame();
                 this.lockScroll();
 
-                // STEP 1: Cash Movements
+                // Step 1: Cash
                 this.addHighlight(target);
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
@@ -4324,7 +4251,7 @@ const TutorialSystem = {
                         this.removeHighlights();
                         this.hideTooltip();
 
-                        // STEP 2: CEO Salary
+                        // Step 2: Salary
                         setTimeout(() => {
                             const salary = document.getElementById('comp-finance-salary-card');
                             if (salary) {
@@ -4340,7 +4267,7 @@ const TutorialSystem = {
                                         this.removeHighlights();
                                         this.hideTooltip();
 
-                                        // STEP 3: Danger Zone (Exit)
+                                        // Step 3: Danger
                                         setTimeout(() => {
                                             const danger = document.getElementById('comp-finance-danger-card');
                                             if (danger) {
@@ -4383,7 +4310,7 @@ const TutorialSystem = {
         }, 200);
     },
 
-    // 4b. Company Marketing Tutorial V2 (Robust Fix)
+    // Tutorial: Marketing V2
     tutorial_CompanyMarketing_V2() {
         if (GameState.tutorialFlags.seenCompanyMarketing) return;
 
@@ -4393,7 +4320,7 @@ const TutorialSystem = {
         let attempts = 0;
         const check = setInterval(() => {
             attempts++;
-            // New Robust ID Targeting
+            // Target ID
             const target = document.getElementById('comp-marketing-infra-card');
 
             if (target) {
@@ -4401,10 +4328,9 @@ const TutorialSystem = {
                 GameState.tutorialFlags.seenCompanyMarketing = true;
                 PersistenceModule.saveGame();
 
-                // Lock scroll
                 this.lockScroll();
 
-                // STEP 1: Infrastructure
+                // Step 1: Infra
                 this.addHighlight(target);
                 target.scrollIntoView({ behavior: 'auto', block: 'center' });
 
@@ -4417,7 +4343,7 @@ const TutorialSystem = {
                         this.removeHighlights();
                         this.hideTooltip();
 
-                        // STEP 2: Channels
+                        // Step 2: Channels
                         setTimeout(() => {
                             const channels = document.getElementById('comp-marketing-channels-section');
                             if (channels) {
@@ -4433,7 +4359,7 @@ const TutorialSystem = {
                                         this.removeHighlights();
                                         this.hideTooltip();
 
-                                        // STEP 3: Analysis
+                                        // Step 3: Analysis
                                         setTimeout(() => {
                                             const analysis = document.getElementById('comp-marketing-analysis-card');
                                             if (analysis) {
@@ -4478,12 +4404,12 @@ const TutorialSystem = {
 
 
     // Helper to continue the sequence (split for readability)
-    // Helper to continue the sequence (split for readability)
+    // Continue Seq
     continueToMonthlyFlow() {
         this.showOverlay();
         this.lockScroll();
         setTimeout(() => {
-            // 1. Net Worth (Total Wealth)
+            // 1. Net Worth
             const netWorth = document.querySelector('.metric-card.net-worth');
             if (netWorth) {
                 this.addHighlight('.metric-card.net-worth');
@@ -4499,7 +4425,7 @@ const TutorialSystem = {
                     this.removeHighlights();
                     this.hideTooltip();
 
-                    // 2. Cash (Liquidity)
+                    // 2. Cash
                     setTimeout(() => {
                         const cash = document.querySelector('.metric-card.cash');
                         if (cash) {
@@ -4516,7 +4442,7 @@ const TutorialSystem = {
                                 this.removeHighlights();
                                 this.hideTooltip();
 
-                                // 3. Monthly Flow
+                                // 3. Flow
                                 setTimeout(() => {
                                     const mFlow = document.querySelector('.metric-card.monthly-flow');
                                     if (mFlow) {
@@ -4532,10 +4458,9 @@ const TutorialSystem = {
                                         () => {
                                             this.removeHighlights();
                                             this.hideTooltip();
-                                            this.hideOverlay(); // Remove blocking
+                                            this.hideOverlay(); // Unblock
                                             this.unlockScroll();
 
-                                            // Final message
                                             setTimeout(() => {
                                                 showGameAlert(
                                                     `🎉 <strong>${t('tutorial_finished')}</strong><br><br>` +
@@ -4558,7 +4483,7 @@ const TutorialSystem = {
         }, 500);
     },
 
-    // STOCK MARKET UNLOCK TUTORIAL (Triggered when netWorth >= 25000 for first time)
+    // Unlock Stock
     stepStock_Unlock() {
         const themeColor = '#4ade80'; // Green
         const icon = '📈';
@@ -4592,26 +4517,26 @@ const TutorialSystem = {
                 fn: () => {
                     UI.showView('market');
 
-                    // Ensure no lingering overlay from previous tutorial steps
+                    // Clear Overlay
                     TutorialSystem.hideOverlay();
                     TutorialSystem.removeHighlights();
 
-                    // Start Stock Tutorial with simple sequential modals
+                    // Start Tutorial
                     setTimeout(() => {
-                        // Step 1: Chart explanation
+                        // Step 1: Chart
                         showGameAlert(
                             t('tutorial_stock_step1'),
                             'info',
                             `📈 ${t('tutorial_stock')} (1/3)`,
                             () => {
-                                // Step 2: Stock List
+                                // Step 2: List
                                 setTimeout(() => {
                                     showGameAlert(
                                         t('tutorial_stock_step2'),
                                         'info',
                                         `📈 ${t('tutorial_stock')} (2/3)`,
                                         () => {
-                                            // Step 3: Buy/Sell
+                                            // Step 3: Trade
                                             setTimeout(() => {
                                                 showGameAlert(
                                                     t('tutorial_stock_step3'),
@@ -4636,7 +4561,7 @@ const TutorialSystem = {
         );
     },
 
-    // BANK UNLOCK TUTORIAL (Triggered when Year 3, Month 6)
+    // Unlock Bank
     stepBank_Unlock() {
         const themeColor = '#3b82f6'; // Blue
         const icon = '🏦';
@@ -4670,26 +4595,26 @@ const TutorialSystem = {
                 fn: () => {
                     UI.showView('bank');
 
-                    // Ensure no lingering overlay
+                    // Clear Overlay
                     TutorialSystem.hideOverlay();
                     TutorialSystem.removeHighlights();
 
-                    // Start Bank Tutorial with sequential modals
+                    // Start Tutorial
                     setTimeout(() => {
-                        // Step 1: Bank intro
+                        // Step 1: Intro
                         showGameAlert(
                             t('tutorial_bank_step1'),
                             'info',
                             `🏦 ${t('tutorial_bank')} (1/3)`,
                             () => {
-                                // Step 2: Credit limit
+                                // Step 2: Credit
                                 setTimeout(() => {
                                     showGameAlert(
                                         t('tutorial_bank_step2'),
                                         'info',
                                         `🏦 ${t('tutorial_bank')} (2/3)`,
                                         () => {
-                                            // Step 3: Encourage real estate
+                                            // Step 3: Real Estate
                                             setTimeout(() => {
                                                 showGameAlert(
                                                     t('tutorial_bank_step3'),
@@ -4714,7 +4639,7 @@ const TutorialSystem = {
         );
     },
 
-    // Check if tutorial should start
+    // Check Start
     checkStart() {
         if (GameState.tutorialFlags.tutorialComplete && GameState.tutorialStep !== 8) return;
         if (GameState.tutorialStep === 0 && !GameState.tutorialFlags.educationChosen) {
@@ -4723,21 +4648,13 @@ const TutorialSystem = {
     }
 };
 
-/*******************************************************
- * UI
- *******************************************************/
+// UI Config
 const formatCurrency = (amount, decimals = 2) => {
     return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(amount);
 };
 const formatPercent = (val) => (val * 100).toFixed(2) + '%';
 
-/**
- * Styled replacement for native alert(). Shows a premium modal instead.
- * @param {string} message - Message to display (supports HTML)
- * @param {string} type - 'info', 'success', 'warning', 'error' (default: 'info')
- * @param {string} title - Optional title (auto-generated if not provided)
- * @param {Function} callback - Optional callback
- */
+// Custom Alert
 function showGameAlert(message, type = 'info', title = null, callback = null, blocking = false) {
     const config = {
         info: {
@@ -4781,11 +4698,10 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
     const cfg = config[type] || config.info;
     const displayTitle = title || cfg.title;
 
-    // Remove existing alert modal if any
     const existing = document.querySelector('.game-alert-overlay');
     if (existing) existing.remove();
 
-    // Create premium modal
+    // Build Modal
     const overlay = document.createElement('div');
     overlay.className = 'game-alert-overlay';
     overlay.style.cssText = `
@@ -4869,7 +4785,6 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
-    // Button handlers
     const btn = modal.querySelector('.game-alert-btn');
     btn.onmouseenter = () => btn.style.transform = 'translateY(-2px)';
     btn.onmouseleave = () => btn.style.transform = 'translateY(0)';
@@ -4881,7 +4796,7 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
         }, 150);
     };
 
-    // Close on overlay click (Prevent for error/critical alerts or forced blocking)
+    // Close on Click
     overlay.onclick = (e) => {
         if (!blocking && type !== 'error' && e.target === overlay) {
             overlay.style.animation = 'fadeIn 0.15s ease-out reverse';
@@ -4889,7 +4804,7 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
         }
     };
 
-    // Close on Escape key (Prevent for error/critical alerts or forced blocking)
+    // Close on Escape key
     const escHandler = (e) => {
         if (!blocking && type !== 'error' && e.key === 'Escape') {
             overlay.remove();
@@ -4899,23 +4814,14 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
     document.addEventListener('keydown', escHandler);
 }
 
-/**
- * Styled replacement for native confirm(). Shows a premium modal with Yes/No buttons.
- * Returns a Promise that resolves to true (confirmed) or false (cancelled).
- * @param {string} message - Message to display (supports HTML and \n for line breaks)
- * @param {string} title - Optional title
- * @param {string} confirmText - Text for confirm button (default: 'Confirmar')
- * @param {string} cancelText - Text for cancel button (default: 'Cancelar')
- * @returns {Promise<boolean>}
- */
+// Styled confirm modal. Returns Promise<boolean>
 function showGameConfirm(message, title = '¿Confirmar?', confirmText = 'Confirmar', cancelText = 'Cancelar') {
-    // We can't access t() in default params easily if it's not global or initialized. 
+    // t() unavailable in default params 
     // Assuming t() is available globally.
     // If not, we should handle inside:
     confirmText = confirmText === 'Confirmar' ? t('confirm') : confirmText;
     cancelText = cancelText === 'Cancelar' ? t('cancel') : cancelText;
     return new Promise((resolve) => {
-        // Remove existing confirm modal if any
         const existing = document.querySelector('.game-confirm-overlay');
         if (existing) existing.remove();
 
@@ -5022,7 +4928,6 @@ function showGameConfirm(message, title = '¿Confirmar?', confirmText = 'Confirm
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
-        // Button handlers with hover effects
         const okBtn = modal.querySelector('.game-confirm-ok');
         const cancelBtn = modal.querySelector('.game-confirm-cancel');
 
@@ -5111,7 +5016,6 @@ const UI = {
             if (spanText) spanText.textContent = labels[lang] || lang.toUpperCase();
         };
 
-        // Initialize state
         updateBtn();
 
         // Click handler
@@ -5290,7 +5194,6 @@ const UI = {
 
     // --- MODALS ---
     showModal(title, content, actions = [], isHTML = false) {
-        // Remove existing
         const existing = document.querySelector('.custom-modal-overlay');
         if (existing) existing.remove();
 
@@ -5322,7 +5225,6 @@ const UI = {
         footer.className = 'custom-modal-footer';
 
         if (actions.length === 0) {
-            // Default close
             const btn = document.createElement('button');
             btn.textContent = t('close');
             btn.className = 'btn-modal-action btn-secondary';
@@ -5361,7 +5263,6 @@ const UI = {
     updateDashboard() {
         const nw = updateNetWorth();
 
-        // DATA PREP
         let cash = GameState.cash;
         let stocksVal = 0;
         GameState.inventory.stocks.forEach(s => {
@@ -5379,11 +5280,11 @@ const UI = {
 
         let rentIncome = GameState.inventory.realEstate.reduce((acc, p) => acc + p.monthlyRent, 0);
         let holdingIncome = (GameState.ownedCompanies || []).reduce((acc, c) => acc + (c.profitLastMonth !== undefined ? c.profitLastMonth : (c.baselineProfit || 0)), 0);
-        // Also add active company profit if receiving salary/dividends or just raw profit?
-        // Request says "beneficio mes", usually implies net profit of the company.
+        // Calculate company profit
+
         if (GameState.company) {
             // holdingIncome += (GameState.company.profitLastMonth || 0); 
-            // FIX: User requested to NOT count company profit in personal flow, only salary.
+            // Exclude company profit from personal flow (only salary counts)
             // Salary is already in GameState.salary.
         }
 
@@ -5397,8 +5298,6 @@ const UI = {
         let companyCount = (GameState.company ? 1 : 0) + (GameState.ownedCompanies ? GameState.ownedCompanies.length : 0);
         // holdingIncome is already calculated above as sum of profits
 
-        // DOM UPDATE
-        // DOM UPDATE
         const container = document.getElementById('dashboard-view');
         if (!container) return;
 
@@ -5410,94 +5309,92 @@ const UI = {
                 <span style="color:#94a3b8; font-size:0.9rem;">${t('age')}: ${GameState.age} ${t('years')} | ${t('month')}: ${GameState.month}</span>
             </div>
 
-            <!-- KPI ROW - Premium Design -->
-            <div class="summary-kpi-row" style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
-                <div class="metric-card net-worth" style="flex:1.5; min-width: 200px; background: linear-gradient(145deg, rgba(250, 204, 21, 0.1), rgba(251, 191, 36, 0.05)); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
-                    <div style="font-size: 2.5rem; margin-bottom: 8px; filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.4));">👑</div>
-                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('net_worth')}</span>
-                    <span style="font-size:1.8rem; font-weight:800; color:#facc15; text-shadow: 0 0 20px rgba(250, 204, 21, 0.3);">${formatCurrency(nw)}</span>
+            <div class="kpi-row">
+                <div class="kpi-card gold" style="flex:1.5; min-width: 200px;">
+                    <div class="kpi-icon gold">👑</div>
+                    <span class="kpi-label">${t('net_worth')}</span>
+                    <span class="kpi-value gold lg">${formatCurrency(nw)}</span>
                 </div>
-                <div class="metric-card cash" style="flex:1.5; min-width: 200px; background: linear-gradient(145deg, rgba(34, 197, 94, 0.1), rgba(74, 222, 128, 0.05)); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
-                    <div style="font-size: 2.5rem; margin-bottom: 8px; filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.4));">💵</div>
-                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('cash_box')}</span>
-                    <span style="font-size:1.8rem; font-weight:800; color:#4ade80; text-shadow: 0 0 20px rgba(34, 197, 94, 0.3);">${formatCurrency(cash)}</span>
+                <div class="kpi-card green" style="flex:1.5; min-width: 200px;">
+                    <div class="kpi-icon green">💵</div>
+                    <span class="kpi-label">${t('cash_box')}</span>
+                    <span class="kpi-value green lg">${formatCurrency(cash)}</span>
                 </div>
-                <div class="metric-card monthly-flow" style="flex:1; min-width: 160px; background: linear-gradient(145deg, ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)' : 'rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05)'}); border: 1px solid ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'}; border-radius: 16px; padding: 20px; text-align: center;">
-                    <div style="font-size: 2.5rem; margin-bottom: 8px; filter: drop-shadow(0 0 15px ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.4)' : 'rgba(248, 113, 113, 0.4)'});">${monthlyFlow >= 0 ? '📈' : '📉'}</div>
-                    <span style="display:block; color:#94a3b8; font-size:0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom:8px;">${t('monthly_flow')}</span>
-                    <span style="font-size:1.5rem; font-weight:800; color:${monthlyFlow >= 0 ? '#4ade80' : '#f87171'}; text-shadow: 0 0 15px ${monthlyFlow >= 0 ? 'rgba(74, 222, 128, 0.3)' : 'rgba(248, 113, 113, 0.3)'};">${monthlyFlow >= 0 ? '+' : ''}${formatCurrency(monthlyFlow)}</span>
-                    <div style="margin-top: 10px; font-size: 0.75rem; color: #64748b;">
-                        <span style="color: #4ade80;">▲ ${formatCurrency(totalIncome)}</span> · 
-                        <span style="color: #f87171;">▼ ${formatCurrency(totalExpenses)}</span>
+                <div class="kpi-card ${monthlyFlow >= 0 ? 'green' : 'red'}" style="flex:1; min-width: 160px;">
+                    <div class="kpi-icon ${monthlyFlow >= 0 ? 'green' : 'red'}">${monthlyFlow >= 0 ? '📈' : '📉'}</div>
+                    <span class="kpi-label">${t('monthly_flow')}</span>
+                    <span class="kpi-value ${monthlyFlow >= 0 ? 'green' : 'red'}">${monthlyFlow >= 0 ? '+' : ''}${formatCurrency(monthlyFlow)}</span>
+                    <div class="flow-detail">
+                        <span class="flow-up">▲ ${formatCurrency(totalIncome)}</span> · 
+                        <span class="flow-down">▼ ${formatCurrency(totalExpenses)}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ASSET BREAKDOWN - Premium Cards -->
             <div class="dashboard-grid">
-                <div class="dashboard-card" style="background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 16px; padding: 20px;">
+                <div class="dash-card">
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; margin-bottom:20px; padding-bottom:15px;">
-                        <h3 style="margin:0; color:#cbd5e1; font-size:1.1rem; display: flex; align-items: center; gap: 10px;">
+                    <div class="dash-card-header">
+                        <h3 class="dash-card-title">
                             <span style="font-size: 1.3rem;">📈</span> ${t('financial_history')}
                         </h3>
-                        <div style="display:flex; gap:5px; background: #0f172a; padding: 4px; border-radius: 8px;">
-                            <button class="btn-filter ${UI.chartTimeframe === 6 ? 'active' : ''}" onclick="UI.chartTimeframe=6; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 6 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">${t('chart_timeframe_6m')}</button>
-                            <button class="btn-filter ${UI.chartTimeframe === 24 ? 'active' : ''}" onclick="UI.chartTimeframe=24; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 24 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">${t('chart_timeframe_2y')}</button>
-                            <button class="btn-filter ${UI.chartTimeframe === 999 ? 'active' : ''}" onclick="UI.chartTimeframe=999; UI.updateDashboard()" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; ${UI.chartTimeframe === 999 ? 'background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;' : 'background: transparent; color: #94a3b8;'}">${t('chart_timeframe_max')}</button>
+                        <div class="timeframe-btns">
+                            <button class="btn-time ${UI.chartTimeframe === 6 ? 'active' : ''}" onclick="UI.chartTimeframe=6; UI.updateDashboard()">${t('chart_timeframe_6m')}</button>
+                            <button class="btn-time ${UI.chartTimeframe === 24 ? 'active' : ''}" onclick="UI.chartTimeframe=24; UI.updateDashboard()">${t('chart_timeframe_2y')}</button>
+                            <button class="btn-time ${UI.chartTimeframe === 999 ? 'active' : ''}" onclick="UI.chartTimeframe=999; UI.updateDashboard()">${t('chart_timeframe_max')}</button>
                         </div>
                     </div>
                     <div style="height:300px; width:100%;">
                         <canvas id="net-worth-chart"></canvas>
                     </div>
                     <!-- Custom Chart Legend (Interactive) -->
-                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155;">
-                        <div onclick="UI.toggleChartDataset('netWorth')" style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: ${UI.chartVisibleDatasets.netWorth ? '1' : '0.4'}; transition: opacity 0.2s;">
-                            <div style="width: 12px; height: 12px; background: #facc15; border-radius: 50%; box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);"></div>
-                            <span style="color: #facc15; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.netWorth ? 'none' : 'line-through'};">${t('chart_legend_networth')}</span>
+                    <div class="chart-legend">
+                        <div class="legend-item ${UI.chartVisibleDatasets.netWorth ? '' : 'faded'}" onclick="UI.toggleChartDataset('netWorth')">
+                            <div class="legend-dot gold"></div>
+                            <span class="legend-text gold ${UI.chartVisibleDatasets.netWorth ? '' : 'crossed'}">${t('chart_legend_networth')}</span>
                         </div>
-                        <div onclick="UI.toggleChartDataset('cash')" style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: ${UI.chartVisibleDatasets.cash ? '1' : '0.4'}; transition: opacity 0.2s;">
-                            <div style="width: 12px; height: 3px; background: #4ade80; border-radius: 2px; box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);"></div>
-                            <span style="color: #4ade80; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.cash ? 'none' : 'line-through'};">${t('chart_legend_cash')}</span>
+                        <div class="legend-item ${UI.chartVisibleDatasets.cash ? '' : 'faded'}" onclick="UI.toggleChartDataset('cash')">
+                            <div class="legend-line green"></div>
+                            <span class="legend-text green ${UI.chartVisibleDatasets.cash ? '' : 'crossed'}">${t('chart_legend_cash')}</span>
                         </div>
-                        <div onclick="UI.toggleChartDataset('debt')" style="display: flex; align-items: center; gap: 8px; cursor: pointer; opacity: ${UI.chartVisibleDatasets.debt ? '1' : '0.4'}; transition: opacity 0.2s;">
-                            <div style="width: 12px; height: 3px; background: #f87171; border-radius: 2px; box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);"></div>
-                            <span style="color: #f87171; font-size: 0.85rem; font-weight: 600; text-decoration: ${UI.chartVisibleDatasets.debt ? 'none' : 'line-through'};">${t('chart_legend_debt')}</span>
+                        <div class="legend-item ${UI.chartVisibleDatasets.debt ? '' : 'faded'}" onclick="UI.toggleChartDataset('debt')">
+                            <div class="legend-line red"></div>
+                            <span class="legend-text red ${UI.chartVisibleDatasets.debt ? '' : 'crossed'}">${t('chart_legend_debt')}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="dashboard-card" style="background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 16px; padding: 20px;">
-                    <h3 style="margin-top:0; color:#cbd5e1; font-size:1.1rem; margin-bottom:20px; border-bottom:1px solid #334155; padding-bottom:15px; display: flex; align-items: center; gap: 10px;">
+                <div class="dash-card">
+                    <h3 class="dash-card-title" style="margin-bottom:20px; border-bottom:1px solid #334155; padding-bottom:15px;">
                         <span style="font-size: 1.3rem;">📊</span> ${t('asset_breakdown')}
                     </h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-                        <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2);">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">💵</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('chart_legend_cash')}</div>
-                            <div style="font-size:1.2rem; font-weight:800; color:#4ade80;">${formatCurrency(cash)}</div>
+                    <div class="assets-grid">
+                        <div class="asset-item cash">
+                            <div class="asset-icon">💵</div>
+                            <div class="asset-label">${t('chart_legend_cash')}</div>
+                            <div class="asset-value cash">${formatCurrency(cash)}</div>
                         </div>
-                        <div style="background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2);">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">📈</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('stocks')}</div>
-                            <div style="font-size:1.2rem; font-weight:800; color:#38bdf8;">${formatCurrency(stocksVal)}</div>
+                        <div class="asset-item stocks">
+                            <div class="asset-icon">📈</div>
+                            <div class="asset-label">${t('stocks')}</div>
+                            <div class="asset-value stocks">${formatCurrency(stocksVal)}</div>
                         </div>
-                        <div style="background: linear-gradient(145deg, rgba(168, 85, 247, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(168, 85, 247, 0.2);">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🏠</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('nav_real_estate')}</div>
-                            <div style="font-size:1.2rem; font-weight:800; color:#a855f7;">${formatCurrency(reEquity)}</div>
+                        <div class="asset-item real-estate">
+                            <div class="asset-icon">🏠</div>
+                            <div class="asset-label">${t('nav_real_estate')}</div>
+                            <div class="asset-value real-estate">${formatCurrency(reEquity)}</div>
                         </div>
-                        <div style="background: linear-gradient(145deg, rgba(251, 146, 60, 0.08), transparent); padding: 15px; border-radius: 12px; border: 1px solid rgba(251, 146, 60, 0.2);">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🏢</div>
-                            <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">${t('company_title')}</div>
-                            <div style="font-size:1.2rem; font-weight:800; color:#fb923c;">${companyCount}</div>
+                        <div class="asset-item company">
+                            <div class="asset-icon">🏢</div>
+                            <div class="asset-label">${t('company_title')}</div>
+                            <div class="asset-value company">${companyCount}</div>
                         </div>
                     </div>
                     <div style="border-top:1px solid #334155; padding-top:15px; background: linear-gradient(145deg, rgba(34, 197, 94, 0.05), transparent); margin: -5px -20px -20px -20px; padding: 15px 20px; border-radius: 0 0 16px 16px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div class="flex items-center justify-between">
                             <div>
-                                <div style="font-size:0.7rem; color:#94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">💰 ${t('holding_profit')}</div>
-                                <div style="font-size:1.1rem; font-weight:800; color:${holdingIncome >= 0 ? '#4ade80' : '#f87171'}">${holdingIncome >= 0 ? '+' : ''}${formatCurrency(holdingIncome)}/${t('month')}</div>
+                                <div class="asset-label">💰 ${t('holding_profit')}</div>
+                                <div class="asset-value ${holdingIncome >= 0 ? 'cash' : ''}" style="${holdingIncome < 0 ? 'color:#f87171' : ''}">${holdingIncome >= 0 ? '+' : ''}${formatCurrency(holdingIncome)}/${t('month')}</div>
                             </div>
                             <div style="font-size: 2rem; opacity: 0.5;">🏦</div>
                         </div>
@@ -5523,11 +5420,11 @@ const UI = {
         const container = document.getElementById('market-view');
         if (!container) return;
 
-        // DATA
+        // Data
         const stocks = StockMarket.stocks;
         const portfolio = GameState.inventory.stocks;
 
-        // CALCS
+        // Calcs
         let portValue = 0;
         let costBasis = 0;
         portfolio.forEach(p => {
@@ -5541,13 +5438,13 @@ const UI = {
         const returnDir = totalReturn >= 0 ? '+' : '';
         const returnClass = totalReturn >= 0 ? '#4ade80' : '#f87171';
 
-        // NEW: Get Limits
+        // New: Get Limits
         const limits = GameBalance.getLimits();
         const limitDisp = limits.stockCap === Infinity ? '∞' : formatCurrency(limits.stockCap);
         const limitPct = limits.stockCap === Infinity ? 0 : Math.min(100, (portValue / limits.stockCap) * 100);
         const isLimitReached = limits.stockCap !== Infinity && portValue >= limits.stockCap;
 
-        // RENDER
+        // Render
         container.innerHTML = `
                     <div class="dashboard-container">
                         <div class="section-header">
@@ -5569,7 +5466,6 @@ const UI = {
                             ${isLimitReached ? `<div style="color:#f87171; font-size:0.8rem; margin-top:5px;">⚠️ ${t('stock_limit_reached')}</div>` : ''}
                         </div>
 
-                        <!-- MARKET HERO - Premium Design -->
                         <div class="market-hero-stats" style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
                             <div class="market-stat-card" style="flex:2; min-width: 180px; background: linear-gradient(145deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.05)); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 20px; text-align: center;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));">📈</div>
@@ -5665,7 +5561,7 @@ const UI = {
                     </div>
                 `;
 
-        // EVENTS
+        // Events
         container.querySelectorAll('.stock-chip').forEach(chip => {
             chip.onclick = () => {
                 const symbol = chip.dataset.symbol;
@@ -5679,7 +5575,7 @@ const UI = {
         const portfolioItem = GameState.inventory.stocks.find(s => s.symbol === stock.symbol);
         const owned = portfolioItem ? portfolioItem.quantity : 0;
 
-        // NEW MOBILE-FIRST LAYOUT
+        // New mobile-FIRST LAYOUT
         // We use a flex-column container that takes up the full modal height
         // content-header: Fixed
         // content-body: Scrollable (Chart + Stats)
@@ -5697,7 +5593,6 @@ const UI = {
                         <button id="btn-close-stock-modal" style="position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.5); color: #f87171; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">✕</button>
 
 
-                        <!-- 1. HEADER (Fixed) - Premium Design -->
                         <div class="ops-header" style="flex:0 0 auto; background: linear-gradient(145deg, ${trendBg}, transparent); border: 1px solid ${trendBorder}; border-radius: 16px; padding: 12px 15px; margin-bottom: 10px; margin-top: 15px;">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -5741,7 +5636,6 @@ const UI = {
 
                         </div>
 
-                        <!-- 3. FOOTER (Fixed Actions) - Premium Buttons -->
                         <div class="ops-footer" style="flex:0 0 auto; border-top:1px solid #334155; padding-top:15px; margin-top:10px;">
                             
                             <!-- Compact Portfolio Stats -->
@@ -5772,7 +5666,7 @@ const UI = {
 
         // Overwrite the default modal buttons logic by passing empty array
         // We handle buttons manually inside the HTML
-        // CRITICAL: We replace \n with space because UI.showModal naïvely replaces \n with <br>, breaking HTML tags.
+        // Sanitize newlines for HTML modal
         this.showModal(' ', msg.replace(/\n/g, ' '), [], true);
 
         // Attach Handlers
@@ -5781,11 +5675,10 @@ const UI = {
             const modalTitle = document.querySelector('#modal-content h2');
             if (modalTitle) modalTitle.style.display = 'none'; // Hide default title
 
-            // MOBILE FIX: Add wrapper class for full-screen handling
+            // Mobile fix: Add wrapper class for full-screen handling
             const modalContent = document.getElementById('modal-content');
             if (modalContent) modalContent.classList.add('stock-modal-wrapper');
 
-            // Close button handler
             document.getElementById('btn-close-stock-modal').onclick = (e) => {
                 const overlay = e.target.closest('.custom-modal-overlay');
                 if (overlay) overlay.remove();
@@ -5890,7 +5783,7 @@ const UI = {
         const container = document.getElementById('bank-view');
         if (!container) return;
 
-        // DATA
+        // Data
         const limit = BankModule.getMaxLoanAmount();
         const loans = GameState.loans;
 
@@ -5910,7 +5803,7 @@ const UI = {
 
         const remainingLimit = Math.max(0, limit - currentDebtForLimit);
 
-        // RENDER
+        // Render
         container.innerHTML = `
                     <div class="dashboard-container">
                          <div class="section-header">
@@ -6017,7 +5910,7 @@ const UI = {
                 `;
 
 
-        // EVENTS
+        // Events
         const amountInput = document.getElementById('loan-amount-input');
         const rangeInput = document.getElementById('loan-years-input');
         const yearsVal = document.getElementById('loan-years-val');
@@ -6063,7 +5956,7 @@ const UI = {
                 const res = BankModule.payLoanTotally(id);
 
                 if (res.success) {
-                    // PREMIUM DEBT FREE MESSAGE
+                    // Debt Free Msg
                     const themeColor = '#10b981'; // Emerald
                     const icon = '💸';
 
@@ -6116,16 +6009,14 @@ const UI = {
                             const val = parseInt(input.value);
 
                             if (isNaN(val) || val <= 0) {
-                                // Small delay to show error after modal closes, or just alert? 
-                                // Alert is safer here to not break flow if modal closes. 
-                                // Actually re-opening modal is better but complex.
+                                // Alert prevents flow break
                                 showGameAlert(t('msg_amt_invalid'), 'warning');
                                 return;
                             }
 
                             const res = BankModule.payLoanPartial(loanId, val);
                             if (res.success) {
-                                // PREMIUM AMORTIZATION MESSAGE
+                                // Success Message
                                 const themeColor = '#34d399'; // Emerald 400
                                 const icon = '📉';
 
@@ -6166,11 +6057,11 @@ const UI = {
         const container = document.getElementById('real-estate-view');
         if (!container) return;
 
-        // DATA
+        // Data
         const properties = REModule.availableProperties;
         const owned = GameState.inventory.realEstate;
 
-        // Stats for Hero
+        // Hero Stats
         let totalVal = 0;
         let totalRent = 0;
         let totalEquity = 0;
@@ -6181,7 +6072,7 @@ const UI = {
             totalRent += p.monthlyRent;
         });
 
-        // Calculate Equity and Mortgage Payments
+        // Calc Equity & Mortgage
         let mortgageDebt = 0;
         GameState.loans.forEach(l => {
             if (l.isMortgage) {
@@ -6191,7 +6082,7 @@ const UI = {
         });
         totalEquity = totalVal - mortgageDebt;
 
-        // RENDER
+        // Render
         container.innerHTML = `
                     <div class="dashboard-container">
                         <div class="section-header">
@@ -6199,7 +6090,7 @@ const UI = {
                             <span style="color:#94a3b8; font-size:0.9rem;">Propiedades: ${owned.length}</span>
                         </div>
 
-                        <!-- LIMIT ALERT Real Estate -->
+                        <!-- RE Limit Alert -->
                         ${(() => {
                 const limits = GameBalance.getLimits();
                 const limitDisp = limits.reCap === Infinity ? '∞' : limits.reCap;
@@ -6222,7 +6113,6 @@ const UI = {
                             `;
             })()}
 
-                        <!-- HERO STATS - Premium Design -->
                         <div class="re-stats-container" style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
                             <div class="re-stat-card" style="flex:2; min-width: 200px; background: linear-gradient(145deg, rgba(250, 204, 21, 0.1), rgba(251, 191, 36, 0.05)); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 16px; padding: 20px; text-align: center; position: relative; overflow: hidden;">
                                 <div style="font-size: 2rem; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));">🏛️</div>
@@ -6241,8 +6131,7 @@ const UI = {
                             </div>
                         </div>
 
-                        <!-- MARKET -->
-                        <!-- MARKET -->
+                        <!-- RE Market -->
                         <div class="job-section-spacer">
                             <h3 style="color:#cbd5e1; margin-bottom:20px;">${t('re_market_title')}</h3>
                             <div class="market-grid">
@@ -6295,7 +6184,7 @@ const UI = {
                             </div>
                         </div>
 
-                        <!-- OWNED -->
+                        <!-- RE My Props -->
                         <div class="dashboard-card" style="margin-top:25px;">
                             <h3 style="margin-top:0; color:#cbd5e1; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">🔑 ${t('re_my_properties')}</h3>
                              ${owned.length === 0 ? `<p style="color:#64748b;">${t('re_no_properties')}</p>` :
@@ -6333,7 +6222,7 @@ const UI = {
                     </div>
                 `;
 
-        // BIND EVENTS
+        // Events
         container.querySelectorAll('.btn-buy-prop-dynamic').forEach(btn => {
             btn.onclick = (e) => {
                 const target = e.currentTarget;
@@ -6343,7 +6232,7 @@ const UI = {
 
                 const useMortgage = target.dataset.mortgage === 'true';
 
-                // Helper execution
+                // Buy Helper
                 const buy = (propId, mortgage, term) => {
                     const res = REModule.buyProperty(propId, mortgage, term);
                     if (res.success) {
@@ -6440,7 +6329,7 @@ const UI = {
                         { text: t('cancel'), style: 'secondary', fn: null }
                     ]);
 
-                    // Attach events manually since we use custom HTML buttons
+                    // Attach Events
                     if (overlay) {
                         const m10 = overlay.querySelector('#mortgage-10y');
                         const m20 = overlay.querySelector('#mortgage-20y');
@@ -6492,7 +6381,7 @@ const UI = {
             btn.onclick = (e) => {
                 const id = parseInt(e.target.dataset.id);
                 const prop = GameState.inventory.realEstate.find(p => p.id === id);
-                // Calculate details for modal
+                // Details
                 let outstandingMortgage = 0;
                 if (prop.mortgageId) {
                     const loan = GameState.loans.find(l => l.id === prop.mortgageId);
@@ -6562,7 +6451,7 @@ const UI = {
         const btnNext = document.getElementById('btn-wiz-next');
         const btnBack = document.getElementById('btn-wiz-back');
 
-        // Inputs & Display
+        // UI Elements
         const nameInput = document.getElementById('wiz-name');
         const typeGrid = document.getElementById('wiz-types-grid');
         const locGrid = document.getElementById('wiz-loc-grid');
@@ -6580,7 +6469,7 @@ const UI = {
             locId: null
         };
 
-        // Helper: Update Summary Sidebar
+        // Update Summary
         const updateSummary = () => {
             summaryCash.textContent = formatCurrency(GameState.cash);
 
@@ -6591,7 +6480,7 @@ const UI = {
                 const type = CompanyModule.businessTypes[state.typeId];
                 setupCost = type.cost;
 
-                // Calculate Rent if Location Selected
+                // Calc Rent
                 if (state.locId) {
                     const loc = CompanyModule.locations[state.locId];
                     rentCost = type.baseRent * loc.rentMult;
@@ -6601,8 +6490,7 @@ const UI = {
             summarySetup.textContent = formatCurrency(setupCost);
             summaryRent.textContent = rentCost > 0 ? `${formatCurrency(rentCost)}/mes` : '---';
 
-            // Total Requirement for FOUNDING is Setup Cost + (Optional: First Month Rent?)
-            // Let's assume you need Setup + 1 Month Rent to start safely.
+            // Setup + 1 Month Rent
             const totalRequired = setupCost + rentCost;
 
             summaryTotal.textContent = formatCurrency(totalRequired);
@@ -6618,10 +6506,10 @@ const UI = {
             }
         };
 
-        // RENDER STEP 1: BUSINESS TYPES
+        // Render Step 1
         typeGrid.innerHTML = '';
 
-        // Count existing cafes
+        // Count Cafes
         const cafeCount = (GameState.ownedCompanies || []).filter(c => c.typeId === 'cafe').length;
 
         for (const [key, val] of Object.entries(CompanyModule.businessTypes)) {
@@ -6629,16 +6517,16 @@ const UI = {
             const riskTag = volatility > 0.3 ? `<span class="biz-tag tag-high-risk">${t('cat_high_risk')}</span>` : `<span class="biz-tag tag-low-risk">${t('cat_stable')}</span>`;
             const icon = val.icon || '🏢';
 
-            // Check Lock Condition (Existing logic for cafe count)
+            // Check Lock
             const isLocked = (key !== 'cafe' && cafeCount < 2);
 
-            // Check Funds Condition
+            // Check Funds
             const canAfford = GameState.cash >= val.cost;
             const isComingSoon = (key !== 'cafe');
             const isDisabled = isLocked || !canAfford || isComingSoon;
 
             const card = document.createElement('div');
-            // Add 'locked' class if any blocking condition is met
+            // Add Lock Class
             card.className = `biz-model-card ${isDisabled ? 'locked' : ''}`;
 
             if (isComingSoon) {
@@ -6654,7 +6542,7 @@ const UI = {
                         `;
 
             } else if (isLocked) {
-                // ... Existing Locked Logic ...
+                // Locked State
                 card.innerHTML = `
                             <div style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 10px; filter: grayscale(1);">🔒</div>
@@ -6668,7 +6556,7 @@ const UI = {
                         `;
 
             } else if (!canAfford) {
-                // INSUFFICIENT FUNDS STATE
+                // Insufficient Funds
                 card.innerHTML = `
                             <div style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 10px; opacity: 0.5;">${icon}</div>
@@ -6683,13 +6571,13 @@ const UI = {
                         `;
 
             } else {
-                // Premium unlocked card
+                // Unlocked
                 const riskColor = volatility > 0.3 ? '#f87171' : '#4ade80';
                 const riskBg = volatility > 0.3 ? 'rgba(248, 113, 113, 0.1)' : 'rgba(74, 222, 128, 0.1)';
                 const riskBorder = volatility > 0.3 ? 'rgba(248, 113, 113, 0.3)' : 'rgba(74, 222, 128, 0.3)';
                 const riskText = volatility > 0.3 ? '⚡ ' + t('cat_high_risk') : '✓ ' + t('cat_stable');
 
-                // Styles now handled by CSS .biz-model-card
+
                 card.innerHTML = `
                             <div style="text-align: center; margin-bottom: 15px;">
                                 <div style="font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.3));">${icon}</div>
@@ -6722,18 +6610,18 @@ const UI = {
             typeGrid.appendChild(card);
         }
 
-        // Helper to render locations (needs to run when entering Step 2 to catch updated state)
+        // Render Locations
         const renderLocations = () => {
             locGrid.innerHTML = '';
 
-            // Count total businesses
+            // Count Businesses
             const totalBusinesses = (GameState.company ? 1 : 0) + (GameState.ownedCompanies ? GameState.ownedCompanies.length : 0);
             const premiumLocationsUnlocked = totalBusinesses >= 2;
 
             for (const [key, val] of Object.entries(CompanyModule.locations)) {
                 const trafficPct = Math.min(100, val.trafficMult * 80);
 
-                // PRE-CALCULATE DYNAMIC PRICE IF TYPE SELECTED
+                // Calc Dynamic Price
                 let priceDisplay = `x${val.rentMult}`;
 
                 if (state.typeId) {
@@ -6742,15 +6630,15 @@ const UI = {
                     priceDisplay = formatCurrency(final) + '/mes';
                 }
 
-                // Custom Requirement Logic
+                // Requirement Logic
                 let isLocked = false;
                 let lockReason = '';
 
-                // 1. Check if Premium Location
+                // 1. Check Type
                 const isPremium = (key === 'downtown' || key === 'business_district');
 
                 if (isPremium) {
-                    // If Cafe, use specific progression: Suburbs -> Downtown -> Business
+                    // Cafe Progression
                     if (state.typeId === 'cafe') {
                         const hasAutoOuter = (GameState.ownedCompanies || []).some(c => c.typeId === 'cafe' && c.locationId === 'suburbs');
                         const hasAutoDowntown = (GameState.ownedCompanies || []).some(c => c.typeId === 'cafe' && c.locationId === 'downtown');
@@ -6767,7 +6655,7 @@ const UI = {
                             }
                         }
                     } else {
-                        // GENERIC FALLBACK (Old Logic)
+                        // Fallback
                         if (!premiumLocationsUnlocked) {
                             isLocked = true;
                             lockReason = t('wiz_req_active_biz', { count: 2 });
@@ -6780,7 +6668,7 @@ const UI = {
                 if (isLocked) card.classList.add('locked');
                 if (state.locId === key) card.classList.add('selected');
 
-                // Get location icon based on key
+                // Get Icon
                 const getLocIcon = (locKey) => {
                     const icons = { 'suburbs': '🏡', 'residential': '🏘️', 'commercial': '🏪', 'downtown': '🌆', 'business_district': '🏙️' };
                     return icons[locKey] || '📍';
@@ -6845,17 +6733,16 @@ const UI = {
             }
         };
 
-        // Initial render (Step 1 or 2 depending on currentStep)
-        if (currentStep === 2) renderLocations();
+        // Initial Render
 
-        // NAVIGATION LOGIC
+        // Nav
         const showStep = (step) => {
             currentStep = step;
-            // Get Steps by ID
+            // Get Steps
             const step1Container = document.getElementById('wizard-step-1');
             const step2Container = document.getElementById('wizard-step-2');
 
-            // Get Progress Indicators
+            // Get Progress
             const badge2 = document.getElementById('wiz-step-dot-2');
             const label2 = document.getElementById('wiz-step-label-2');
             const line2 = document.getElementById('wiz-step-bar-2');
@@ -6864,7 +6751,7 @@ const UI = {
                 step1Container.style.display = 'block';
                 step2Container.style.display = 'none';
 
-                // Progress Update
+                // Update Progress
                 line2.style.width = '0%';
                 badge2.classList.remove('active');
                 badge2.classList.add('inactive');
@@ -6875,7 +6762,7 @@ const UI = {
                 btnNext.textContent = t('wizard_next');
                 btnNext.onclick = goNext;
 
-                // Mobile buttons
+                // Mobile btns
                 btnBackMobile.style.display = 'none';
                 btnNextMobile.textContent = t('wizard_next');
                 btnNextMobile.onclick = goNext;
@@ -6883,7 +6770,7 @@ const UI = {
                 step1Container.style.display = 'none';
                 step2Container.style.display = 'block';
 
-                // Progress Update
+                // Update Progress
                 line2.style.width = '100%';
                 badge2.classList.remove('inactive');
                 badge2.classList.add('active');
@@ -6894,13 +6781,12 @@ const UI = {
                 btnNext.textContent = t('wizard_found_btn');
                 btnNext.onclick = finishWizard;
 
-                // Mobile buttons      
+                // Mobile btns
                 btnBackMobile.style.display = 'block';
                 btnNextMobile.textContent = t('wizard_found_btn');
                 btnNextMobile.onclick = finishWizard;
 
-                // UPDATE DYNAMIC RENT ON CARDS WHEN ENTERING STEP 2
-                // We re-render to ensure lock logic (which depends on typeId) is updated
+                // Update Rent & Locks
                 renderLocations();
             }
         };
@@ -6915,7 +6801,7 @@ const UI = {
 
         btnBack.onclick = () => showStep(1);
 
-        // CONNECT MOBILE BUTTONS TO SAME LOGIC
+        // Connect mobile buttons to same logic
         const btnBackMobile = document.getElementById('btn-wiz-back-mobile');
         const btnNextMobile = document.getElementById('btn-wiz-next-mobile');
 
@@ -6999,7 +6885,7 @@ const UI = {
             }
         };
 
-        // INITIALIZE
+        // Initialize
         nameInput.value = '';
         state = { name: '', typeId: null, locId: null };
         updateSummary();
@@ -7016,7 +6902,7 @@ const UI = {
 
     // Modified to call Company Tutorial upon success
     finishCompanyWizard() {
-        // Logic moved here or kept in event listener?
+
         // I'll leave the event listener logic but invoke tutorial there.
     },
 
@@ -7034,9 +6920,8 @@ const UI = {
     },
 
     showView(targetView) {
-        // console.log('DEBUG: showView called with', targetView);
 
-        // LOCKED VIEW CHECKS
+        // Locked view checks
         if (targetView === 'lifestyle' && !GameState.expensesUnlocked) {
             showGameAlert(t('msg_expenses_locked'), 'warning');
             // Redirect to dashboard (force click to update nav state properly)
@@ -7078,7 +6963,7 @@ const UI = {
         });
     },
 
-    // TUTORIAL MODULE
+    // Tutorial module
     startInitialTutorial() {
         // Use the new obligatory TutorialSystem
         TutorialSystem.checkStart();
@@ -7282,7 +7167,7 @@ const UI = {
         const current = GameState.lifestyle;
         let totalCost = LifestyleModule.calculateTotal();
 
-        // HERO - Premium Design
+        // Hero
         const heroHTML = `
             <div class="lifestyle-hero" style="background: linear-gradient(145deg, rgba(236, 72, 153, 0.15), rgba(219, 39, 119, 0.05)); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: 20px; padding: 25px; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #ec4899, #db2777);"></div>
@@ -7325,7 +7210,7 @@ const UI = {
             return icons[itemId] || '📦';
         };
 
-        // CATEGORIES with upgrade buttons
+        // Categories with upgrade buttons
         const categoriesHTML = Object.keys(LifestyleModule.categories).map(catKey => {
             const cat = LifestyleModule.categories[catKey];
             const selectedId = current ? current[catKey] : null;
@@ -7347,7 +7232,7 @@ const UI = {
                 else if (nextItem.purchaseCost) upfrontInfo = `${t('plus_purchase')} ${formatCurrency(nextItem.purchaseCost)}`;
             }
 
-            // Premium button styles - 3D style with pink/violet colors
+            // Button Styles
             const btnStyle = `width: 100%; padding: 12px 20px; background: linear-gradient(135deg, #ec4899, #db2777); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 6px 0 #9d174d, 0 10px 20px rgba(236, 72, 153, 0.4); transform: translateY(-2px); transition: all 0.15s;${isTutorialForce ? ' animation: pulse 1.5s infinite;' : ''}`;
 
             // Locked overlay
@@ -7411,7 +7296,7 @@ const UI = {
             </div>
         `;
 
-        // EVENTS
+        // Events
         container.querySelectorAll('.btn-upgrade-lifestyle').forEach(btn => {
             btn.onmouseover = () => { btn.style.transform = 'scale(1.02)'; btn.style.boxShadow = '0 4px 15px rgba(74, 222, 128, 0.3)'; };
             btn.onmouseout = () => { btn.style.transform = 'scale(1)'; btn.style.boxShadow = 'none'; };
@@ -7500,12 +7385,12 @@ const UI = {
         const container = document.getElementById('education-view');
         if (!container) return;
 
-        // DATA
+        // Data
         const courses = EduModule.courses;
         const myEdu = GameState.education;
         const current = GameState.currentCourse;
 
-        // HERO CONTENT
+        // Hero content
         let heroHTML = '';
         if (current) {
             const progress = ((current.duration - current.remainingMonths) / current.duration) * 100;
@@ -7567,7 +7452,7 @@ const UI = {
         }
 
 
-        // GRID CONTENT
+        // Grid content
         const available = [];
         const locked = [];
 
@@ -7597,7 +7482,7 @@ const UI = {
             let actionBtn = '';
             let statusBadge = '';
 
-            // Logic Checks (Recalculate or pass down? Recalc for display text)
+            // Checks
             let missingReqText = '';
             let hasReq = true;
             if (course.required && course.required.length > 0) {
@@ -7848,7 +7733,7 @@ const UI = {
                 const holdingSection = document.createElement('div');
                 holdingSection.style.marginBottom = '30px';
 
-                // PREMIUM HEADER
+                // Header
                 holdingSection.innerHTML = `
                     <div style="background: linear-gradient(90deg, #1e293b, transparent); border-left: 4px solid #f59e0b; padding: 10px 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0;">
                         <h3 style="margin:0; font-size: 1.2rem; color: #fbbf24; font-weight:800; display:flex; align-items:center; gap:8px;">
@@ -8053,7 +7938,7 @@ const UI = {
                     const goalCard = document.createElement('div');
                     goalCard.className = 'dashboard-card goal-card';
 
-                    // Check if has temporary jobs (gigs) - must have both gigs and salary
+                    // Temp Check
                     const hasGigs = GameState.currentGigs && GameState.currentGigs.length > 0 && GameState.salary > 0;
 
                     if (hasGigs) {
@@ -8122,14 +8007,14 @@ const UI = {
                         const isEduOk = !nextJobInPath.reqEdu || JobSys.checkEducation(nextJobInPath.reqEdu);
                         const isTimeOk = currentMonths >= reqMonths;
 
-                        // LIFESTYLE CHECKS & PREMIUM TAG GENERATION
+                        // Lifestyle Logic
                         let isLifestyleOk = true;
                         let premiumTagsHTML = '';
 
                         if (nextJobInPath.req) {
                             const r = nextJobInPath.req;
 
-                            // Helper for Premium Tag
+                            // Tag Helper
                             const createTag = (label, level, currentLevel, icon, typeKey) => {
                                 const ok = currentLevel >= level;
                                 if (!ok) isLifestyleOk = false;
@@ -8159,28 +8044,28 @@ const UI = {
                                     </div>`;
                             };
 
-                            // Housing Check
+                            // Housing
                             if (r.housing !== undefined) {
                                 premiumTagsHTML += createTag('Vivienda', r.housing, GameBalance.getHousingTier(), '🏠', 'housing');
                             }
 
-                            // Vehicle/Transport Check
+                            // Transport
                             const reqTrans = r.transport !== undefined ? r.transport : r.vehicle;
                             if (reqTrans !== undefined) {
                                 premiumTagsHTML += createTag('Transporte', reqTrans, GameBalance.getCombinedTier('transport'), '🚗', 'transport');
                             }
 
-                            // Food Check
+                            // Food
                             if (r.food !== undefined) {
                                 premiumTagsHTML += createTag('Dieta', r.food, GameBalance.getCombinedTier('food'), '🥗', 'food');
                             }
 
-                            // Clothes Check
+                            // Clothes
                             if (r.clothes !== undefined) {
                                 premiumTagsHTML += createTag('Imagen', r.clothes, GameBalance.getCombinedTier('clothes'), '👔', 'clothes');
                             }
 
-                            // Leisure Check
+                            // Leisure
                             if (r.leisure !== undefined) {
                                 premiumTagsHTML += createTag('Ocio', r.leisure, GameBalance.getCombinedTier('leisure'), '🎉', 'leisure');
                             }
@@ -8188,7 +8073,7 @@ const UI = {
 
                         const nextCard = document.createElement('div');
                         nextCard.className = 'job-promo-card';
-                        // Premium Style Override
+
                         nextCard.style.background = 'linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95))';
                         nextCard.style.border = '1px solid rgba(148, 163, 184, 0.1)';
                         nextCard.style.borderRadius = '16px';
@@ -8197,7 +8082,7 @@ const UI = {
                         nextCard.style.position = 'relative';
                         nextCard.style.overflow = 'hidden';
 
-                        // Calculate status colors
+                        // Status
                         const isReady = canPromote && isEduOk && isLifestyleOk;
                         const cardAccent = isReady ? '#10b981' : '#64748b'; // Green vs Slate
 
@@ -8218,7 +8103,7 @@ const UI = {
                                     </div>
                                 </div>
                                 
-                                <!-- EXPERIENCE BAR PREMIUM -->
+                                <!-- Experience Bar -->
                                 <div style="margin-bottom:20px; background:rgba(15, 23, 42, 0.6); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                                     <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#cbd5e1; margin-bottom:8px;">
                                         <span style="display:flex; align-items:center; gap:5px;">⏱️ ${t('job_exp_label')}</span>
@@ -8229,12 +8114,12 @@ const UI = {
                                     </div>
                                 </div>
 
-                                <!-- REQUIREMENTS GRID -->
+                                <!-- Requirements -->
                                 <div style="margin-bottom:25px;">
                                     <div style="font-size:0.75rem; text-transform:uppercase; color:#64748b; margin-bottom:10px; padding-left:5px;">${t('job_req_access')}</div>
                                     <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px;">
                                         
-                                        <!-- EDUCATION TAG -->
+                                        <!-- Edu Tag -->
                                         ${nextJobInPath.reqEdu ? `
                                             <div style="background:${isEduOk ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; border:1px solid ${isEduOk ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; border-radius:8px; padding:10px; display:flex; align-items:center; gap:10px;">
                                                 <div style="font-size:1.2rem;">${isEduOk ? '🎓' : '📚'}</div>
@@ -8245,7 +8130,7 @@ const UI = {
                                             </div>
                                         ` : ''}
 
-                                        <!-- LIFESTYLE TAGS INJECTED -->
+                                        <!-- Lifestyle Tags -->
                                         ${premiumTagsHTML}
                                     </div>
                                 </div>
@@ -8261,16 +8146,13 @@ const UI = {
                                 </button>
                             `;
 
-                        // RE-GENERATE TAGS FOR PREMIUM GRID
-                        // We do this via JS after render to keep code clean, or we could refactor the loop above.
-                        // Let's refactor the loop above in a separate replacement chunk to generate 'premiumTagsHTML' 
-                        // instead of the old span tags.
+
 
                         if (canPromote && isEduOk && isLifestyleOk) {
                             nextCard.querySelector('#btn-promote').onclick = () => {
                                 const res = JobSys.promote();
                                 if (res.success) {
-                                    // PREMIUM PROMOTION MESSAGE
+                                    // Success Msg
                                     const themeColor = '#8b5cf6'; // Violet/Purple
                                     const icon = '🚀';
 
@@ -8305,9 +8187,9 @@ const UI = {
                         dashboardGrid.appendChild(nextCard);
                     } // Close normal promotion case
                 } else {
-                    // --- MAX LEVEL CASE OR TRES DEPORTE ---
+                    // Max Level or Special Case
 
-                    // SPECIAL CASE: TRES DEPORTE
+                    // Special: TRES DEPORTE
                     if (GameState.jobTitle === 'TRES DEPORTE') {
                         const monthsSinceLastRequest = JobSys.monthsSinceLastRaise || 0;
                         const canAsk = monthsSinceLastRequest >= 2;
@@ -8348,7 +8230,6 @@ const UI = {
 
                         dashboardGrid.appendChild(goalCard);
                     }
-                    // NORMAL MAX LEVEL CASE (RAISE SYSTEM)  
                     else {
                         const monthsSince = JobSys.monthsSinceLastRaise || 0;
                         const canRaise = monthsSince >= 12;
@@ -8376,7 +8257,7 @@ const UI = {
                         if (canRaise) {
                             raiseCard.querySelector('#btn-request-raise').onclick = () => {
                                 const res = JobSys.requestRaise();
-                                // PREMIUM BOSS RESPONSE
+                                // Boss Response
                                 const themeColor = '#f97316'; // Orange
                                 const icon = '🗣️';
 
@@ -8414,7 +8295,7 @@ const UI = {
 
                 contentContainer.appendChild(dashboardGrid);
 
-                // 3. Job Market (Grid)
+                // 3. Market
                 const marketSection = document.createElement('div');
                 marketSection.className = 'market-section';
                 marketSection.innerHTML = `<h3 class="section-title">🌐 ${t('job_market_title')}</h3>`;
@@ -8435,7 +8316,7 @@ const UI = {
                     return v.path !== 'temporary';
                 });
 
-                // --- SECTION: GIGS ---
+                // Gigs
                 const gigSection = document.createElement('div');
                 gigSection.className = 'market-section';
                 gigSection.id = 'temp-jobs-section';
@@ -8478,7 +8359,7 @@ const UI = {
                                 return;
                             }
                             if (res.success) {
-                                // PREMIUM GIG WELCOME MESSAGE
+                                // Welcome Msg
                                 const themeColor = '#facc15';
                                 const icon = '⚡';
 
@@ -8619,7 +8500,7 @@ const UI = {
                                 const title = isGig ? t('temp_job_accepted') : t('contract_signed');
                                 const subTitle = isGig ? t('temp_job_title') : t('new_career_path');
 
-                                // PREMIUM WELCOME MESSAGE
+                                // Welcome Msg
                                 let welcomeMsg = `
                                 <div style="text-align: center; margin-bottom: 20px;">
                                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
@@ -8654,7 +8535,7 @@ const UI = {
                                 UI.updateHeader();
                                 UI.updateDashboard();
                             } else {
-                                // PREMIUM REJECTION MESSAGE
+                                // Rejection Msg
                                 const themeColor = '#f43f5e'; // Rose
                                 const icon = '🚫';
 
@@ -8693,7 +8574,7 @@ const UI = {
                 });
                 marketSection.appendChild(marketGrid);
 
-                // 2. RENDER LOCKED
+                // 2. Locked
                 if (locked.length > 0) {
                     const details = document.createElement('details');
                     details.style.marginTop = '30px';
@@ -8784,7 +8665,7 @@ const UI = {
 
                 contentContainer.appendChild(marketSection);
 
-                // 4. Entrepreneur Footer - Premium Design
+                // 4. Entrepreneur
                 const enoughNetWorth = GameState.netWorth >= 100000;
                 const entrepreneurSection = document.createElement('div');
                 entrepreneurSection.className = 'entrepreneur-footer';
@@ -8812,14 +8693,13 @@ const UI = {
                 }
                 contentContainer.appendChild(entrepreneurSection);
             } else {
-                // --- COMPANY OWNER MODE ---
+                // Owner Mode
                 const co = GameState.company;
                 const activeTab = jobContainer.dataset.activeTab || 'summary';
 
                 const coDash = document.createElement('div');
                 coDash.innerHTML = `
                         <div class="company-dashboard">
-                            <!-- Company Hero Header - Premium Design -->
                             <div style="background: linear-gradient(145deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.05)); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 20px; padding: 25px; position: relative; overflow: hidden; margin-bottom: 20px;">
                                 <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></div>
                                 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
@@ -8843,7 +8723,6 @@ const UI = {
                                 </div>
                             </div>
 
-                            <!-- Company Tabs - Premium Design -->
                             <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #1e293b; padding: 8px; border-radius: 12px;">
                                 <button class="tab-btn ${activeTab === 'summary' ? 'active' : ''}" data-tab="summary" style="flex: 1; min-width: 60px; padding: 12px 8px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; ${activeTab === 'summary' ? 'background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a;' : 'background: transparent; color: #94a3b8;'}">
                                     📊 <span class="desktop-text">${t('comp_tab_summary')}</span>
@@ -8883,7 +8762,7 @@ const UI = {
 
                 const tabContent = document.getElementById('co-tab-content');
 
-                // Shared Helpers (Defined here to be available across all tabs)
+                // Helpers
                 window.setStrat = (cat, val) => {
                     CompanyModule.setStrategicOption(cat, val);
                     UI.updateJob(JobSystem);
@@ -8939,7 +8818,7 @@ const UI = {
 
                         tabContent.innerHTML = `
                                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                                    <!-- Estado General Card -->
+                                    <!-- General Status -->
                                     <div id="comp-status-card" style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.08), transparent); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 16px; padding: 20px;">
                                         <h3 style="margin: 0 0 15px 0; color: #4ade80; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
                                             <span style="font-size: 1.3rem;">📊</span> ${t('comp_status_general')}
@@ -8974,8 +8853,7 @@ const UI = {
                                         </div>
                                     </div>
 
-                                    <!-- Novedades Card -->
-                                    <!-- Novedades Card -->
+                                    <!-- News -->
                                     <div id="comp-summary-news" style="background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), transparent); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 20px;">
                                         <h3 style="margin: 0 0 15px 0; color: #38bdf8; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
                                             <span style="font-size: 1.3rem;">📢</span> ${t('comp_news_title')}
@@ -8984,7 +8862,7 @@ const UI = {
                                     </div>
                                     
                                     <div id="comp-summary-tab">
-                                        <!-- Desglose Financiero Card -->
+                                        <!-- Financial Breakdown -->
                                         <div style="background: linear-gradient(145deg, rgba(168, 85, 247, 0.08), transparent); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 16px; padding: 20px;">
                                             <h3 style="margin: 0 0 15px 0; color: #a855f7; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
                                                 <span style="font-size: 1.3rem;">📋</span> ${t('comp_breakdown_title')}
@@ -9004,7 +8882,7 @@ const UI = {
                                             </table>
                                         </div>
     
-                                        <!-- Gráfico Card -->
+                                        <!-- Charts -->
                                         <div style="background: linear-gradient(145deg, rgba(251, 191, 36, 0.08), transparent); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 16px; padding: 20px;">
                                             <h3 style="margin: 0 0 15px 0; color: #fbbf24; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
                                                 <span style="font-size: 1.3rem;">📈</span> ${t('comp_evolution_title')}
@@ -9056,11 +8934,11 @@ const UI = {
                     let upgradeText = t('comp_expand_btn');
                     let upgradeDisabled = "";
 
-                    // Get location-based max staff
+                    // Loc Staff
                     const loc = CompanyModule.locations[co.locationId];
                     const locationMaxStaff = loc?.maxStaff || 15;
 
-                    // Check if at location max
+                    // Max Check
                     if (co.maxStaff >= locationMaxStaff) {
                         upgradeText = `${t('max_level')} (${locationMaxStaff})`;
                         upgradeDisabled = "disabled";
@@ -9079,14 +8957,14 @@ const UI = {
                         upgradeText += ` (${formatCurrency(upgradeCost)})`;
                     }
 
-                    // Check if Expert hiring should be locked (productLevel must be >= 5)
+                    // Check Expert Lock
                     const expertLocked = co.productLevel < 5;
                     const expertBtnDisabled = expertLocked ? 'disabled' : '';
                     const expertBtnStyle = expertLocked ? 'opacity:0.5; cursor:not-allowed;' : '';
                     const expertBtnText = expertLocked ? `${t('cat_expert')} (1.8k) 🔒 ${t('required_prereq')}: ${t('tier_abbr')} 5` : `${t('cat_expert')} (1.8k)`;
 
 
-                    // RENDER STAFF CARDS
+                    // Staff Cards
                     co.staff.forEach((emp, i) => {
                         staffHtml += `
                                 <div class="staff-card">
@@ -9163,7 +9041,7 @@ const UI = {
                                             ${t('comp_upgrade_office')}
                                         </button>
                                         
-                                        <!-- PAYROLL AUTOMATION BUTTON -->
+                                        <!-- Auto-Payroll Btn -->
                                         ${(() => {
                             const hasAuto = co.upgrades && co.upgrades.autoPayroll;
                             const canBuy = !hasAuto && co.maxStaff > 5 && co.cash >= 25000;
@@ -9171,7 +9049,7 @@ const UI = {
                                 ? 'background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); pointer-events: none;'
                                 : (canBuy ? 'background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);' : 'background: #334155; color: #64748b; opacity: 0.6;');
 
-                            // Ensure user sees price or status
+                            // Show Price
                             let label = hasAuto ? t('comp_auto_payroll') : t('comp_hire_rrhh', { amount: formatCurrency(25000) });
                             let subLabel = '';
 
@@ -9296,7 +9174,7 @@ const UI = {
                     }
 
                     window.hireRole = (role, sal) => {
-                        // Validate Expert hiring restriction
+                        // Validate Expert
                         if (role === 'Experto' && GameState.company.productLevel < 5) {
                             const lockMsg = `
                                         <div style="text-align:center;">
@@ -9327,7 +9205,7 @@ const UI = {
                         const skill = role === 'Experto' ? 0.8 : 0.4;
                         const roleName = role === 'Experto' ? t('comp_role_expert') : t('comp_role_clerk');
 
-                        // Show styled modal for employee name input
+                        // Name Modal
                         const nameInputHtml = `
                             <div style="text-align: center;">
                                 <div style="font-size: 3rem; margin-bottom: 15px;">👤</div>
@@ -9359,7 +9237,7 @@ const UI = {
                             </div>
                         `;
 
-                        // PREMIUM HIRING MODAL
+                        // Hiring Modal
                         const themeColor = '#06b6d4'; // Cyan
                         const icon = '👥';
 
@@ -9406,7 +9284,7 @@ const UI = {
                             }
                         ], true);
 
-                        // Focus input after modal renders
+                        // Focus
                         setTimeout(() => {
                             const inp = document.getElementById('new-employee-name');
                             if (inp) inp.focus();
@@ -9426,7 +9304,7 @@ const UI = {
                         const inputEl = document.getElementById(`salary-input-${employeeIndex}`);
                         const newSalary = parseInt(inputEl.value);
 
-                        // Validation: Range check
+                        // Range Valid
                         if (isNaN(newSalary) || newSalary < 1000 || newSalary > 9000) {
                             UI.showModal(
                                 '⚠️ ' + t('comp_salary_invalid'),
@@ -9443,7 +9321,7 @@ const UI = {
                         const employee = GameState.company.staff[employeeIndex];
                         const oldSalary = employee.salary;
 
-                        // Warning: Below required wage
+                        // Warn: Low Wage
                         if (newSalary < employee.requiredWage) {
                             const warningMsg = `
                                         <div style="text-align:left;">
@@ -9466,7 +9344,7 @@ const UI = {
                                     `;
 
                             UI.confirmModal('⚠️ ' + t('comp_salary_low_warning'), warningMsg, () => {
-                                // User confirmed - proceed with update
+                                // Confirmed
                                 employee.salary = newSalary;
 
                                 const diff = newSalary - oldSalary;
@@ -9487,16 +9365,16 @@ const UI = {
                                     }]
                                 );
                             }, () => {
-                                // User cancelled - restore old value
+                                // Cancel
                                 inputEl.value = oldSalary;
                             });
                             return;
                         }
 
-                        // Update salary (if not below required wage)
+                        // Update
                         employee.salary = newSalary;
 
-                        // Feedback message
+                        // Feedback
                         const diff = newSalary - oldSalary;
                         const diffText = diff >= 0 ? `+${formatCurrency(diff)}` : formatCurrency(diff);
 
@@ -9729,7 +9607,7 @@ const UI = {
                             </div>
                         `;
 
-                    // window.attachProductHandlers(); // Removed (undefined)
+
 
                 } else if (activeTab === 'marketing') {
                     const stats = co.lastStats || {};
@@ -9901,12 +9779,12 @@ const UI = {
 
                     tabContent.innerHTML = strategyHTML;
 
-                    // window.attachMarketingHandlers(); // Removed
+
                 } else if (activeTab === 'finance') {
                     tabContent.innerHTML = `
                         <div style="display: flex; flex-direction: column; gap: 20px;">
                             
-                            <!-- Cash Movements Card -->
+                            <!-- Cash -->
                             <div id="comp-finance-movements-card" style="
                                 background: linear-gradient(145deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.05));
                                 border: 1px solid rgba(56, 189, 248, 0.3);
@@ -9978,7 +9856,7 @@ const UI = {
                                 </div>
                             </div>
                             
-                            <!-- CEO Salary Card -->
+                            <!-- Salary -->
                             <div id="comp-finance-salary-card" style="
                                 background: linear-gradient(145deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
                                 border: 1px solid rgba(251, 191, 36, 0.3);
@@ -10025,7 +9903,7 @@ const UI = {
                                 </div>
                             </div>
                             
-                            <!-- Danger Zone Card -->
+                            <!-- Danger -->
                             <div id="comp-finance-danger-card" style="
                                 background: linear-gradient(145deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
                                 border: 1px solid rgba(239, 68, 68, 0.3);
@@ -10103,12 +9981,11 @@ const UI = {
     },
 
     checkStoryEvents() {
-        // console.log(`DEBUG: Checking Story Events. Year: ${GameState.year}, Month: ${GameState.month}`);
 
-        // EVENT 1: Year 1, Month 4
+        // Event 1
         if (GameState.year === 1 && GameState.month === 4) {
             GameState.cash += 300;
-            // PREMIUM BIRTHDAY MESSAGE
+            // Birthday Msg
             const themeColor = '#e879f9'; // Fuchsia
             const icon = '🎁';
 
@@ -10135,13 +10012,13 @@ const UI = {
             UI.playCoinSound();
         }
 
-        // EVENT 2A: Year 2, Month 4 - Silent Unlock (delayed by 1 month)
+        // Event 2A
         if (GameState.year === 2 && GameState.month === 4) {
             GameState.expensesUnlocked = true;
             // Notification removed as requested
         }
 
-        // EVENT 2B: Year 2, Month 4 - Kicked out (or later if missed)
+        // Event 2B
         if (!GameState.tutorialState.forceHousing &&
             !GameState.tutorialFlags.momKickedOut && // Prevent re-triggering
             ((GameState.year === 2 && GameState.month >= 4) || GameState.year > 2)) {
@@ -10151,19 +10028,15 @@ const UI = {
 
             UI.playCoinSound();
 
-            // Trigger Tutorial Step 8
+            // Tutorial Step 8
             TutorialSystem.step8_ForceHousing();
         }
     }
 };
 
-/**
- * Advance the game by one month. This is the main game loop function.
- * Processes all modules, updates finances, checks events, and handles progression.
- * Called when player clicks "Siguiente Mes" button.
- */
+// Game Loop
 function nextTurn() {
-    // Tutorial Cleanup for Step 4 (Free Play)
+    // Tut Cleanup
     if (GameState.tutorialStep === 4) {
         TutorialSystem.hideOverlay();
         TutorialSystem.removeHighlights();
@@ -10173,11 +10046,11 @@ function nextTurn() {
     StockMarket.nextTurn();
     RealEstate.nextTurn(); // Dynamic prices
     Bank.nextTurn();
-    // JobSystem.nextTurn(); // Moved below to ensure salary is paid before expiry
-    EducationModule.nextTurn(); // Study progress
-    CompanyModule.nextTurn(); // Company Progress
+    // JobSys (Moved)
+    EducationModule.nextTurn(); // Study
+    CompanyModule.nextTurn(); // Company
 
-    // Dynamic Expenses
+    // Expenses
     if (GameState.lifestyle) {
         GameState.expenses = LifestyleModule.calculateTotal();
     }
@@ -10186,7 +10059,7 @@ function nextTurn() {
     const netIncome = GameState.salary + rentIncome - GameState.expenses;
     GameState.cash += netIncome;
 
-    // TRACK ANNUAL INCOME FOR TAXES
+    // Tax Track
     if (!GameState.currentYearIncome) {
         GameState.currentYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
     }
@@ -10194,7 +10067,7 @@ function nextTurn() {
         GameState.currentYearExpenses = 0;
     }
 
-    // DEFENSIVE INIT FOR LIFETIME STATS (for old save games)
+    // Init Stats
     if (!GameState.lifetimeStats) {
         GameState.lifetimeStats = {
             totalIncome: { salary: 0, rental: 0, stocks: 0, company: 0 },
@@ -10205,29 +10078,27 @@ function nextTurn() {
 
     if (GameState.salary > 0) {
         GameState.currentYearIncome.salary += GameState.salary;
-        // LIFETIME TRACKING
-        GameState.lifetimeStats.totalIncome.salary += GameState.salary;
+        // Lifetime tracking gameState.lifetimeStats.totalIncome.salary += GameState.salary;
     }
     if (rentIncome > 0) {
         GameState.currentYearIncome.rental += rentIncome;
-        // LIFETIME TRACKING
-        GameState.lifetimeStats.totalIncome.rental += rentIncome;
+        // Lifetime tracking gameState.lifetimeStats.totalIncome.rental += rentIncome;
     }
-    // LIFETIME EXPENSE TRACKING
+    // Lifetime Exp
     if (GameState.expenses > 0) {
         GameState.lifetimeStats.totalExpenses.lifestyle += GameState.expenses;
         GameState.currentYearExpenses += GameState.expenses;
     }
-    // Stock gains are tracked when selling
-    // Company profits are tracked in Company Module.nextTurn
+    // Stock Gains
+    // Co Profits
 
-    // PROGRESSIVE COMMUNIST EXPROPRIATION SYSTEM
+    // Expropriation
     let expropriationTriggered = false;
     let expropriationAmount = 0;
     let expropriationPercent = 0;
     let expropriationMessage = '';
 
-    // Tier 4: 6 Million or more - 90% (RECURRING)
+    // Tier 4
     if (GameState.cash >= 6000000) {
         expropriationPercent = 0.90;
         expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
@@ -10235,7 +10106,7 @@ function nextTurn() {
         expropriationTriggered = true;
         expropriationMessage = t('event_communist_6m');
     }
-    // Tier 3: 3 Million - 70% (ONCE)
+    // Tier 3
     else if (GameState.cash >= 3000000 && !GameState.expropriation3MDone) {
         expropriationPercent = 0.70;
         expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
@@ -10244,7 +10115,7 @@ function nextTurn() {
         expropriationTriggered = true;
         expropriationMessage = t('event_communist_3m');
     }
-    // Tier 2: 1 Million - 60% (ONCE)
+    // Tier 2
     else if (GameState.cash >= 1000000 && !GameState.expropriation1MDone) {
         expropriationPercent = 0.60;
         expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
@@ -10253,7 +10124,7 @@ function nextTurn() {
         expropriationTriggered = true;
         expropriationMessage = t('event_communist_1m');
     }
-    // Tier 1: 500k - 50% (ONCE)
+    // Tier 1
     else if (GameState.cash >= 500000 && !GameState.expropriation500kDone) {
         expropriationPercent = 0.50;
         expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
@@ -10263,10 +10134,10 @@ function nextTurn() {
         expropriationMessage = t('event_communist_500k');
     }
 
-    // Show expropriation modal if triggered
+    // Show Modal
     if (expropriationTriggered) {
         setTimeout(() => {
-            // PREMIUM EXPROPRIATION MESSAGE
+            // Msg
             const themeColor = '#ef4444'; // Red
             const icon = '☭';
 
@@ -10302,14 +10173,14 @@ function nextTurn() {
         }, 500);
     }
 
-    JobSystem.nextTurn(); // Run here to handle job expiry AFTER pay
+    JobSystem.nextTurn(); // Job Expiry
 
-    // TAX SYSTEM
-    // Warning in Month 1, Year 4
+    // Tax Sys
+    // Year 4 Warn
     if (GameState.year === 4 && GameState.month === 1 && !GameState.taxWarningShown) {
         GameState.taxWarningShown = true;
         setTimeout(() => {
-            // PREMIUM TAX WARNING
+            // Warn Msg
             const themeColor = '#3b82f6'; // Blue
             const icon = '🏛️'; // Bank/Institution icon
 
@@ -10366,7 +10237,7 @@ function nextTurn() {
         }, 800);
     }
 
-    // Tax Declaration in Month 5 (starting year 4)
+    // Declaration
     if (GameState.year >= 4 && GameState.month === 5) {
         if (!GameState.previousYearIncome) {
             GameState.previousYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
@@ -10378,12 +10249,12 @@ function nextTurn() {
             GameState.previousYearIncome.stocks +
             GameState.previousYearIncome.company;
 
-        // DEDUCTION: 75% of Expenses
+        // Deductions
         const totalExpenses = GameState.previousYearExpenses || 0;
         const deductibleExpenses = Math.floor(totalExpenses * 0.75);
         const taxableBase = Math.max(0, totalIncome - deductibleExpenses);
 
-        // PROGRESSIVE TAX SYSTEM
+        // Tax Rate
         function calculateTaxRate(income) {
             if (income < 10000) return 0.10;
             if (income < 25000) return 0.15;
@@ -10463,7 +10334,7 @@ function nextTurn() {
                     text: `💸 ${t('pay_taxes')}`,
                     style: 'danger',
                     fn: () => {
-                        // Show blocking confirmation first. Deduction happens AFTER accepting.
+                        // Confirm Pay
                         showGameAlert(
                             t('tax_paid_msg', { amount: formatCurrency(taxAmount) }),
                             'warning',
@@ -10488,7 +10359,7 @@ function nextTurn() {
 
     GameState.month++;
 
-    // MOVED: Check Story Events AFTER advancing time so they trigger on arrival
+    // Check Events
     UI.checkStoryEvents();
 
     if (GameState.month > 12) {
@@ -10496,36 +10367,33 @@ function nextTurn() {
         GameState.year++;
         GameState.age++; // Birthday!
 
-        // CHECK FOR YEAR 50 ENDGAME
+        // Endgame
         if (GameState.year > 50) {
             setTimeout(() => showEndgameModal(), 500);
             return; // Stop game progression
         }
 
-        // ASSIGN NEW ANNUAL STOCK TARGETS
-        StockMarket.assignAnnualTargets();
+        // Assign new annual stock targets stockMarket.assignAnnualTargets();
 
-        // RESET ANNUAL INCOME TRACKING
+        // Reset annual income tracking
         if (!GameState.previousYearIncome) {
             GameState.previousYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
         }
         GameState.previousYearIncome = { ...GameState.currentYearIncome };
         GameState.currentYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
 
-        // RESET ANNUAL EXPENSES TRACKING
-        GameState.previousYearExpenses = GameState.currentYearExpenses || 0;
+        // Reset annual expenses tracking gameState.previousYearExpenses = GameState.currentYearExpenses || 0;
         GameState.currentYearExpenses = 0;
     }
 
 
 
-    // Auto-save every 3 months (more frequent to prevent data loss)
+    // Auto-save
     if (GameState.month % 3 === 0) {
         const saveRes = PersistenceModule.saveGame();
-        // console.log("Auto-Save:", saveRes.message);
     }
 
-    // Regenerate real estate listings every 6 months
+    // Regen Listings
     if (GameState.month % 6 === 0) {
         RealEstate.generateListings();
     }
@@ -10533,9 +10401,9 @@ function nextTurn() {
     // History & Chart
     const nw = updateNetWorth();
 
-    // GAMIFICATION: MILESTONE CONFETTI
+    // Milestones
     const milestones = [5000, 50000, 100000, 500000, 1000000];
-    if (!GameState.achievedMilestones) GameState.achievedMilestones = []; // Safety init for old saves
+    if (!GameState.achievedMilestones) GameState.achievedMilestones = []; // Old Save Safety
 
     milestones.forEach(m => {
         if (nw >= m && !GameState.achievedMilestones.includes(m)) {
@@ -10546,32 +10414,30 @@ function nextTurn() {
         }
     });
 
-    // STOCK MARKET UNLOCK (25K NET WORTH)
-    // Initialize for old saves that don't have this property
+    // Unlock Stock
+    // Init Unlocked
     if (GameState.stockUnlocked === undefined) {
         GameState.stockUnlocked = false;
     }
 
-    // console.log('DEBUG Stock Unlock Check:', { nw, stockUnlocked: GameState.stockUnlocked, shouldTrigger: nw >= 30000 && !GameState.stockUnlocked });
 
     if (nw >= 30000 && !GameState.stockUnlocked) {
-        // console.log('DEBUG: Triggering Stock Unlock!');
         GameState.stockUnlocked = true;
-        // Trigger celebration and tutorial after a short delay
+        // Celebration
         setTimeout(() => {
             TutorialSystem.stepStock_Unlock();
         }, 500);
     }
 
-    // BANK UNLOCK (Year 3, Month 6)
-    // Initialize for old saves that don't have this property
+    // Unlock Bank
+    // Init Bank
     if (GameState.bankUnlocked === undefined) {
         GameState.bankUnlocked = false;
     }
 
     if (!GameState.bankUnlocked && GameState.year >= 3 && GameState.month >= 6) {
         GameState.bankUnlocked = true;
-        // Trigger Bank tutorial after a short delay
+        // Bank Tut
         setTimeout(() => {
             TutorialSystem.stepBank_Unlock();
         }, 600);
@@ -10587,8 +10453,7 @@ function nextTurn() {
     GameState.history.assets.push(assetsOnly);
     GameState.history.labels.push(`${GameState.month}/${GameState.year}`);
 
-    // Max 24 points to keep it clean? Or scrollable. Canvas resizes fine. 
-    // If dragging too long, slice.
+    // Max Points
     if (GameState.history.netWorth.length > 50) {
         GameState.history.netWorth.shift();
         GameState.history.cash.shift();
@@ -10597,20 +10462,20 @@ function nextTurn() {
         GameState.history.labels.shift();
     }
 
-    // BANKRUPTCY WARNING SYSTEM
+    // Bankruptcy Sys
     if (GameState.cash < 0) {
-        // Increment consecutive bankruptcy counter
+        // Increment Cnt
         GameState.consecutiveBankruptcyTurns = (GameState.consecutiveBankruptcyTurns || 0) + 1;
 
         if (GameState.consecutiveBankruptcyTurns >= 3) {
-            // GAME OVER - BANKRUPTCY
+            // Game Over
             setTimeout(() => {
                 showBankruptcyModal();
             }, 100);
             return; // Stop rendering updates behind modal
         }
 
-        // WARNING
+        // Warn
         showGameAlert(
             `
             <div style="text-align: center;">
@@ -10630,7 +10495,7 @@ function nextTurn() {
             t('bankruptcy_alert_title')
         );
     } else {
-        // Reset counter if positive balance
+        // Reset Cnt
         GameState.consecutiveBankruptcyTurns = 0;
     }
 
@@ -10644,7 +10509,7 @@ function nextTurn() {
 function showBankruptcyModal() {
     const stats = GameState.lifetimeStats;
 
-    // Calculate final stats
+    // Calc Stats
     let totalDebt = 0;
     GameState.loans.forEach(l => totalDebt += l.remainingBalance);
     const liquidationValue = GameState.netWorth; // Simplified view
@@ -10690,7 +10555,7 @@ function showBankruptcyModal() {
                 </div>
     `;
 
-    // Create modal overlay
+    // Create Modal
     const overlay = document.createElement('div');
     overlay.className = 'game-alert-overlay';
     overlay.style.cssText = `
@@ -10715,11 +10580,10 @@ function showBankruptcyModal() {
     document.body.appendChild(overlay);
 }
 
-// INIT
+// Init App
 try {
-    // console.log('Juego iniciado (Script Try Block Start)');
     const setupEventListeners = () => {
-        // Next Turn Buttons (Header and Dashboard)
+        // Next Turn
         const nextBtns = document.querySelectorAll('#next-turn-btn, #dashboard-next-btn');
         nextBtns.forEach(btn => {
             btn.onclick = () => {
@@ -10730,7 +10594,7 @@ try {
             };
         });
 
-        // Stock Market
+        // Stock
         const btnBuy = document.getElementById('btn-buy');
         if (btnBuy) btnBuy.onclick = () => {
             const symbol = document.getElementById('stock-select').value;
@@ -10774,7 +10638,7 @@ try {
             }
         };
 
-        // Loan Slider
+        // Slider
         const slider = document.getElementById('loan-years');
         if (slider) {
             slider.oninput = (e) => {
@@ -10795,14 +10659,14 @@ try {
             }
         };
 
-        // Modals
+        // Modal Close
         document.querySelectorAll('.close').forEach(btn => {
             btn.onclick = () => {
                 btn.closest('.modal').style.display = 'none';
             };
         });
 
-        // Window click to close modals
+        // Outside Click
         window.onclick = (event) => {
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = "none";
@@ -10815,16 +10679,15 @@ try {
         StockMarket.init();
         UI.render();
         UI.setupLanguageSwitcher();
-        UI.updateStaticTranslations(); // Fix: Translate static texts (game title, nav labels) on game start
+        UI.updateStaticTranslations(); // Translate Static
         setupEventListeners();
 
-        // Sync Bottom Nav
         // Sync Bottom Nav
         document.querySelectorAll('.b-nav-item').forEach(btn => {
             btn.onclick = () => {
                 const view = btn.dataset.view;
 
-                // LOCK BANK UNTIL UNLOCKED
+                // Lock Bank
                 if (view === 'bank' && !GameState.bankUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
@@ -10837,7 +10700,7 @@ try {
                     return;
                 }
 
-                // LOCK STOCK UNTIL UNLOCKED VIA 25K MILESTONE
+                // Lock Stock
                 if (view === 'market' && !GameState.stockUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
@@ -10854,13 +10717,13 @@ try {
             };
         });
 
-        // Sync Desktop Nav to Bottom Nav
+        // Sync Nav
         document.getElementById('main-nav').querySelectorAll('.nav-btn').forEach(btn => {
-            const originalClick = btn.onclick; // Preserving if any (though usually handled by event delegation or loop below)
+            const originalClick = btn.onclick; // Preserve Click
             btn.onclick = () => {
                 const view = btn.dataset.view;
 
-                // LOCK BANK UNTIL UNLOCKED
+                // Lock bank until unlocked
                 if (view === 'bank' && !GameState.bankUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
@@ -10873,7 +10736,7 @@ try {
                     return;
                 }
 
-                // LOCK STOCK UNTIL UNLOCKED VIA 25K MILESTONE
+                // Lock stock until unlocked via 25K MILESTONE
                 if (view === 'market' && !GameState.stockUnlocked) {
                     UI.showView(view); // Show background
                     showGameAlert(
@@ -10896,7 +10759,7 @@ try {
             }
         });
 
-        // Hack to force initial job display update and ChartTick
+        // Force Init
         setTimeout(() => {
             try {
                 UI.updateJob(JobSystem);
@@ -10907,7 +10770,7 @@ try {
         }, 100);
     };
 
-    // STARTUP LOGIC
+    // Startup
     if (PersistenceModule.checkSave()) {
         const allSaves = PersistenceModule.getAllSaves();
 
@@ -10982,7 +10845,7 @@ try {
             const welcomeModal = document.querySelector('.custom-modal-overlay');
             if (welcomeModal) welcomeModal.remove();
 
-            // Premium styled confirmation modal
+            // Confirmation
             const confirmMsg = `
                 <style>
                     .custom-modal-box h3 { display: none !important; }
@@ -11023,7 +10886,7 @@ try {
         promptNewUser(initGame);
     }
 
-    // Function to update welcome screen texts when language changes
+    // Update language
     function updateWelcomeScreen() {
         const title = document.querySelector('.profile-title');
         if (title) title.textContent = t('tutorial_welcome');
@@ -11171,7 +11034,7 @@ try {
                             font-style: italic;
                             margin: 0;
                         }
-                        /* MOBILE OPTIMIZATIONS */
+                        /* Mobile */
                         @media (max-width: 480px) {
                             .custom-modal-box {
                                 margin: 10px !important;
@@ -11203,7 +11066,7 @@ try {
                         <span class="profile-rocket">🚀</span>
                         <h2 class="profile-title">${t('tutorial_welcome')}</h2>
                         
-                        <!-- Language Selector -->
+                        <!-- Lang Selector -->
                         <div id="welcome-lang-selector" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
                             <button onclick="I18n.setLanguage('es'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇪🇸</button>
                             <button onclick="I18n.setLanguage('en'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 1.5rem; transition: all 0.2s;">🇬🇧</button>
@@ -11244,24 +11107,24 @@ try {
 
         UI.showModal(t('create_profile'), msg, [], true);
 
-        // Quick fix: Remove the default footer if it exists
+        // Remove Footer
         const overlay = document.querySelector('.custom-modal-overlay');
         if (overlay) {
             const footer = overlay.querySelector('.custom-modal-footer, .modal-actions');
             if (footer) footer.style.display = 'none';
         }
 
-        // Attach handler manually since we moved button to body
+        // Attach Handler
         document.getElementById('btn-start-game-custom').onclick = () => {
             const name = document.getElementById('start-player-name').value || 'Inversor';
             GameState.playerName = name;
 
-            // Cheat Code / Easter Egg
+            // Cheat
             if (name === 'SergioGuapo') {
                 GameState.cash = 200000;
             }
 
-            // Close modal manually (since we bypass default actions)
+            // Close Modal
             const overlay = document.querySelector('.custom-modal-overlay');
             if (overlay) overlay.remove();
 
@@ -11272,7 +11135,7 @@ try {
 
 } catch (e) {
     console.error('Critical Error loading save, resetting:', e);
-    // Instead of alerting, just start fresh
+    // Reset
     promptNewUser(initGame);
 }
 
