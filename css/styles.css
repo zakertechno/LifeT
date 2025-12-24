@@ -3084,9 +3084,13 @@
             .home-btn {
                 grid-column: 1 / 2 !important;
                 grid-row: 1 !important;
-                padding: 6px 10px !important;
-                background: linear-gradient(135deg, #475569, #334155) !important;
-                border: 1px solid #64748b !important;
+                padding: 0 !important;
+                background: transparent !important;
+                border: none !important;
+                width: 36px !important;
+                height: 36px !important;
+                border-radius: 8px !important;
+                overflow: hidden !important;
             }
 
             .home-btn::before {
@@ -3100,18 +3104,9 @@
             .home-icon-img {
                 width: 100% !important;
                 height: 100% !important;
-                min-width: unset !important;
-                max-width: unset !important;
                 object-fit: cover !important;
-                border-radius: 6px !important;
+                border-radius: 8px !important;
                 filter: none !important;
-            }
-
-            .home-btn {
-                padding: 4px !important;
-                width: 36px !important;
-                height: 36px !important;
-                border-radius: 10px !important;
             }
 
             #header-player-name {
