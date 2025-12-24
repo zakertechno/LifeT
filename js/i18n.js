@@ -1030,6 +1030,7 @@ const I18n = {
             find_job: 'Buscar Empleo',
 
             // Tutorial - Dashboard Tooltips
+            tutorial_home_btn_msg: 'Pulsa el <strong>botón inicio</strong> para acceder a tus finanzas.',
             tutorial_net_worth_msg: 'Esto es lo que realmente vales.<br><br>Es la suma de todo tu dinero y propiedades, menos tus deudas. ¡Haz que crezca!',
             tutorial_cash_msg: 'El dinero líquido que tienes para gastar o invertir. ¡Si llega a cero, game over!',
             tutorial_flow_msg: 'Es la diferencia entre tus ingresos y gastos. Mantenlo positivo para acumular riqueza cada mes.',
@@ -2572,6 +2573,7 @@ const I18n = {
             find_job: 'Find a Job',
 
             // Tutorial - Dashboard Tooltips
+            tutorial_home_btn_msg: 'Press the <strong>home button</strong> to access your finances.',
             tutorial_net_worth_msg: "This is what you're really worth.<br><br>It's the sum of all your money and assets, minus your debts. Make it grow!",
             tutorial_cash_msg: "The liquid money you have to spend or invest. If it hits zero, it's game over!",
             tutorial_flow_msg: "It's the difference between your income and expenses. Keep it positive to accumulate wealth each month.",
@@ -4193,6 +4195,7 @@ const I18n = {
             find_job: 'Job finden',
 
             // Tutorial - Dashboard Tooltips
+            tutorial_home_btn_msg: 'Drücken Sie die <strong>Start-Taste</strong>, um auf Ihre Finanzen zuzugreifen.',
             tutorial_net_worth_msg: 'Das ist Ihr wahrer Wert.<br><br>Es ist die Summe all Ihres Geldes und Ihrer Vermögenswerte, abzüglich Ihrer Schulden. Lassen Sie es wachsen!',
             tutorial_cash_msg: 'Das flüssige Geld, das Sie ausgeben oder investieren können. Wenn es auf Null fällt, ist das Spiel vorbei!',
             tutorial_flow_msg: 'Das ist die Differenz zwischen Ihren Einnahmen und Ausgaben. Halten Sie es positiv, um jeden Monat Vermögen aufzubauen.',
@@ -5456,6 +5459,7 @@ const I18n = {
             tutorial_better_salaries: '更高薪资可用',
             tutorial_promotions_available: '晋升机会',
             find_job: '找工作',
+            tutorial_home_btn_msg: '按<strong>主页按钮</strong>查看你的财务状况。',
             tutorial_net_worth_msg: '这是你真正的价值。<br><br>它是你所有资金和资产的总和，减去债务。让它增长！',
             tutorial_cash_msg: '你可以消费或投资的流动资金。如果归零，游戏结束！',
             tutorial_flow_msg: '这是你的收入和支出之间的差额。保持正数以每月积累财富。',
@@ -6833,6 +6837,7 @@ const I18n = {
             tutorial_better_salaries: 'Лучшие зарплаты',
             tutorial_promotions_available: 'Возможности повышения',
             find_job: 'Найти работу',
+            tutorial_home_btn_msg: 'Нажмите <strong>кнопку главная</strong> для доступа к финансам.',
             tutorial_net_worth_msg: 'Это ваша реальная стоимость.<br><br>Сумма денег и активов минус долги. Растите её!',
             tutorial_cash_msg: 'Ликвидные деньги для трат и инвестиций. Если ноль — игра окончена!',
             tutorial_flow_msg: 'Разница между доходами и расходами. Держите положительным!',

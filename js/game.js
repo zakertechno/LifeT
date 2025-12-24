@@ -4477,69 +4477,90 @@ const TutorialSystem = {
     continueToMonthlyFlow() {
         this.showOverlay();
         this.lockScroll();
+
+        // 0. First highlight the home button
         setTimeout(() => {
-            // 1. Net Worth
-            const netWorth = document.querySelector('.net-worth-card');
-            if (netWorth) {
-                this.addHighlight('.net-worth-card');
-                netWorth.scrollIntoView({ behavior: 'auto', block: 'center' });
+            const homeBtn = document.querySelector('.home-btn');
+            if (homeBtn) {
+                this.addHighlight('.home-btn');
+                homeBtn.scrollIntoView({ behavior: 'auto', block: 'center' });
             }
 
             this.showTooltip(
-                '.net-worth-card',
-                `🏛️ ${t('net_worth')}`,
-                t('tutorial_net_worth_msg'),
+                '.home-btn',
+                `🏠 ${t('nav_dashboard')}`,
+                t('tutorial_home_btn_msg'),
                 t('next'),
                 () => {
                     this.removeHighlights();
                     this.hideTooltip();
 
-                    // 2. Cash
+                    // 1. Net Worth (continue to original flow)
                     setTimeout(() => {
-                        const cash = document.querySelector('.dashboard-cash-card');
-                        if (cash) {
-                            this.addHighlight('.dashboard-cash-card');
-                            cash.scrollIntoView({ behavior: 'auto', block: 'center' });
+                        const netWorth = document.querySelector('.net-worth-card');
+                        if (netWorth) {
+                            this.addHighlight('.net-worth-card');
+                            netWorth.scrollIntoView({ behavior: 'auto', block: 'center' });
                         }
 
                         this.showTooltip(
-                            '.dashboard-cash-card',
-                            `💵 ${t('cash')}`,
-                            t('tutorial_cash_msg'),
+                            '.net-worth-card',
+                            `🏛️ ${t('net_worth')}`,
+                            t('tutorial_net_worth_msg'),
                             t('next'),
                             () => {
                                 this.removeHighlights();
                                 this.hideTooltip();
 
-                                // 3. Flow
+                                // 2. Cash
                                 setTimeout(() => {
-                                    const mFlow = document.querySelector('.monthly-flow-card');
-                                    if (mFlow) {
-                                        this.addHighlight('.monthly-flow-card');
-                                        mFlow.scrollIntoView({ behavior: 'auto', block: 'center' });
+                                    const cash = document.querySelector('.dashboard-cash-card');
+                                    if (cash) {
+                                        this.addHighlight('.dashboard-cash-card');
+                                        cash.scrollIntoView({ behavior: 'auto', block: 'center' });
                                     }
 
                                     this.showTooltip(
-                                        '.monthly-flow-card',
-                                        `📉 ${t('monthly_flow')}`,
-                                        t('tutorial_flow_msg'),
-                                        t('understood'),
+                                        '.dashboard-cash-card',
+                                        `💵 ${t('cash')}`,
+                                        t('tutorial_cash_msg'),
+                                        t('next'),
                                         () => {
                                             this.removeHighlights();
                                             this.hideTooltip();
-                                            this.hideOverlay(); // Unblock
-                                            this.unlockScroll();
 
+                                            // 3. Flow
                                             setTimeout(() => {
-                                                showGameAlert(
-                                                    `🎉 <strong>${t('tutorial_finished')}</strong><br><br>` +
-                                                    t('tutorial_basic_complete') + '<br><br>' +
-                                                    t('tutorial_good_luck'),
-                                                    'success',
-                                                    '🎓 ' + t('graduated')
+                                                const mFlow = document.querySelector('.monthly-flow-card');
+                                                if (mFlow) {
+                                                    this.addHighlight('.monthly-flow-card');
+                                                    mFlow.scrollIntoView({ behavior: 'auto', block: 'center' });
+                                                }
+
+                                                this.showTooltip(
+                                                    '.monthly-flow-card',
+                                                    `📉 ${t('monthly_flow')}`,
+                                                    t('tutorial_flow_msg'),
+                                                    t('understood'),
+                                                    () => {
+                                                        this.removeHighlights();
+                                                        this.hideTooltip();
+                                                        this.hideOverlay(); // Unblock
+                                                        this.unlockScroll();
+
+                                                        setTimeout(() => {
+                                                            showGameAlert(
+                                                                `🎉 <strong>${t('tutorial_finished')}</strong><br><br>` +
+                                                                t('tutorial_basic_complete') + '<br><br>' +
+                                                                t('tutorial_good_luck'),
+                                                                'success',
+                                                                '🎓 ' + t('graduated')
+                                                            );
+                                                            GameState.tutorialFlags.tutorialComplete = true;
+                                                            PersistenceModule.saveGame();
+                                                        }, 500);
+                                                    }
                                                 );
-                                                GameState.tutorialFlags.tutorialComplete = true;
-                                                PersistenceModule.saveGame();
                                             }, 500);
                                         }
                                     );
@@ -4549,7 +4570,7 @@ const TutorialSystem = {
                     }, 500);
                 }
             );
-        }, 500);
+        }, 300);
     },
 
     // Unlock Stock
