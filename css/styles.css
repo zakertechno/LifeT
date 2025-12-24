@@ -2919,6 +2919,14 @@
             filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5));
         }
 
+        .home-icon-img {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            object-fit: cover;
+            filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5));
+        }
+
         #header-player-name {
             color: #fcd34d;
             font-weight: 700;
@@ -3087,6 +3095,11 @@
 
             .home-icon {
                 font-size: 1.1rem !important;
+            }
+
+            .home-icon-img {
+                width: 24px !important;
+                height: 24px !important;
             }
 
             #header-player-name {
