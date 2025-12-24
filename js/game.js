@@ -997,11 +997,11 @@ const StockMarket = {
         const portfolioLimit = limits.stockCap;
 
         if (currentPortfolioValue >= portfolioLimit) {
-            return { success: false, message: `Has alcanzado el límite de inversión (${formatCurrency(portfolioLimit)}).<br>Banco: "Necesitas mejorar tu vivienda para que te dejemos invertir más."` };
+            return { success: false, message: t('stock_limit_reached_msg').replace('{limit}', formatCurrency(portfolioLimit)) };
         }
 
         if (currentPortfolioValue + cost > portfolioLimit) {
-            return { success: false, message: `Esta compra superaría tu límite actual de ${formatCurrency(portfolioLimit)}.<br>Mejora tu nivel de vida para aumentar tu credibilidad financiera.` };
+            return { success: false, message: t('stock_limit_exceeded_msg').replace('{limit}', formatCurrency(portfolioLimit)) };
         }
 
         if (GameState.cash < cost) return { success: false, message: t('stock_insufficient_funds') };
@@ -2806,7 +2806,7 @@ const JobSystem = {
             if (monthsSinceLastRequest < 2) {
                 return {
                     success: false,
-                    message: `Tu jefa te ignora. Espera ${2 - monthsSinceLastRequest} mes(es) más para volver a intentarlo.`
+                    message: t('tres_deporte_wait_msg').replace('{months}', 2 - monthsSinceLastRequest)
                 };
             }
 
@@ -2895,7 +2895,7 @@ const JobSystem = {
                 ' ',
                 msg,
                 [{
-                    text: '💼 Ir a Trabajo',
+                    text: t('btn_go_to_work'),
                     style: 'primary',
                     fn: () => {
                         const btn = document.querySelector('.b-nav-item[data-view="job"]');
@@ -3051,7 +3051,7 @@ const JobSystem = {
             success: true,
             increase: increase,
             raisePct: raisePct,
-            message: `"${msg}"\n\nTu salario ha subido un ${raisePct}% (+${formatCurrency(increase)}).`
+            message: t('salary_raise_msg').replace('{bossMsg}', msg).replace('{pct}', raisePct).replace('{amount}', formatCurrency(increase))
         };
     }
 };

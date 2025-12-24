@@ -384,6 +384,11 @@ const I18n = {
             stock_sell_success: 'Has vendido {qty} acciones de {name}',
             stock_buy_detail: 'Compradas {qty} acciones de {symbol} por {price}',
             stock_sell_detail: 'Vendidas {qty} acciones de {symbol} por {price}',
+            stock_limit_reached_msg: 'Has alcanzado el límite de inversión ({limit}).<br>Banco: "Necesitas mejorar tu vivienda para que te dejemos invertir más."',
+            stock_limit_exceeded_msg: 'Esta compra superaría tu límite actual de {limit}.<br>Mejora tu nivel de vida para aumentar tu credibilidad financiera.',
+            tres_deporte_wait_msg: 'Tu jefa te ignora. Espera {months} mes(es) más para volver a intentarlo.',
+            salary_raise_msg: '"{bossMsg}"\n\nTu salario ha subido un {pct}% (+{amount}).',
+            btn_go_to_work: '💼 Ir a Trabajo',
 
             // HOUSING
             lifestyle_housing_parents_name: 'Casa de tus padres',
@@ -602,6 +607,7 @@ const I18n = {
             job_raise_wait: 'Podrás pedir aumento en {months} mes(es)',
             job_raise_btn: 'Pedir Aumento',
             job_raise_btn: 'Pedir Aumento',
+            job_promotion_success: '¡AUMENTO CONCEDIDO!',
             job_locked_wait: 'Aún no disponible',
 
             // Job Switch Confirmation
@@ -1949,6 +1955,11 @@ const I18n = {
             stock_sell_success: 'You have sold {qty} shares of {name}',
             stock_buy_detail: 'Bought {qty} shares of {symbol} for {price}',
             stock_sell_detail: 'Sold {qty} shares of {symbol} for {price}',
+            stock_limit_reached_msg: 'You have reached your investment limit ({limit}).<br>Bank: "You need to upgrade your housing to invest more."',
+            stock_limit_exceeded_msg: 'This purchase would exceed your current limit of {limit}.<br>Improve your lifestyle to increase your financial credibility.',
+            tres_deporte_wait_msg: 'Your boss ignores you. Wait {months} more month(s) to try again.',
+            salary_raise_msg: '"{bossMsg}"\n\nYour salary has increased by {pct}% (+{amount}).',
+            btn_go_to_work: '💼 Go to Work',
 
             // Real Estate
 
@@ -2035,6 +2046,7 @@ const I18n = {
             job_time_since_request: 'Time since last request',
             job_raise_wait: 'You can request a raise in {months} month(s)',
             job_raise_btn: 'Request Raise',
+            job_promotion_success: 'RAISE GRANTED!',
             job_locked_wait: 'Not yet available',
 
             // Job Switch Confirmation
@@ -3538,6 +3550,11 @@ const I18n = {
             stock_sell_success: 'Du hast {qty} Aktien von {name} verkauft',
             stock_buy_detail: '{qty} Aktien von {symbol} für {price} gekauft',
             stock_sell_detail: '{qty} Aktien von {symbol} für {price} verkauft',
+            stock_limit_reached_msg: 'Du hast dein Investitionslimit erreicht ({limit}).<br>Bank: "Du musst deine Wohnung verbessern, um mehr zu investieren."',
+            stock_limit_exceeded_msg: 'Dieser Kauf würde dein aktuelles Limit von {limit} überschreiten.<br>Verbessere deinen Lebensstil, um deine finanzielle Glaubwürdigkeit zu erhöhen.',
+            tres_deporte_wait_msg: 'Dein Chef ignoriert dich. Warte noch {months} Monat(e), um es erneut zu versuchen.',
+            salary_raise_msg: '"{bossMsg}"\n\nDein Gehalt ist um {pct}% gestiegen (+{amount}).',
+            btn_go_to_work: '💼 Zur Arbeit',
 
 
 
@@ -3624,6 +3641,7 @@ const I18n = {
             job_time_since_request: 'Zeit seit letzter Anfrage',
             job_raise_wait: 'Sie können in {months} Monat(en) eine Erhöhung beantragen',
             job_raise_btn: 'Gehaltserhöhung fordern',
+            job_promotion_success: 'GEHALTSERHÖHUNG GENEHMIGT!',
 
             // Job Switch Confirmation
             msg_confirm_switch_job_title: 'Job wechseln?',
@@ -4875,6 +4893,11 @@ const I18n = {
             stock_sell_success: '已出售{qty}股{name}',
             stock_buy_detail: '以{price}购买{qty}股{symbol}',
             stock_sell_detail: '以{price}出售{qty}股{symbol}',
+            stock_limit_reached_msg: '你已达到投资限额（{limit}）。<br>银行："你需要升级住房才能投资更多。"',
+            stock_limit_exceeded_msg: '此次购买将超过你当前的限额{limit}。<br>提升生活水平以提高你的财务信用。',
+            tres_deporte_wait_msg: '你的老板无视你。再等{months}个月再试。',
+            salary_raise_msg: '"{bossMsg}"\n\n你的工资增加了{pct}%（+{amount}）。',
+            btn_go_to_work: '💼 去工作',
             months: '个月',
             free: '免费',
             in_progress: '进行中',
@@ -5085,6 +5108,7 @@ const I18n = {
             job_time_since_request: '距上次请求的时间',
             job_raise_wait: '你可以在{months}个月后申请加薪',
             job_raise_btn: '申请加薪',
+            job_promotion_success: '加薪成功！',
             job_locked_wait: '暂不可用',
             msg_confirm_switch_job_title: '换工作？',
             msg_confirm_switch_job_desc: '你将离开当前职位<strong>{currentJob}</strong>。此操作无法撤销。',
@@ -6252,6 +6276,11 @@ const I18n = {
             stock_sell_success: 'Продано {qty} акций {name}',
             stock_buy_detail: 'Куплено {qty} акций {symbol} за {price}',
             stock_sell_detail: 'Продано {qty} акций {symbol} за {price}',
+            stock_limit_reached_msg: 'Вы достигли лимита инвестиций ({limit}).<br>Банк: "Вам нужно улучшить жильё, чтобы инвестировать больше."',
+            stock_limit_exceeded_msg: 'Эта покупка превысит ваш текущий лимит {limit}.<br>Улучшите свой образ жизни для повышения финансовой репутации.',
+            tres_deporte_wait_msg: 'Ваш начальник игнорирует вас. Подождите ещё {months} месяц(ев).',
+            salary_raise_msg: '"{bossMsg}"\n\nВаша зарплата увеличилась на {pct}% (+{amount}).',
+            btn_go_to_work: '💼 К работе',
             months: 'месяцев',
             free: 'Бесплатно',
             in_progress: 'В процессе',
@@ -6460,6 +6489,7 @@ const I18n = {
             job_time_since_request: 'Время с запроса',
             job_raise_wait: 'Можно запросить через {months} мес.',
             job_raise_btn: 'Запросить повышение',
+            job_promotion_success: 'ПОВЫШЕНИЕ ЗАРПЛАТЫ ОДОБРЕНО!',
             job_locked_wait: 'Пока недоступно',
             msg_confirm_switch_job_title: 'Сменить работу?',
             msg_confirm_switch_job_desc: 'Вы покинете должность <strong>{currentJob}</strong>. Это необратимо.',
