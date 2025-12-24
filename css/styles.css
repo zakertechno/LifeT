@@ -3103,7 +3103,8 @@
                 min-width: unset !important;
                 max-width: unset !important;
                 object-fit: cover !important;
-                border-radius: 8px !important;
+                border-radius: 6px !important;
+                filter: none !important;
             }
 
             .home-btn {
