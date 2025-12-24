@@ -4480,14 +4480,18 @@ const TutorialSystem = {
 
         // 0. First highlight the home button
         setTimeout(() => {
-            const homeBtn = document.querySelector('.home-btn');
+            // Mobile uses header-left home-btn, desktop uses desktop-home-btn
+            const isMobile = window.innerWidth <= 768;
+            const homeBtnSelector = isMobile ? '.header-left .home-btn' : '#desktop-home-btn';
+            const homeBtn = document.querySelector(homeBtnSelector);
+
             if (homeBtn) {
-                this.addHighlight('.home-btn');
+                this.addHighlight(homeBtnSelector);
                 homeBtn.scrollIntoView({ behavior: 'auto', block: 'center' });
             }
 
             this.showTooltip(
-                '.home-btn',
+                homeBtnSelector,
                 `🏠 ${t('nav_dashboard')}`,
                 t('tutorial_home_btn_msg'),
                 t('next'),
