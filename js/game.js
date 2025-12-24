@@ -2842,6 +2842,7 @@ const JobSystem = {
 
         // Success
         GameState.jobTitle = nextJob.title;
+        GameState.salary = nextJob.salary;
         this.monthsInCurrentJob = 0;
 
         // Reset Flag
