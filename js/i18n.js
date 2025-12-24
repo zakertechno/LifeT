@@ -2743,7 +2743,7 @@ const I18n = {
             job_tres_deporte_desc: 'In TRES DEPORTE there are no promotions, but you can request a raise every 2 months.',
             endgame_death_title: 'MEMENTO MORI',
             endgame_congrats: 'Impressive career!',
-            endgame_thanks_msg: 'Thanks for playing "The Sergio Game".',
+            endgame_thanks_msg: 'Thanks for playing "Life Inc.".',
             endgame_income_title: 'Total Income',
             endgame_op_real_estate: 'Real Estate Operations',
             re_buy_price: 'Purchase',
@@ -3251,7 +3251,7 @@ const I18n = {
 
             endgame_death_title: 'Du bist verstorben - Jahr 50',
             endgame_congrats: 'HERZLICHEN GLÜCKWUNSCH!',
-            endgame_thanks_msg: 'Danke fürs Spielen, aber du hättest sicher noch besser abschneiden können...',
+            endgame_thanks_msg: 'Danke fürs Spielen von "Life Inc.".',
             endgame_income_title: 'Gesamteinkommen deines Lebens',
             endgame_op_real_estate: 'Immobiliengeschäfte',
             endgame_retry: 'Warum versuchst du es nicht noch einmal mit anderen Entscheidungen?',

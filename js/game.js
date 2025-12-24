@@ -8415,6 +8415,10 @@ const UI = {
                         const performApply = (force = false) => {
                             const res = JobSys.applyToJob(vac.title, force);
                             if (res.requiresJobConfirmation) {
+                                // Trigger tutorial advancement when job confirmation is shown
+                                if (GameState.tutorialStep === 6 && !GameState.tutorialFlags.acceptedFirstRealJob) {
+                                    TutorialSystem.onRealJobAccepted(vac.title);
+                                }
                                 const currentJobName = getJobTranslation(res.currentJob);
                                 UI.showModal(
                                     t('msg_confirm_switch_job_title'),
@@ -8569,6 +8573,10 @@ const UI = {
                         const performApply = (force = false) => {
                             const res = JobSys.applyToJob(vac.title, force);
                             if (res.requiresJobConfirmation) {
+                                // Trigger tutorial advancement when job confirmation is shown
+                                if (GameState.tutorialStep === 6 && !GameState.tutorialFlags.acceptedFirstRealJob) {
+                                    TutorialSystem.onRealJobAccepted(vac.title);
+                                }
                                 const currentJobName = getJobTranslation(res.currentJob);
                                 UI.showModal(
                                     t('msg_confirm_switch_job_title'),
@@ -10250,11 +10258,11 @@ function nextTurn() {
 
     if (GameState.salary > 0) {
         GameState.currentYearIncome.salary += GameState.salary;
-        // Lifetime tracking gameState.lifetimeStats.totalIncome.salary += GameState.salary;
+        GameState.lifetimeStats.totalIncome.salary += GameState.salary;
     }
     if (rentIncome > 0) {
         GameState.currentYearIncome.rental += rentIncome;
-        // Lifetime tracking gameState.lifetimeStats.totalIncome.rental += rentIncome;
+        GameState.lifetimeStats.totalIncome.rental += rentIncome;
     }
     // Lifetime Exp
     if (GameState.expenses > 0) {
@@ -10935,6 +10943,11 @@ try {
             try {
                 UI.updateJob(JobSystem);
                 UI.updateDashboard();
+
+                // Check if game should already be at endgame (prevents playing past endgame after loading)
+                if (GameState.year > 50) {
+                    setTimeout(() => showEndgameModal(), 500);
+                }
             } catch (e) {
                 console.error('Async Init Error:', e);
             }
