@@ -1268,6 +1268,9 @@ const I18n = {
             stock_time_all: 'Todo',
             stock_btn_buy: 'COMPRAR',
             stock_btn_sell: 'VENDER',
+            stock_earnings_eps: 'Beneficio por Acción',
+            stock_earnings_change: 'Cambio Trim.',
+            stock_earnings_history: 'Historial (Últimos 4 Trimestres)',
 
             // Bank Success
             bank_debt_free_title: '¡LIBRE DE DEUDAS!',
@@ -2833,6 +2836,9 @@ const I18n = {
             stock_time_all: 'All',
             stock_btn_buy: 'BUY',
             stock_btn_sell: 'SELL',
+            stock_earnings_eps: 'Earnings per Share',
+            stock_earnings_change: 'Quarterly Change',
+            stock_earnings_history: 'History (Last 4 Quarters)',
 
             // Bank Success
             bank_debt_free_title: 'DEBT FREE!',
@@ -3488,6 +3494,20 @@ const I18n = {
             quotes: 'Kurse',
             tap_to_trade: 'Tippen zum Handeln',
             my_positions: 'Meine Positionen',
+            stock_pos_qty: 'Menge',
+            stock_pos_avg: 'Durchschnittspreis',
+            stock_pos_val: 'Aktueller Wert',
+            stock_modal_yield: 'Rendite',
+            stock_modal_owned: 'Im Portfolio',
+            stock_modal_value: 'Wert',
+            stock_time_6m: '6 Monate',
+            stock_time_2y: '2 Jahre',
+            stock_time_all: 'Alle',
+            stock_btn_buy: 'KAUFEN',
+            stock_btn_sell: 'VERKAUFEN',
+            stock_earnings_eps: 'Gewinn pro Aktie',
+            stock_earnings_change: 'Quartalsänderung',
+            stock_earnings_history: 'Verlauf (Letzte 4 Quartale)',
 
             // Bank
             financial_services: 'Finanzdienstleistungen',
@@ -5691,6 +5711,9 @@ const I18n = {
             stock_time_all: '全部',
             stock_btn_buy: '买入',
             stock_btn_sell: '卖出',
+            stock_earnings_eps: '每股收益',
+            stock_earnings_change: '季度变化',
+            stock_earnings_history: '历史（最近4个季度）',
 
             // Bank Extended
             bank_debt_free_title: '无债！',
@@ -7046,6 +7069,9 @@ const I18n = {
             stock_modal_yield: 'Доходность',
             stock_btn_buy: 'КУПИТЬ',
             stock_btn_sell: 'ПРОДАТЬ',
+            stock_earnings_eps: 'Прибыль на акцию',
+            stock_earnings_change: 'Квартальные изменения',
+            stock_earnings_history: 'История (последние 4 квартала)',
             bank_debt_free_title: 'БЕЗ ДОЛГОВ!',
             bank_debt_free_msg: 'Поздравляем, все обязательства погашены.',
             bank_excellent: 'Отлично!',

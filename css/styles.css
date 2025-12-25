@@ -136,7 +136,6 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -145,8 +144,7 @@
             background: linear-gradient(145deg, rgba(51, 65, 85, 0.95), rgba(30, 41, 59, 0.98));
             color: var(--text-primary);
             border-color: rgba(56, 189, 248, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .nav-btn:hover::before {
@@ -174,69 +172,156 @@
         }
 
         /* Tab Accents (Hover) */
+        /* Dashboard (Blue) */
         .nav-btn[data-view="dashboard"]:hover {
             border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(56, 189, 248, 0.15);
         }
 
+        .nav-btn[data-view="dashboard"]::before {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
+        }
+
+        /* Education (Purple) */
         .nav-btn[data-view="education"]:hover {
             border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(168, 85, 247, 0.15);
         }
 
+        .nav-btn[data-view="education"]::before {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), transparent);
+        }
+
+        /* Lifestyle (Red) */
         .nav-btn[data-view="lifestyle"]:hover {
             border-color: rgba(248, 113, 113, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(248, 113, 113, 0.15);
         }
 
+        .nav-btn[data-view="lifestyle"]::before {
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.1), transparent);
+        }
+
+        /* Job (Yellow) */
         .nav-btn[data-view="job"]:hover {
             border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(251, 191, 36, 0.15);
         }
 
+        .nav-btn[data-view="job"]::before {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent);
+        }
+
+        /* Bank (Green) */
         .nav-btn[data-view="bank"]:hover {
             border-color: rgba(74, 222, 128, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(74, 222, 128, 0.15);
         }
 
+        .nav-btn[data-view="bank"]::before {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), transparent);
+        }
+
+        /* Real Estate (Orange) */
         .nav-btn[data-view="real-estate"]:hover {
             border-color: rgba(251, 146, 60, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(251, 146, 60, 0.15);
         }
 
+        .nav-btn[data-view="real-estate"]::before {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), transparent);
+        }
+
+        /* Market (Blue - different shade) */
         .nav-btn[data-view="market"]:hover {
             border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(59, 130, 246, 0.15);
+        }
+
+        .nav-btn[data-view="market"]::before {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
         }
 
         /* Active state individual colors */
+
+        /* Dashboard */
         .nav-btn[data-view="dashboard"].active {
+            background: linear-gradient(145deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.15));
             border-color: rgba(56, 189, 248, 0.7);
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.3), inset 0 0 20px rgba(56, 189, 248, 0.1);
         }
 
+        .nav-btn[data-view="dashboard"].active::after {
+            background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+        }
+
+        /* Education */
         .nav-btn[data-view="education"].active {
+            background: linear-gradient(145deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.15));
             border-color: rgba(168, 85, 247, 0.7);
             box-shadow: 0 0 25px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1);
         }
 
+        .nav-btn[data-view="education"].active::after {
+            background: linear-gradient(90deg, transparent, #a855f7, transparent);
+        }
+
+        /* Lifestyle */
         .nav-btn[data-view="lifestyle"].active {
+            background: linear-gradient(145deg, rgba(248, 113, 113, 0.2), rgba(220, 38, 38, 0.15));
             border-color: rgba(248, 113, 113, 0.7);
             box-shadow: 0 0 25px rgba(248, 113, 113, 0.3), inset 0 0 20px rgba(248, 113, 113, 0.1);
         }
 
+        .nav-btn[data-view="lifestyle"].active::after {
+            background: linear-gradient(90deg, transparent, #ef4444, transparent);
+        }
+
+        /* Job */
         .nav-btn[data-view="job"].active {
+            background: linear-gradient(145deg, rgba(251, 191, 36, 0.2), rgba(217, 119, 6, 0.15));
             border-color: rgba(251, 191, 36, 0.7);
             box-shadow: 0 0 25px rgba(251, 191, 36, 0.3), inset 0 0 20px rgba(251, 191, 36, 0.1);
         }
 
+        .nav-btn[data-view="job"].active::after {
+            background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+        }
+
+        /* Bank */
         .nav-btn[data-view="bank"].active {
+            background: linear-gradient(145deg, rgba(74, 222, 128, 0.2), rgba(22, 163, 74, 0.15));
             border-color: rgba(74, 222, 128, 0.7);
             box-shadow: 0 0 25px rgba(74, 222, 128, 0.3), inset 0 0 20px rgba(74, 222, 128, 0.1);
         }
 
+        .nav-btn[data-view="bank"].active::after {
+            background: linear-gradient(90deg, transparent, #22c55e, transparent);
+        }
+
+        /* Real Estate */
         .nav-btn[data-view="real-estate"].active {
+            background: linear-gradient(145deg, rgba(251, 146, 60, 0.2), rgba(234, 88, 12, 0.15));
             border-color: rgba(251, 146, 60, 0.7);
             box-shadow: 0 0 25px rgba(251, 146, 60, 0.3), inset 0 0 20px rgba(251, 146, 60, 0.1);
         }
 
+        .nav-btn[data-view="real-estate"].active::after {
+            background: linear-gradient(90deg, transparent, #f97316, transparent);
+        }
+
+        /* Market */
         .nav-btn[data-view="market"].active {
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.15));
             border-color: rgba(59, 130, 246, 0.7);
             box-shadow: 0 0 25px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(59, 130, 246, 0.1);
         }
+
+        .nav-btn[data-view="market"].active::after {
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+        }
+
+
 
         .view {
             display: none;
@@ -2850,7 +2935,7 @@
             align-items: center;
             gap: 6px;
             background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 8px 14px;
+            padding: 5px 12px;
             border-radius: 25px;
             border: 2px solid transparent;
             background-clip: padding-box;
@@ -2872,6 +2957,10 @@
             opacity: 1;
         }
 
+        #desktop-exit-btn::before {
+            background: linear-gradient(135deg, #f87171, #ef4444, #f87171) !important;
+        }
+
         .save-btn:hover {
             transform: scale(1.05);
         }
@@ -2887,7 +2976,7 @@
             align-items: center;
             gap: 8px;
             background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 8px 14px;
+            padding: 5px 12px;
             border-radius: 25px;
             border: 2px solid transparent;
             background-clip: padding-box;

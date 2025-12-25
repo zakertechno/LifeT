@@ -568,6 +568,11 @@ const PersistenceModule = {
             }
 
             Object.assign(GameState, loadedState);
+
+            // ANTI-CHEAT: Reassign stock targets on load to prevent save-scumming
+            // Players can't save, check stock trends, then reload to exploit them
+            StockMarket.assignAnnualTargets();
+
             return { success: true, message: t('welcome_back_title') + ', ' + GameState.playerName };
         } catch (e) {
             return { success: false, message: t('msg_load_error', { error: e.message }) };
@@ -872,17 +877,18 @@ const GameBalance = {
 // --- Stock Market ---
 const StockMarket = {
     stocks: [
-        { symbol: 'SP500', name: 'S&P 500', price: 4500.00, trend: 0.00, history: [], volatility: 0.08, type: 'index' },
-        { symbol: 'NDX', name: 'Nasdaq 100', price: 15500.00, trend: 0.00, history: [], volatility: 0.12, type: 'index' },
-        { symbol: 'TEL', name: 'Telefónica', price: 4.00, trend: 0.00, history: [], volatility: 0.10, earnings: 0.35 },
-        { symbol: 'SAN', name: 'Santander', price: 3.50, trend: 0.00, history: [], volatility: 0.08, earnings: 0.30 },
-        { symbol: 'IBE', name: 'Iberdrola', price: 11.00, trend: 0.00, history: [], volatility: 0.06, earnings: 0.95 },
-        { symbol: 'ITX', name: 'Inditex', price: 30.00, trend: 0.00, history: [], volatility: 0.12, earnings: 2.80 },
-        { symbol: 'REP', name: 'Repsol', price: 14.00, trend: 0.00, history: [], volatility: 0.15, earnings: 1.40 },
-        { symbol: 'HOME', name: 'Home Asia', price: 50.00, trend: 0.00, history: [], volatility: 0.14, earnings: 4.20 },
-        { symbol: 'RISU', name: 'La Risu', price: 20.00, trend: 0.00, history: [], volatility: 0.18, earnings: 1.75 },
-        { symbol: 'VRDS', name: 'Los Verdes', price: 12.00, trend: 0.00, history: [], volatility: 0.11, earnings: 1.10 }
+        { symbol: 'ZP500', name: 'ZP 500', price: 6865.00, trend: 0.00, history: [], volatility: 0.08, type: 'index' },
+        { symbol: 'NSQK', name: 'Nasquack', price: 23412.00, trend: 0.00, history: [], volatility: 0.10, type: 'index' },
+        { symbol: 'PEAR', name: 'Pear', price: 274.00, trend: 0.00, history: [], volatility: 0.10, earnings: 5.50, earningsPrevious: 5.50, earningsChange: 0, earningsHistory: [5.50, 5.50, 5.50, 5.50], earningsMomentum: 'stable' },
+        { symbol: 'MCRH', name: 'MacroHard', price: 488.00, trend: 0.00, history: [], volatility: 0.08, earnings: 9.20, earningsPrevious: 9.20, earningsChange: 0, earningsHistory: [9.20, 9.20, 9.20, 9.20], earningsMomentum: 'stable' },
+        { symbol: 'GIGL', name: 'Giggle', price: 316.00, trend: 0.00, history: [], volatility: 0.09, earnings: 4.80, earningsPrevious: 4.80, earningsChange: 0, earningsHistory: [4.80, 4.80, 4.80, 4.80], earningsMomentum: 'stable' },
+        { symbol: 'NVDO', name: 'Nvdio', price: 188.00, trend: 0.00, history: [], volatility: 0.18, earnings: 4.50, earningsPrevious: 4.50, earningsChange: 0, earningsHistory: [4.50, 4.50, 4.50, 4.50], earningsMomentum: 'stable' },
+        { symbol: 'FAKE', name: 'Fakebook', price: 668.00, trend: 0.00, history: [], volatility: 0.16, earnings: 8.50, earningsPrevious: 8.50, earningsChange: 0, earningsHistory: [8.50, 8.50, 8.50, 8.50], earningsMomentum: 'stable' },
+        { symbol: 'TSLO', name: 'Teslo', price: 485.00, trend: 0.00, history: [], volatility: 0.25, earnings: 2.10, earningsPrevious: 2.10, earningsChange: 0, earningsHistory: [2.10, 2.10, 2.10, 2.10], earningsMomentum: 'stable' },
+        { symbol: 'MCD', name: 'McDollars', price: 316.00, trend: 0.00, history: [], volatility: 0.06, earnings: 7.50, earningsPrevious: 7.50, earningsChange: 0, earningsHistory: [7.50, 7.50, 7.50, 7.50], earningsMomentum: 'stable' },
+        { symbol: 'SBUG', name: 'Starbugs', price: 84.60, trend: 0.00, history: [], volatility: 0.05, earnings: 2.20, earningsPrevious: 2.20, earningsChange: 0, earningsHistory: [2.20, 2.20, 2.20, 2.20], earningsMomentum: 'stable' }
     ],
+    monthCounter: 0,
 
     init() {
         // Initialize history for graph
@@ -903,42 +909,152 @@ const StockMarket = {
         // Filter stocks
         const regularStocks = this.stocks.filter(s => !s.type || s.type !== 'index');
 
-        // Shuffle companies randomly
-        const shuffled = [...regularStocks].sort(() => Math.random() - 0.5);
+        // Calculate combined score for each stock (65% random + 35% momentum)
+        regularStocks.forEach(stock => {
+            const randomScore = Math.random() * 100; // 0-100
+            const momentumScore = this.getMomentumScore(stock.earningsMomentum);
 
-        // Assign performance tiers
-        // Tier 1
-        shuffled[0].annualTarget = 0.60 + Math.random() * 0.20;
-        shuffled[1].annualTarget = 0.60 + Math.random() * 0.20;
+            // 65% aleatorio + 35% momentum
+            stock.tierScore = (randomScore * 0.65) + (momentumScore * 0.35);
+        });
 
-        // Tier 2: 2 companies with 10-20% annual return
-        shuffled[2].annualTarget = 0.10 + Math.random() * 0.10;
-        shuffled[3].annualTarget = 0.10 + Math.random() * 0.10;
+        // Sort by combined score (highest first)
+        const sorted = regularStocks.sort((a, b) => b.tierScore - a.tierScore);
 
-        // Tier 3: 2 companies with -10% to 1% annual return
-        shuffled[4].annualTarget = -0.10 + Math.random() * 0.11;
-        shuffled[5].annualTarget = -0.10 + Math.random() * 0.11;
+        // Assign tiers based on ranking
+        // Tier 1: Top 2 stocks (50-70% annual return)
+        sorted[0].annualTarget = 0.50 + Math.random() * 0.20;
+        sorted[1].annualTarget = 0.50 + Math.random() * 0.20;
 
-        // Tier 4: 1 company with -20% to -10% annual return
-        shuffled[6].annualTarget = -0.20 + Math.random() * 0.10;
+        // Tier 2: Positions 3-4 (10-20% annual return)
+        sorted[2].annualTarget = 0.10 + Math.random() * 0.10;
+        sorted[3].annualTarget = 0.10 + Math.random() * 0.10;
 
-        // Tier 5: 1 company with -50% to -30% annual return
-        shuffled[7].annualTarget = -0.50 + Math.random() * 0.20;
+        // Tier 3: Positions 5-6 (-10% to 1% annual return)
+        sorted[4].annualTarget = -0.10 + Math.random() * 0.11;
+        sorted[5].annualTarget = -0.10 + Math.random() * 0.11;
+
+        // Tier 4: Position 7 (-20% to -10% annual return)
+        sorted[6].annualTarget = -0.20 + Math.random() * 0.10;
+
+        // Tier 5: Position 8 (-40% to -30% annual return)
+        sorted[7].annualTarget = -0.40 + Math.random() * 0.10;
 
         // Reset progress tracking for all companies
         regularStocks.forEach(stock => {
             stock.monthsInYear = 0;
             stock.yearStartPrice = stock.price;
         });
+
+        // Set random interval for next reassignment (3-18 months)
+        this.monthsUntilReassignment = Math.floor(3 + Math.random() * 16); // 3 to 18
+        console.log(`[STOCK MARKET] Targets reassigned. Next reassignment in ${this.monthsUntilReassignment} months`);
+    },
+
+    getMomentumScore(momentum) {
+        switch (momentum) {
+            case 'growing': return 80;  // Boost towards high tiers
+            case 'stable': return 50;  // Neutral
+            case 'declining': return 20;  // Penalty towards low tiers
+            default: return 50;
+        }
+    },
+
+    updateQuarterlyEarnings() {
+        const regularStocks = this.stocks.filter(s => !s.type || s.type !== 'index');
+
+        regularStocks.forEach(stock => {
+            // 1. Save previous earnings
+            stock.earningsPrevious = stock.earnings;
+
+            // 2. Calculate random quarterly variation (-10% to +10%)
+            const baseChange = (Math.random() * 0.20) - 0.10;
+
+            // 3. Volatility factor (more volatile companies = more volatile earnings)
+            const volatilityFactor = stock.volatility / 0.10; // Normalized to 10% base
+            const adjustedChange = baseChange * volatilityFactor;
+
+            // 4. Apply change
+            const newEarnings = stock.earnings * (1 + adjustedChange);
+
+            // 5. Apply realistic limits
+            stock.earnings = Math.max(1.0, Math.min(15.0, newEarnings));
+
+            // 6. Calculate percentage change for display
+            stock.earningsChange = (stock.earnings - stock.earningsPrevious) / stock.earningsPrevious;
+
+            // 7. Update history (keep last 4 quarters)
+            if (!stock.earningsHistory || stock.earningsHistory.length === 0) {
+                stock.earningsHistory = [stock.earnings, stock.earnings, stock.earnings];
+            }
+            stock.earningsHistory.push(stock.earnings);
+            if (stock.earningsHistory.length > 4) {
+                stock.earningsHistory.shift();
+            }
+
+            // 8. Recalculate momentum
+            this.calculateMomentum(stock);
+        });
+
+        console.log('[EARNINGS] Quarterly reports released');
+    },
+
+    calculateMomentum(stock) {
+        const history = stock.earningsHistory;
+
+        if (!history || history.length < 2) {
+            stock.earningsMomentum = 'stable';
+            return;
+        }
+
+        // Calculate trend from last 4 quarters
+        let growthSum = 0;
+        let positiveQuarters = 0;
+
+        for (let i = 1; i < history.length; i++) {
+            const growth = (history[i] - history[i - 1]) / history[i - 1];
+            growthSum += growth;
+            if (growth > 0) positiveQuarters++;
+        }
+
+        const avgGrowth = growthSum / (history.length - 1);
+        const positiveRatio = positiveQuarters / (history.length - 1);
+
+        // Classify based on average growth AND consistency
+        if (avgGrowth > 0.05 && positiveRatio >= 0.67) {
+            // Average growth >5% and 2+ positive quarters
+            stock.earningsMomentum = 'growing';
+        } else if (avgGrowth < -0.05 && positiveRatio <= 0.33) {
+            // Average decline >5% and 2+ negative quarters
+            stock.earningsMomentum = 'declining';
+        } else {
+            stock.earningsMomentum = 'stable';
+        }
     },
 
     nextTurn() {
+        // Update month counter for quarterly earnings
+        this.monthCounter = (this.monthCounter || 0) + 1;
+
+        // Quarterly earnings reports (every 3 months)
+        if (this.monthCounter % 3 === 0) {
+            this.updateQuarterlyEarnings();
+        }
+
+        // Check if it's time to reassign targets (random 3-18 month cycle)
+        if (this.monthsUntilReassignment !== undefined) {
+            this.monthsUntilReassignment--;
+            if (this.monthsUntilReassignment <= 0) {
+                this.assignAnnualTargets();
+            }
+        }
+
         this.stocks.forEach(stock => {
             let totalChange = 0;
 
             if (stock.type === 'index') {
                 // Index Logic
-                const targetMonthlyReturn = 0.0072; // ~9% APY
+                const targetMonthlyReturn = 0.00643; // ~8% APY
                 const fluctuation = (Math.random() * stock.volatility) - (stock.volatility / 2);
                 totalChange = targetMonthlyReturn + fluctuation;
             } else {
@@ -1343,7 +1459,20 @@ const RealEstate = {
 
         const finalPricePerM2 = Math.floor(pricePerM2 * (this.marketTrend || 1));
         const price = sizeM2 * finalPricePerM2;
-        const zoneAvgPrice = Math.floor(finalPricePerM2 * (1 + ((Math.random() * 0.2) - 0.1)));
+        // Zone avg price - adjusted probabilities
+        const rand = Math.random();
+        let zoneAvgPrice;
+
+        if (rand < 0.25) {
+            // 25% chance: CHOLLO - zone is 10-20% higher than actual price
+            zoneAvgPrice = Math.floor(finalPricePerM2 * (1.10 + Math.random() * 0.10));
+        } else if (rand < 0.45) {
+            // 20% chance: SOBREPRECIO - zone is 10-20% lower than actual price
+            zoneAvgPrice = Math.floor(finalPricePerM2 * (0.80 + Math.random() * 0.10));
+        } else {
+            // 55% chance: Normal price - zone is very close to actual (±2%)
+            zoneAvgPrice = Math.floor(finalPricePerM2 * (0.98 + Math.random() * 0.04));
+        }
 
         let baseYield = 0.045;
         if (cat === 're_cat_garages') baseYield = 0.055;
@@ -1385,12 +1514,31 @@ const RealEstate = {
             this.availableProperties.push(this.createProperty());
         }
 
-        // 2. Price Evolution
-        const change = (Math.random() * 0.06) - 0.025;
+        // 2. Price Evolution (reduced volatility)
+        // Global market change: -1% to +2% (avg +0.5%)
+        const change = (Math.random() * 0.03) - 0.01;
         this.marketTrend *= (1 + change);
+
         GameState.inventory.realEstate.forEach(prop => {
-            const localChange = (Math.random() * 0.04) - 0.02;
-            const totalChange = change + localChange;
+            // Local change: -0.5% to +0.5%
+            const localChange = (Math.random() * 0.01) - 0.005;
+
+            // Check if it's a chollo or sobreprecio
+            const pricePerM2 = prop.purchasePrice ? (prop.purchasePrice / prop.sizeM2) : (prop.price / prop.sizeM2);
+            const isChollo = pricePerM2 < prop.zoneAvgPrice;
+            const isSobreprecio = pricePerM2 > prop.zoneAvgPrice;
+
+            // Apply modifiers based on deal type
+            let modifier = 1.0;
+            if (isChollo) {
+                // Chollos appreciate 15% faster
+                modifier = 1.15;
+            } else if (isSobreprecio) {
+                // Sobreprecios appreciate 15% slower (or depreciate more)
+                modifier = 0.85;
+            }
+
+            const totalChange = (change + localChange) * modifier;
             prop.price = Math.floor(prop.price * (1 + totalChange));
         });
     },
@@ -2797,19 +2945,16 @@ const JobSystem = {
         // Check Promo
         this.checkAvailablePromotion();
 
-        // Generate Gigs
+        // Generate Gigs monthly
+        this.generateMonthlyGigs();
     },
 
     // Generate Gigs
     generateMonthlyGigs() {
-        // Check Active
-        if (GameState.jobType === 'gig' && GameState.gigRemaining > 0) {
-            return; // Skip
-        }
-
-        // Shuffle & Pick
+        // Always refresh the job market monthly
+        // Shuffle & Pick 3 random gigs
         const shuffled = [...GIGS_POOL].sort(() => 0.5 - Math.random());
-        GameState.currentGigs = shuffled.slice(0, 2).map(gig => ({ ...gig, path: 'temporary' }));
+        GameState.currentGigs = shuffled.slice(0, 3).map(gig => ({ ...gig, path: 'temporary' }));
     },
 
     getAvailablePromotions() {
@@ -5527,15 +5672,24 @@ const UI = {
     `;
 
 
+
         // Re-draw chart (Filtered)
         const h = GameState.history;
         const limit = UI.chartTimeframe;
-        const slicedHistory = {
+
+        // If limit is 999 (max), show ALL history; otherwise slice
+        const slicedHistory = limit === 999 ? {
+            labels: h.labels,
+            netWorth: h.netWorth,
+            cash: h.cash,
+            debt: h.debt
+        } : {
             labels: h.labels.slice(-limit),
             netWorth: h.netWorth.slice(-limit),
             cash: h.cash.slice(-limit),
             debt: h.debt.slice(-limit)
         };
+
         ChartModule.drawChart('net-worth-chart', slicedHistory, UI.chartVisibleDatasets);
     },
     updateMarket() {
@@ -5571,7 +5725,7 @@ const UI = {
                     <div class="dashboard-container">
                         <div class="section-header">
                             <h2>${t('stock_market')}</h2>
-                            <span style="color:#94a3b8; font-size:0.9rem;">IBEX 35</span>
+                            <span style="color:#94a3b8; font-size:0.9rem;">Global Market</span>
                         </div>
 
                         <!-- LIMIT ALERT MOCKUP -->
@@ -5754,6 +5908,34 @@ const UI = {
                                 <button class="btn-seg active" data-tf="24" onclick="UI.changeTimeframe(24)" style="flex:1; background: linear-gradient(135deg, #38bdf8, #0ea5e9); border:none; color:white; padding:10px; border-radius:8px; font-weight: 700; font-size: 0.85rem;">${t('stock_time_2y')}</button>
                                 <button class="btn-seg" data-tf="999" onclick="UI.changeTimeframe(999)" style="flex:1; background:transparent; border:none; color:#94a3b8; padding:10px; border-radius:8px; font-weight: 600; font-size: 0.85rem;">${t('stock_time_all')}</button>
                             </div>
+
+                            ${stock.earnings !== undefined ? `
+                            <!-- Earnings Section -->
+                            <div style="background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">${t('stock_earnings_eps')}</div>
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: white;">€${stock.earnings.toFixed(2)}</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">${t('stock_earnings_change')}</div>
+                                        <div style="font-size: 1.3rem; font-weight: 700; color: ${stock.earningsChange > 0 ? '#22c55e' : stock.earningsChange < 0 ? '#ef4444' : '#94a3b8'};">
+                                            ${stock.earningsChange > 0 ? '▲' : stock.earningsChange < 0 ? '▼' : '━'} ${(Math.abs(stock.earningsChange) * 100).toFixed(1)}%
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Historical Data -->
+                                <div style="padding: 10px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border: 1px solid #334155;">
+                                    <div style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">${t('stock_earnings_history')}</div>
+                                    <div style="font-size: 0.85rem; color: #64748b; text-align: center; font-weight: 600;">
+                                        ${stock.earningsHistory ? stock.earningsHistory.map((e, i) =>
+            `<span style="color: ${i > 0 && e > stock.earningsHistory[i - 1] ? '#22c55e' : i > 0 && e < stock.earningsHistory[i - 1] ? '#ef4444' : '#94a3b8'}">€${e.toFixed(2)}</span>`
+        ).join(' → ') : '-'}
+                                    </div>
+                                </div>
+                            </div>
+                            ` : ''}
 
 
                         </div>
@@ -6268,7 +6450,11 @@ const UI = {
                             <div class="market-grid">
                                 ${properties.map(prop => {
                 const pricePerM2 = prop.price / prop.sizeM2;
-                const isGoodDeal = pricePerM2 < prop.zoneAvgPrice;
+                const priceDiff = ((pricePerM2 - prop.zoneAvgPrice) / prop.zoneAvgPrice) * 100;
+
+                // Only show badge if difference is significant (>5%)
+                const showBadge = Math.abs(priceDiff) > 5;
+                const isGoodDeal = priceDiff < 0; // Price below zone avg
                 const dealText = isGoodDeal ? t('re_good_deal') : t('re_bad_deal');
                 const dealClass = isGoodDeal ? 'good-deal' : 'bad-deal';
                 const roi = (prop.monthlyRent * 12) / prop.price;
@@ -6277,7 +6463,7 @@ const UI = {
                                     <div class="property-card-expert">
                                         <div class="prop-img" style="display:flex; align-items:center; justify-content:center; background:#1e293b; font-size:4rem; position:relative;">
                                             ${prop.icon || '🏠'}
-                                            <span class="deal-badge ${dealClass}">${dealText}</span>
+                                            ${showBadge ? `<span class="deal-badge ${dealClass}">${dealText}</span>` : ''}
                                         </div>
                                         <div class="prop-content">
                                             <h4 style="margin:0 0 5px 0; color:#fff;">${t(prop.name)}</h4>
@@ -8222,10 +8408,10 @@ const UI = {
                                 
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                     <div>
-                                        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#cbd5e1; margin-bottom:4px;">${t('next_objective')}</div>
-                                        <div style="font-size:1.25rem; font-weight:700; color:#f8fafc; display:flex; align-items:center; gap:10px;">
-                                            <span>${getJobTranslation(nextJobInPath.title)}</span>
-                                            ${isReady ? `<span style="font-size:0.8rem; background:rgba(16, 185, 129, 0.2); color:#34d399; padding:2px 8px; border-radius:12px; border:1px solid rgba(16, 185, 129, 0.3);">${t('ready')}</span>` : ''}
+                                        <div style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${t('market_title')}</div>
+                                        <div style="font-size:1.8rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:12px;">
+                                            <span style="background:linear-gradient(135deg, #3b82f6, #2563eb); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Global Market</span>
+                                            <span style="font-size:0.9rem; padding:4px 10px; background:rgba(59,130,246,0.1); border-radius:20px; color:#60a5fa; border:1px solid rgba(59,130,246,0.3); font-weight:600;">ETF</span>
                                         </div>
                                     </div>
                                     <div style="text-align:right;">
@@ -10613,7 +10799,9 @@ function nextTurn() {
             return; // Stop game progression
         }
 
-        // Assign new annual stock targets stockMarket.assignAnnualTargets();
+        // NOTE: Stock targets are reassigned in two ways:
+        // 1. On game load (prevents save-scumming) - see SaveSystem.loadFromSlot()
+        // 2. Every 6-18 months randomly - see StockMarket.nextTurn()
 
         // Reset annual income tracking
         if (!GameState.previousYearIncome) {
@@ -10694,8 +10882,9 @@ function nextTurn() {
     GameState.history.assets.push(assetsOnly);
     GameState.history.labels.push(`${GameState.month}/${GameState.year}`);
 
-    // Max Points
-    if (GameState.history.netWorth.length > 50) {
+    // Max Points - Increased to support full 50-year game (600 months)
+    // Only limit if exceeds 600 to prevent memory issues
+    if (GameState.history.netWorth.length > 600) {
         GameState.history.netWorth.shift();
         GameState.history.cash.shift();
         GameState.history.debt.shift();

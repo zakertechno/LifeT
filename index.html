@@ -186,7 +186,8 @@
 
             <button id="desktop-home-btn" class="home-btn desktop-only-btn desktop-btn-left"
                 onclick="document.querySelector('.nav-btn[data-view=&quot;dashboard&quot;]').click()">
-                <img src="assets/user-icon.png" alt="" class="home-icon-img">
+                <span class="home-icon-img"
+                    style="font-size: 1.5rem; display: flex; align-items: center; justify-content: center;">🏠</span>
                 <div id="header-player-name-desktop">Jugador
                 </div>
             </button>
@@ -209,7 +210,7 @@
                 </button>
 
                 <button id="desktop-exit-btn" class="save-btn desktop-only-btn"
-                    style="background: #ef4444; border-color: #dc2626; padding: 0; width: 42px; height: 42px; justify-content: center;"
+                    style="background: #f87171; border-color: #ef4444; padding: 0; width: 36px; height: 36px; justify-content: center;"
                     onclick="PersistenceModule.exitGame()">
                     <span style="color: white; font-weight: 800; font-size: 1.2rem;">✕</span>
                 </button>
