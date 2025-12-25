@@ -4893,3 +4893,21 @@
         .flow-down {
             color: #f87171;
         }
+/* Strict Header Centering Logic */
+#top-bar-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.game-title-main {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    pointer-events: none; /* Let clicks pass through if needed */
+    white-space: nowrap;
+    text-align: center;
+}

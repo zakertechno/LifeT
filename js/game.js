@@ -192,6 +192,7 @@ function getCourseTranslation(courseId) {
 // State
 // Global State
 const GameState = {
+    isMuted: localStorage.getItem('lifeIncMute') === 'true',
     playerName: 'Inversor',
     month: 1,
     year: 1,
@@ -5277,8 +5278,23 @@ const UI = {
             const lang = I18n.currentLang;
             const spanFlag = btn.querySelector('span:nth-child(1)');
             const spanText = btn.querySelector('span:nth-child(2)');
-            if (spanFlag) spanFlag.textContent = flags[lang] || '🌐';
-            if (spanText) spanText.textContent = labels[lang] || lang.toUpperCase();
+
+            // Clear and set the emoji as text first
+            if (spanFlag) {
+                spanFlag.innerHTML = flags[lang] || '🌐';
+            }
+            if (spanText) {
+                spanText.textContent = labels[lang] || lang.toUpperCase();
+            }
+
+            // Re-parse Twemoji for the updated emoji
+            if (typeof twemoji !== 'undefined' && spanFlag) {
+                twemoji.parse(spanFlag, {
+                    folder: 'emoji',
+                    ext: '.png',
+                    base: 'assets/'
+                });
+            }
         };
 
         updateBtn();
@@ -7304,6 +7320,7 @@ const UI = {
 
 
     playCoinSound() {
+        if (GameState.isMuted) return; // Mute Check
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
@@ -7331,6 +7348,7 @@ const UI = {
     },
 
     playLossSound() {
+        if (GameState.isMuted) return; // Mute Check
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
@@ -11235,18 +11253,18 @@ try {
                 .welcome-back-container { padding: 25px; text-align: center; background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); border-radius: 24px; max-height: 80vh; overflow-y: auto; }
                 .welcome-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; animation: pulse 2s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
                 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-                .welcome-title { color: #38bdf8; margin: 0 0 8px; font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); white-space: nowrap; }
-                .welcome-subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
+                .welcome-title { color: #38bdf8; margin: 0 0 8px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; } /* Removed heavy blur shadow */
+                .welcome-subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; font-smoothing: antialiased; -webkit-font-smoothing: antialiased; }
                 .saves-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
                 .load-slot-card { background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 12px; padding: 12px; text-align: left; position: relative; transition: border-color 0.2s; }
                 .load-slot-card:hover { border-color: #38bdf8; }
                 .slot-badge { position: absolute; top: -6px; right: 10px; background: #1e293b; padding: 2px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 600; }
                 .slot-badge.auto { color: #4ade80; border: 1px solid #4ade80; }
                 .slot-badge.manual { color: #38bdf8; border: 1px solid #38bdf8; }
-                .slot-player { font-size: 1rem; font-weight: 700; color: #fbbf24; margin-bottom: 5px; }
-                .slot-details { display: flex; gap: 12px; font-size: 0.8rem; color: #e2e8f0; margin-bottom: 4px; flex-wrap: wrap; }
-                .slot-money { color: #4ade80; font-weight: 600; }
-                .slot-date { font-size: 0.7rem; color: #64748b; margin-bottom: 8px; }
+                .slot-player { font-size: 1rem; font-weight: 700; color: #fbbf24; margin-bottom: 5px; -webkit-font-smoothing: antialiased; }
+                .slot-details { display: flex; gap: 12px; font-size: 0.8rem; color: #e2e8f0; margin-bottom: 4px; flex-wrap: wrap; -webkit-font-smoothing: antialiased; }
+                .slot-money { color: #4ade80; font-weight: 600; letter-spacing: 0.5px; } /* Increased spacing for clarity */
+                .slot-date { font-size: 0.7rem; color: #64748b; margin-bottom: 8px; font-weight: 500; }
                 .btn-load-slot { width: 100%; padding: 8px; background: linear-gradient(135deg, #4ade80, #22c55e); border: none; border-radius: 6px; color: #0f172a; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
                 .btn-load-slot:hover { transform: scale(1.02); }
                 .btn-new-game { width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 600; border-radius: 10px; border: 2px solid #475569; cursor: pointer; background: transparent; color: #94a3b8; transition: all 0.2s; }
@@ -11576,3 +11594,24 @@ try {
     promptNewUser(initGame);
 }
 
+
+// --- AUDIO SYSTEM ---
+function toggleAudio() {
+    GameState.isMuted = !GameState.isMuted;
+    localStorage.setItem('lifeIncMute', GameState.isMuted);
+    updateAudioUI();
+}
+
+function updateAudioUI() {
+    const icon = GameState.isMuted ? '🔇' : '🔊';
+    const desktopIcon = document.getElementById('audio-icon-desktop');
+    const mobileIcon = document.getElementById('audio-icon-mobile');
+
+    if (desktopIcon) desktopIcon.textContent = icon;
+    if (mobileIcon) mobileIcon.textContent = icon;
+}
+
+// Initialize Audio UI on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateAudioUI();
+});
