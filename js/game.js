@@ -1166,10 +1166,10 @@ const Bank = {
         return Math.min(Math.floor(maxPrincipal), absoluteCap);
     },
 
-    createLoan(amount, isBusiness = false) {
+    createLoan(amount, years = 5, isBusiness = false) {
         const annualRate = isBusiness ? this.INTEREST_RATES.business : this.INTEREST_RATES.personal;
         const monthlyRate = annualRate / 12;
-        const termMonths = 60; // 5 years fixed for personal/business loans
+        const termMonths = years * 12;
         const monthlyPayment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -termMonths));
         const loan = {
             id: Date.now(),
@@ -1199,8 +1199,7 @@ const Bank = {
 
         if (amount > available) return { success: false, message: `Límite excedido. Te quedan ${formatCurrency(available)} de crédito disponible (Total: ${formatCurrency(max)}).` };
 
-        const isBusiness = !!GameState.company;
-        return this.createLoan(amount, isBusiness);
+        return this.createLoan(amount, years, false);
     },
 
     payLoanPartial(loanId, amount) {
@@ -1459,11 +1458,21 @@ const RealEstate = {
                 GameState.loans.splice(loanIndex, 1);
             }
         }
+        // Capital Gains Tax (25%)
+        const capitalGain = marketValue - purchasePrice;
+        let tax = 0;
+        if (capitalGain > 0) {
+            tax = Math.floor(capitalGain * 0.40);
+        }
 
-        const netProfit = marketValue - mortgageCost;
-        const actualProfit = marketValue - purchasePrice; // Net Profit
+        const netProfit = marketValue - mortgageCost - tax; // Net Cash Flow
+        const actualProfit = marketValue - purchasePrice - tax; // True Net Profit
 
         GameState.cash += netProfit;
+
+        // Track Taxes
+        if (!GameState.lifetimeStats.totalTaxesPaid) GameState.lifetimeStats.totalTaxesPaid = 0;
+        GameState.lifetimeStats.totalTaxesPaid += tax;
 
         // Lifetime real estate tracking
         if (!GameState.lifetimeStats) {
@@ -1492,11 +1501,28 @@ const RealEstate = {
         GameState.inventory.realEstate.splice(propIndex, 1);
         return {
             success: true,
-            message: t('re_sold_success', {
-                amount: formatCurrency(marketValue),
-                mortgage: formatCurrency(mortgageCost),
-                net: formatCurrency(netProfit)
-            })
+            message: `
+                <div style="text-align: left; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">
+                        <span style="color: #94a3b8;">${t('re_sale_price')}</span>
+                        <span style="color: #facc15;">+${formatCurrency(marketValue)}</span>
+                    </div>
+                    ${mortgageCost > 0 ? `
+                    <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">
+                        <span style="color: #94a3b8;">${t('re_mortgage_cancel')}</span>
+                        <span style="color: #f87171;">-${formatCurrency(mortgageCost)}</span>
+                    </div>` : ''}
+                    ${tax > 0 ? `
+                    <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">
+                        <span style="color: #94a3b8;">${t('re_tax_capital_gains')}</span>
+                        <span style="color: #f87171;">-${formatCurrency(tax)}</span>
+                    </div>` : ''}
+                    <div style="display:flex; justify-content:space-between; font-weight: 800; font-size: 1.1em; margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.2);">
+                        <span style="color: #e2e8f0;">${t('re_net_amount')}:</span>
+                        <span style="color: #4ade80;">+${formatCurrency(netProfit)}</span>
+                    </div>
+                </div>
+            `
         };
     }
 };
@@ -5935,11 +5961,11 @@ const UI = {
                                 
                                 <div class="loan-input-group">
                                     <label>${t('bank_amount_req')}</label>
-                                    <input type="number" id="loan-amount-input" class="loan-input" placeholder="Ej. 50000" min="1000" step="1000">
+                                    <input type="number" id="loan-amount" class="loan-input" placeholder="Ej. 50000" min="1000" step="1000">
                                 </div>
                                 <div class="loan-input-group">
                                     <label>${t('bank_term_years').replace('{years}', '<span id="loan-years-val" style="color:#facc15; font-weight:bold;">2</span>')}</label>
-                                    <input type="range" id="loan-years-input" min="1" max="5" value="2" style="width:100%; accent-color:#facc15; height: 8px;">
+                                    <input type="range" id="loan-years" min="1" max="5" value="2" style="width:100%; accent-color:#facc15; height: 8px;">
                                 </div>
 
                                 <div class="loan-summary">
@@ -5988,6 +6014,10 @@ const UI = {
                                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size:0.85rem; color:#cbd5e1; background: rgba(15, 23, 42, 0.5); padding: 12px; border-radius: 10px;">
                                                     <div><span style="color:#94a3b8;">${t('bank_monthly_quota')}:</span> <span style="color: #facc15; font-weight: 600;">${formatCurrency(loan.monthlyPayment)}</span></div>
                                                     <div><span style="color:#94a3b8;">${t('remaining')}:</span> <span style="font-weight: 600;">${loan.remainingMonths} ${t('months')}</span></div>
+                                                    <div style="grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 4px;">
+                                                        <span style="color:#94a3b8;">${t('bank_interest_rate')}:</span> 
+                                                        <span style="color: #e2e8f0; font-weight: 600;">${(loan.interestRate * 100).toFixed(2)}%</span>
+                                                    </div>
                                                 </div>
                                                 <div style="margin-top:10px; background:rgba(255,255,255,0.1); height:4px; border-radius:2px;">
                                                     <div class="loan-bar" style="width:${progress}%; height:100%; background:#4ade80; border-radius:2px;"></div>
@@ -6007,13 +6037,14 @@ const UI = {
 
 
         // Events
-        const amountInput = document.getElementById('loan-amount-input');
-        const rangeInput = document.getElementById('loan-years-input');
+        const amountInput = document.getElementById('loan-amount'); // FIXED ID
+        const rangeInput = document.getElementById('loan-years'); // FIXED ID
         const yearsVal = document.getElementById('loan-years-val');
         const monthlyPreview = document.getElementById('loan-monthly-preview');
-        const btnRequest = document.getElementById('btn-request-loan-dynamic');
+        const btnRequest = document.getElementById('btn-request-loan-dynamic'); // Note: ID in HTML above is btn-request-loan-dynamic
 
         const updatePreview = () => {
+            if (!amountInput || !rangeInput) return;
             const amount = parseInt(amountInput.value) || 0;
             const years = parseInt(rangeInput.value);
             yearsVal.textContent = `${years} ${t('years')}`;
@@ -6028,23 +6059,27 @@ const UI = {
             }
         };
 
-        amountInput.oninput = updatePreview;
-        rangeInput.oninput = updatePreview;
+        if (amountInput) amountInput.oninput = updatePreview;
+        if (rangeInput) rangeInput.oninput = updatePreview;
 
-        btnRequest.onclick = () => {
-            const amount = parseInt(amountInput.value);
-            const years = parseInt(rangeInput.value);
-            if (!amount || amount <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
+        if (btnRequest) {
+            btnRequest.onclick = () => {
+                const amount = parseInt(amountInput.value);
+                const years = parseInt(rangeInput.value);
+                if (!amount || amount <= 0) return showGameAlert(t('msg_amt_invalid'), 'warning');
 
-            const result = BankModule.takeLoan(amount, years);
+                const result = BankModule.takeLoan(amount, years);
 
-            if (result.success) {
-                showGameAlert(t('loan_approved') + ' ' + t('loan_received_msg', { amount: formatCurrency(amount) }), 'success');
-                UI.updateAll();
-            } else {
-                showGameAlert(t('loan_denied') + ' ' + result.message, 'error');
-            }
-        };
+                if (result.success) {
+                    showGameAlert(t('loan_approved') + ' ' + t('loan_received_msg', { amount: formatCurrency(amount) }), 'success');
+                    UI.updateHeader(); // Update Header FIRST (swapped)
+                    UI.updateBank(BankModule); // Re-render bank (recursive call essentially, but fine)
+                    UI.updateDashboard(); // Ensure dashboard reflects too
+                } else {
+                    showGameAlert(t('loan_denied') + ' ' + result.message, 'error');
+                }
+            };
+        }
 
         container.querySelectorAll('.btn-pay-loan').forEach(btn => {
             btn.onclick = (e) => {
@@ -10587,7 +10622,8 @@ function nextTurn() {
         GameState.previousYearIncome = { ...GameState.currentYearIncome };
         GameState.currentYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
 
-        // Reset annual expenses tracking gameState.previousYearExpenses = GameState.currentYearExpenses || 0;
+        // Reset annual expenses tracking
+        GameState.previousYearExpenses = GameState.currentYearExpenses || 0;
         GameState.currentYearExpenses = 0;
     }
 
@@ -10838,8 +10874,8 @@ try {
             feedback.textContent = res.message;
             feedback.className = res.success ? 'success-msg' : 'error-msg';
             if (res.success) {
-                UI.updateBank(Bank);
                 UI.updateHeader();
+                UI.updateBank(Bank);
             }
         };
 
