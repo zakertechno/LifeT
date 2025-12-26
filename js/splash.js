@@ -86,7 +86,8 @@ function generateEpicSound() {
 }
 
 function showSplashScreen() {
-    // Simplified robust approach: Just inject strict overlay immediately
+    // Hide all content until splash finishes
+    document.body.classList.add('splash-active');
 
     // Create a full-screen overlay (highest z-index)
     const overlay = document.createElement('div');
@@ -302,9 +303,10 @@ function finishSplashScreen(overlay) {
     `;
     overlay.appendChild(finalBlack);
 
-    // Remove entire splash overlay
+    // Remove entire splash overlay and show content
     setTimeout(() => {
         overlay.remove();
+        document.body.classList.remove('splash-active');
     }, 1000);
 }
 

@@ -1,3 +1,7 @@
+// Game Configuration
+const END_YEAR = 50;
+const WARNING_MONTHS_BEFORE = 6;
+
 // Endgame
 
 function showEndgameModal() {
@@ -12,131 +16,373 @@ function showEndgameModal() {
     const totalExpenses = stats.totalExpenses.lifestyle + stats.totalExpenses.housing + stats.totalExpenses.education;
 
     const summary = `
-                <div style="text-align: center; padding: 15px; max-height: 75vh; overflow-y: auto;">
-                    <div style="font-size: 2.5rem; margin-bottom: 5px;">☠️</div>
-                    <h2 style="color: #f87171; margin: 0 0 3px 0; font-size: 1.4rem;">${t('endgame_death_title')}</h2>
-                    <p style="color: #4ade80; margin: 5px 0; font-size: 1rem; font-weight: 600;">
-                        ${t('milestone_message', { amount: formatCurrency(GameState.netWorth) })}
-                    </p>
-                    <p style="color: #38bdf8; margin: 0 0 12px 0; font-size: 0.95rem; font-weight: bold;">
-                        ${t('endgame_congrats')}
-                    </p>
-                    <p style="color: #94a3b8; margin: 0 0 12px 0; font-size: 0.85rem;">
-                        ${t('endgame_thanks_msg')}
-                    </p>
-                    
-                    <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 10px; margin: 8px auto; max-width: 400px;">
-                        <h3 style="color: #4ade80; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">💰 ${t('endgame_income_title')}</h3>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>💼 ${t('tax_src_salary')}:</span>
-                            <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.salary)}</strong>
+        <style>
+            /* Force full screen override */
+            .custom-modal-box { 
+                max-width: 100vw !important; 
+                width: 100vw !important; 
+                height: 100vh !important; 
+                max-height: 100vh !important; 
+                border-radius: 0 !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                border: none !important; 
+                background: #020617 !important; 
+                display: block !important;
+                overflow: hidden !important; 
+            }
+            .custom-modal-overlay { padding: 0 !important; }
+            .custom-modal-box h3, .custom-modal-footer, .custom-modal-close { display: none !important; }
+
+            /* Wrapper for vertical layout (Header + Grid) */
+            .endgame-wrapper {
+                display: flex;
+                flex-direction: column;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            /* Header Section */
+            .endgame-header-section {
+                flex: 0 0 9vh; 
+                display: flex;
+                align-items: flex-end; 
+                justify-content: center;
+                width: 100%;
+                z-index: 200;
+                padding-bottom: 2vh;
+            }
+            .endgame-header-section h1 { 
+                font-size: 3rem; 
+                margin: 0; 
+                color: white; 
+                text-shadow: 0 0 40px rgba(255,255,255,0.3); 
+                font-weight: 900;
+                letter-spacing: 8px;
+                text-transform: uppercase;
+                background: linear-gradient(to bottom, #ffffff 10%, #94a3b8 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                line-height: 1;
+            }
+
+            /* Main Grid Container (Takes remaining space) */
+            .endgame-grid {
+                flex: 1;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                padding: 0 3vw 3vh 3vw; 
+                gap: 2vh 2vw;
+                box-sizing: border-box;
+                height: 85vh; 
+            }
+
+            /* Quadrant Common */
+            .quadrant {
+                position: relative;
+                padding: 2vh 2vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                overflow: hidden; 
+                border-radius: 28px;
+                box-shadow: 0 10px 30px -5px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.08);
+                backdrop-filter: blur(20px);
+                transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            }
+            
+            .quadrant:hover { transform: scale(1.01); z-index: 5; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.2); }
+
+            /* Glassmorphism Backgrounds & Lighting */
+            .q-expenses { 
+                background: linear-gradient(135deg, rgba(69, 10, 10, 0.95), rgba(20, 5, 5, 0.98));
+                border: 1px solid rgba(220, 38, 38, 0.15);
+            }
+            .q-income { 
+                background: linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(2, 35, 25, 0.98));
+                border: 1px solid rgba(5, 150, 105, 0.15);
+            }
+            .q-taxes { 
+                background: linear-gradient(135deg, rgba(23, 37, 84, 0.95), rgba(10, 15, 30, 0.98));
+                border: 1px solid rgba(37, 99, 235, 0.15);
+            }
+            .q-net { 
+                background: linear-gradient(135deg, rgba(69, 26, 3, 0.95), rgba(28, 20, 10, 0.98));
+                border: 1px solid rgba(217, 119, 6, 0.15);
+                box-shadow: 0 0 60px rgba(217, 119, 6, 0.2), inset 0 0 30px rgba(217, 119, 6, 0.1);
+            }
+            
+            /* Content Styling */
+            .quadrant-content {
+                width: 100%;
+                max-width: 650px;
+                margin: 0 auto;
+                z-index: 2;
+            }
+
+            .quadrant-title { 
+                font-size: 1.3rem; 
+                font-weight: 800; 
+                text-transform: uppercase; 
+                margin-bottom: 2vh; 
+                display: flex; 
+                align-items: center; 
+                gap: 10px; 
+                letter-spacing: 1px;
+            }
+
+            .quadrant-stat { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                margin-bottom: 0.6vh; 
+                padding: 0.7vh 1vh;
+                font-size: 0.95rem; 
+                color: rgba(255,255,255,0.85); 
+                border-radius: 8px;
+                background: rgba(0,0,0,0.15);
+                border: 1px solid rgba(255,255,255,0.03);
+            }
+            .quadrant-stat strong { font-size: 1.1rem; font-weight: 700; white-space: nowrap; }
+
+            /* Specific Text Details */
+            .q-expenses .quadrant-title { color: #f87171; text-shadow: 0 0 25px rgba(248, 113, 113, 0.3); }
+            .q-expenses .quadrant-stat strong { color: #fecaca; }
+            
+            .q-income .quadrant-title { color: #4ade80; text-shadow: 0 0 25px rgba(74, 222, 128, 0.3); }
+            .q-income .quadrant-stat strong { color: #bbf7d0; }
+            
+            .q-taxes .quadrant-title { color: #60a5fa; text-shadow: 0 0 25px rgba(96, 165, 250, 0.3); }
+            .q-taxes .quadrant-stat strong { color: #bfdbfe; }
+            
+            .q-net .quadrant-title { color: #fbbf24; text-shadow: 0 0 35px rgba(251, 191, 36, 0.5); }
+            .q-net .quadrant-stat strong { color: #fde68a; }
+
+            /* Total Row */
+            .total-row {
+                margin-top: 1.5vh;
+                padding-top: 1.2vh;
+                border-top: 1px solid rgba(255,255,255,0.15);
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 15px;
+                font-size: 1.2rem;
+                color: white;
+            }
+            .total-row strong { font-size: 1.5rem; }
+
+            /* Center Button Container */
+            .center-action-container {
+                position: fixed;
+                top: 55%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 300;
+                width: 0;
+                height: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            @keyframes pulse-gold {
+                0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
+                70% { box-shadow: 0 0 0 25px rgba(245, 158, 11, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+            }
+
+            /* Premium Button Clean */
+            .center-btn {
+                position: relative;
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                /* Dark Premium Background with golden rim */
+                background: radial-gradient(circle at 30% 30%, #303030, #020617);
+                border: 4px solid #451a03; 
+                color: #fbbf24; /* Gold Icon */
+                cursor: pointer;
+                outline: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 
+                    0 0 0 8px #020617, /* Spacing */
+                    0 0 0 12px #fbbf24, /* Gold Ring */
+                    0 10px 40px rgba(0,0,0,0.8);
+                animation: pulse-gold 2.5s infinite;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                aspect-ratio: 1 / 1;
+            }
+            
+            .center-btn span.icon { 
+                font-size: 4.5rem; 
+                display: block; 
+                line-height: 1;
+                filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
+            }
+            
+            .center-btn:hover { 
+                transform: scale(1.15); 
+                box-shadow: 
+                    0 0 0 8px #020617,
+                    0 0 0 12px #fbbf24, 
+                    0 0 60px rgba(251, 191, 36, 0.7);
+                color: #fff;
+            }
+            
+        </style>
+        
+        <div class="endgame-wrapper">
+            <div class="endgame-header-section">
+                <h1>${t('endgame_death_title')}</h1>
+            </div>
+
+            <div class="endgame-grid">
+                <!-- Q1: Net Worth (Top Left) -->
+                <div class="quadrant q-net">
+                     <div class="quadrant-content text-center" style="text-align: center;">
+                        <div class="quadrant-title" style="justify-content: center; font-size: 1.4rem; opacity: 1; margin-bottom: 2vh;">👑 ${t('net_worth')}</div>
+                        <div style="font-size:3.5rem; color:#fff; text-shadow:0 0 40px rgba(251,191,36,0.6); font-weight:900; margin: 2vh 0; letter-spacing: -1px; line-height: 1;">
+                            ${formatCurrency(GameState.netWorth)}
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🏠 ${t('tax_src_rental')}:</span>
-                            <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.rental)}</strong>
+                         <p style="font-size:1.1rem; color:#fde68a; max-width: 90%; margin: 0 auto; line-height: 1.5; opacity: 0.95; padding-top: 1vh; border-top: 1px solid rgba(253, 230, 138, 0.3);">
+                            "${t('milestone_message', { amount: formatCurrency(GameState.netWorth) })}"
+                        </p>
+                     </div>
+                </div>
+
+                <!-- Q2: Income (Top Right) -->
+                <div class="quadrant q-income">
+                    <div class="quadrant-content">
+                        <div class="quadrant-title">💰 ${t('endgame_income_title')}</div>
+                        <div class="quadrant-stat"><span>💼 ${t('tax_src_salary')}</span> <strong>${formatCurrency(stats.totalIncome.salary)}</strong></div>
+                        <div class="quadrant-stat"><span>🏠 ${t('tax_src_rental')}</span> <strong>${formatCurrency(stats.totalIncome.rental)}</strong></div>
+                        <div class="quadrant-stat"><span>📈 ${t('tax_src_stocks')}</span> <strong>${formatCurrency(stats.totalIncome.stocks)}</strong></div>
+                        <div class="quadrant-stat"><span>🏢 ${t('tax_src_company')}</span> <strong>${formatCurrency(stats.totalIncome.company)}</strong></div>
+                         <div class="quadrant-stat"><span>🏘️ ${t('re_net_profit')}</span> <strong>${formatCurrency(realEstateProfit)}</strong></div>
+                        
+                        <div class="total-row" style="color: #86efac;">
+                            ${t('total')}: <strong>${formatCurrency(totalIncome)}</strong>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>📈 ${t('tax_src_stocks')}:</span>
-                            <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.stocks)}</strong>
+                    </div>
+                </div>
+                
+                <!-- Q3: Expenses (Bottom Left) -->
+                <div class="quadrant q-expenses">
+                    <div class="quadrant-content">
+                        <div class="quadrant-title">💸 ${t('total_life_expenses')}</div>
+                        <div class="quadrant-stat"><span>🛍️ ${t('lifestyle')}</span> <strong>${formatCurrency(stats.totalExpenses.lifestyle)}</strong></div>
+                        <div class="quadrant-stat"><span>🏠 ${t('housing')}</span> <strong>${formatCurrency(stats.totalExpenses.housing)}</strong></div>
+                        <div class="quadrant-stat"><span>🎓 ${t('education_label')}</span> <strong>${formatCurrency(stats.totalExpenses.education)}</strong></div>
+                        <div class="total-row">
+                            ${t('total')}: <strong>${formatCurrency(-totalExpenses)}</strong>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🏢 ${t('tax_src_company')}:</span>
-                            <strong style="color: #4ade80;">${formatCurrency(stats.totalIncome.company)}</strong>
-                        </div>
+                    </div>
+                </div>
+                
+                <!-- Q4: Taxes (Bottom Right) -->
+                <div class="quadrant q-taxes">
+                     <div class="quadrant-content">
+                        <div class="quadrant-title">🏛️ ${t('taxes_paid_title')}</div>
+                        <div class="quadrant-stat"><span>📋 ${t('total_paid_state')}</span> <strong style="font-size: 1.6rem; color: #93c5fd;">${formatCurrency(-stats.totalTaxesPaid)}</strong></div>
+                        
                         ${(stats.realEstate && stats.realEstate.propertiesSold > 0) ? `
-                        <div style="margin: 8px 0; padding: 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px;">
-                            <div style="font-size: 0.75rem; color: #38bdf8; font-weight: 600; margin-bottom: 4px;">
-                                🏘️ ${t('endgame_op_real_estate')} (${stats.realEstate.propertiesSold})
+                        <div style="margin: 2vh 0 0 0; padding: 1.5vh; background: rgba(30, 58, 138, 0.3); border-radius: 12px; border: 1px solid rgba(147, 197, 253, 0.2);">
+                            <div style="font-size: 0.9rem; text-transform: uppercase; color: #93c5fd; margin-bottom: 0.5vh; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                🏘️ ${t('endgame_op_real_estate')} <span style="background:rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 6px; font-size: 0.8rem;">${stats.realEstate.propertiesSold}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin: 2px 0; font-size: 0.75rem; color: #94a3b8;">
-                                <span>${t('re_buy_price')}:</span>
-                                <span>${formatCurrency(stats.realEstate.totalPurchases || 0)}</span>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="quadrant-stat" style="font-size: 0.85rem; padding: 6px; flex-direction: column; align-items: flex-start; gap: 2px;">
+                                    <span style="opacity: 0.7;">${t('re_buy_price')}</span>
+                                    <span style="font-weight:700; color: #cbd5e1;">${formatCurrency(stats.realEstate.totalPurchases || 0)}</span>
+                                </div>
+                                <div class="quadrant-stat" style="font-size: 0.85rem; padding: 6px; flex-direction: column; align-items: flex-start; gap: 2px;">
+                                    <span style="opacity: 0.7;">${t('re_sell_price')}</span>
+                                    <span style="font-weight:700; color: #cbd5e1;">${formatCurrency(stats.realEstate.totalSales || 0)}</span>
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin: 2px 0; font-size: 0.75rem; color: #94a3b8;">
-                                <span>${t('re_sell_price')}:</span>
-                                <span>${formatCurrency(stats.realEstate.totalSales || 0)}</span>
-                            </div>
-                            <div style="height: 1px; background: rgba(56, 189, 248, 0.3); margin: 4px 0;"></div>
-                            <div style="display: flex; justify-content: space-between; margin: 2px 0; font-size: 0.8rem; font-weight: 600;">
-                                <span style="color: #38bdf8;">${t('re_net_profit')}:</span>
-                                <strong style="color: ${realEstateProfit >= 0 ? '#4ade80' : '#f87171'};">
+                            <div class="quadrant-stat highlight" style="font-size: 0.95rem; padding: 8px; margin-top: 8px; background: rgba(0,0,0,0.25); justify-content: space-between; border: 1px solid rgba(255,255,255,0.05);">
+                                <span class="text-primary">${t('re_net_profit')}</span>
+                                <strong style="color: ${realEstateProfit >= 0 ? '#4ade80' : '#f87171'}; font-size: 1.1rem;">
                                     ${formatCurrency(realEstateProfit)} 
-                                    ${stats.realEstate.totalPurchases > 0 ? `(${((realEstateProfit / stats.realEstate.totalPurchases) * 100).toFixed(1)}%)` : ''}
                                 </strong>
                             </div>
                         </div>
-                        ` : ''}
-                        <div style="height: 1px; background: #334155; margin: 6px 0;"></div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.9rem; font-weight: 600;">
-                            <span>${t('gross_income')}:</span>
-                            <strong style="color: #4ade80;">${formatCurrency(totalIncome)}</strong>
+                        ` : `
+                        <div style="margin-top: 2vh; font-size:1rem; color:#64748b; font-style:italic; line-height: 1.5; text-align: center; opacity: 0.7;">
+                            "${t('endgame_thanks_msg')}"
                         </div>
-                    </div>
-                    
-                    <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 10px; margin: 8px auto; max-width: 400px;">
-                        <h3 style="color: #f87171; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">💸 ${t('total_life_expenses')}</h3>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🛍️ ${t('lifestyle')}:</span>
-                            <strong style="color: #f87171;">${formatCurrency(stats.totalExpenses.lifestyle)}</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🏠 ${t('housing')}:</span>
-                            <strong style="color: #f87171;">${formatCurrency(stats.totalExpenses.housing)}</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.8rem;">
-                            <span>🎓 ${t('education_label')}:</span>
-                            <strong style="color: #f87171;">${formatCurrency(stats.totalExpenses.education)}</strong>
-                        </div>
-                        <div style="height: 1px; background: #334155; margin: 6px 0;"></div>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.9rem; font-weight: 600;">
-                            <span>${t('total_expenses_label')}:</span>
-                            <strong style="color: #f87171;">${formatCurrency(totalExpenses)}</strong>
-                        </div>
-                    </div>
-                    
-                    <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 8px; padding: 10px; margin: 8px auto; max-width: 400px;">
-                        <h3 style="color: #fbbf24; margin: 0 0 8px 0; font-size: 0.9rem; font-weight: 600;">📋 ${t('taxes_paid_title')}</h3>
-                        <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 0.9rem; font-weight: 600;">
-                            <span>${t('total_paid_state')}:</span>
-                            <strong style="color: #fbbf24;">${formatCurrency(stats.totalTaxesPaid)}</strong>
-                        </div>
-                    </div>
-                    
-                    <p style="color: #38bdf8; margin: 12px 0 0 0; font-size: 0.9rem;">
-                        ${t('endgame_retry')}
-                    </p>
+                        `}
+                     </div>
                 </div>
-            `;
+            </div>
+        </div>
+        
+        <div class="center-action-container">
+            <button id="btn-restart-game" class="center-btn">
+                <span class="icon">↻</span>
+            </button>
+        </div>
+    `;
 
-    UI.showModal(
-        t('endgame_death_title'),
-        summary,
-        [{ text: `🔄 ${t('endgame_reset_title')}`, style: 'primary', fn: resetGame }],
-        true
-    );
+    UI.showModal(' ', summary, [], true);
+
+    setTimeout(() => {
+        const btn = document.getElementById('btn-restart-game');
+        if (btn) {
+            btn.onclick = () => {
+                showThankYouScreen();
+            };
+        }
+    }, 100);
 }
 
 function resetGame() {
-    UI.showModal(`⚠️ ${t('endgame_reset_title')}`,
-        `<div style="text-align:center;">
-            <div style="font-size:3rem; margin-bottom:10px;">🤯</div>
-            <p style="color:#cbd5e1; margin-bottom:15px; font-size:1.1rem;">${t('endgame_reset_msg')}</p>
-            <div style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); padding:15px; border-radius:10px;">
-                <p style="color:#ef4444; font-weight:800; margin:0; text-transform:uppercase;">⛔ ${t('msg_irreversible_action')}</p>
+    const msg = `
+        <div class="reset-container">
+            <span class="reset-icon">🤯</span>
+            <p class="reset-text">${t('endgame_reset_msg')}</p>
+            <div class="reset-warning-box">
+                <p class="reset-warning-text">⛔ ${t('msg_irreversible_action')}</p>
+            </div>
+            
+            <div class="reset-actions">
+                <button id="btn-reset-cancel" class="btn-reset-cancel">${t('cancel')}</button>
+                <button id="btn-reset-confirm" class="btn-reset-confirm">${t('endgame_reset_confirm')}</button>
             </div>
         </div>
-        `,
-        [
-            { text: t('cancel'), style: 'secondary', fn: null },
-            {
-                text: t('endgame_reset_confirm'), style: 'danger', fn: () => {
-                    localStorage.removeItem('gameState');
-                    localStorage.removeItem('playerName');
-                    location.reload();
-                }
-            }
-        ], true
-    );
+    `;
+
+    // Create Premium Modal Overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'premium-modal-overlay custom-modal-overlay';
+
+    const box = document.createElement('div');
+    box.className = 'premium-modal-box endgame-theme';
+    box.innerHTML = msg;
+
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    const btnCancel = overlay.querySelector('#btn-reset-cancel');
+    if (btnCancel) {
+        btnCancel.onclick = () => {
+            overlay.remove();
+        };
+    }
+
+    const btnConfirm = overlay.querySelector('#btn-reset-confirm');
+    if (btnConfirm) {
+        btnConfirm.onclick = () => {
+            localStorage.removeItem('gameState');
+            localStorage.removeItem('playerName');
+            location.reload();
+        };
+    }
 }
 
 
@@ -264,6 +510,7 @@ const GameState = {
         company: 0
     },
     taxWarningShown: false,
+    endgameWarningShown: false,
 
     // Expropriation
     expropriation500kDone: false,
@@ -332,6 +579,7 @@ function updateNetWorth(forceRecalc = false) {
 // Chart
 const ChartModule = {
     instance: null,
+    instanceStock: null, // Track stock instance too
 
     drawChart(canvasId, history, visibility = { netWorth: true, cash: true, debt: true }) {
         // Check Lib
@@ -342,12 +590,7 @@ const ChartModule = {
 
         const ctx = document.getElementById(canvasId).getContext('2d');
 
-        // Reset Canvas
-        if (this.instance) {
-            this.instance.destroy();
-        }
-
-        // Gradients
+        // Gradients (Always needed for dataset construction)
         const gradientNW = ctx.createLinearGradient(0, 0, 0, 400);
         gradientNW.addColorStop(0, 'rgba(250, 204, 21, 0.5)'); // Yellow/Gold
         gradientNW.addColorStop(1, 'rgba(250, 204, 21, 0.0)');
@@ -397,48 +640,65 @@ const ChartModule = {
             });
         }
 
-        this.instance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: history.labels,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
+        // OPTIMIZATION: Update existing instance if possible
+        const canvasElement = document.getElementById(canvasId);
+
+        // Critical: Check if the instance exists AND belongs to the current DOM element
+        // If the DOM was refreshed via innerHTML, canvasElement will be a new node 
+        // and this.instance.canvas will be the old detached node.
+        if (this.instance && this.instance.canvas === canvasElement) {
+            this.instance.data.labels = history.labels;
+            this.instance.data.datasets = datasets;
+            this.instance.update('none'); // Update without animation for performance
+        } else {
+            // If we have an old instance but the canvas changed, destroy it first to free memory
+            if (this.instance) {
+                this.instance.destroy();
+            }
+
+            this.instance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: history.labels,
+                    datasets: datasets
                 },
-                plugins: {
-                    legend: {
-                        display: false // Custom Legend
-                    },
-                    tooltip: {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
                         mode: 'index',
                         intersect: false,
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                        titleColor: '#f1f5f9',
-                        bodyColor: '#cbd5e1',
-                        borderColor: '#334155',
-                        borderWidth: 1
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: '#334155' },
-                        ticks: { color: '#94a3b8', maxTicksLimit: 8 }
                     },
-                    y: {
-                        grid: { color: '#334155' },
-                        ticks: {
-                            color: '#94a3b8',
-                            callback: (val) => formatCurrency(val, 0) // Integer
+                    plugins: {
+                        legend: {
+                            display: false // Custom Legend
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8', maxTicksLimit: 8 }
+                        },
+                        y: {
+                            grid: { color: '#334155' },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: (val) => formatCurrency(val, 0) // Integer
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     },
     drawStockChart(canvasId, stock, timeframe) {
         // Check Lib
@@ -448,9 +708,6 @@ const ChartModule = {
         }
 
         const ctx = document.getElementById(canvasId).getContext('2d');
-        if (this.instanceStock) {
-            this.instanceStock.destroy();
-        }
 
         let data = stock.history || [];
         let labels = Array.from({ length: data.length }, (_, i) => i);
@@ -469,31 +726,46 @@ const ChartModule = {
         const color = isPositive ? '#4ade80' : '#f87171';
         const bgColor = isPositive ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)';
 
-        this.instanceStock = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    borderColor: color,
-                    backgroundColor: bgColor,
-                    borderWidth: 2,
-                    fill: true,
-                    pointRadius: 0,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
-                scales: {
-                    x: { display: false },
-                    y: { display: false } // Minimalist
-                    // Y ticks enabled
-                }
+        const newDataset = {
+            data: data,
+            borderColor: color,
+            backgroundColor: bgColor,
+            borderWidth: 2,
+            fill: true,
+            pointRadius: 0,
+            tension: 0.1
+        };
+
+        const canvasElement = document.getElementById(canvasId);
+
+        // OPTIMIZATION: Update existing instance if possible
+        if (this.instanceStock && this.instanceStock.canvas === canvasElement) {
+            this.instanceStock.data.labels = labels;
+            this.instanceStock.data.datasets = [newDataset];
+            this.instanceStock.update('none');
+        } else {
+            if (this.instanceStock) {
+                this.instanceStock.destroy();
             }
-        });
+
+            this.instanceStock = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [newDataset]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false } // Minimalist
+                        // Y ticks enabled
+                    }
+                }
+            });
+        }
     }
 };
 
@@ -610,21 +882,51 @@ const PersistenceModule = {
 
     // Exit
     exitGame() {
-        UI.showModal(
-            t('exit_game_title') || 'Salir del Juego',
-            `<div style="text-align:center; padding: 10px;">
-                <p style="margin-bottom: 10px;">${t('exit_game_confirm') || '¿Seguro que quieres cerrar el juego?'}</p>
-                <p style="color: #ef4444; font-size: 0.9em;">⚠️ ${t('exit_game_warning') || 'El progreso no guardado se perderá.'}</p>
-            </div>`,
-            [
-                { text: t('cancel'), style: 'secondary', fn: null },
-                {
-                    text: t('exit_btn') || 'Cerrar Juego',
-                    style: 'danger',
-                    fn: () => { window.close(); }
-                }
-            ]
-        );
+        const exitContent = `
+            <style>
+                .custom-modal-box h3 { display: none !important; }
+                .custom-modal-box .modal-body { padding: 0 !important; }
+                .custom-modal-box { max-width: 400px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(239, 68, 68, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(239, 68, 68, 0.15) !important; }
+                .exit-container { padding: 35px 30px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                .exit-icon { font-size: 4rem; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.4)); animation: exitPulse 2s ease-in-out infinite; }
+                @keyframes exitPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+                .exit-title { color: #f87171; margin: 0 0 15px; font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 20px rgba(248, 113, 113, 0.3); }
+                .exit-text { color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 10px; }
+                .exit-warning { color: #fbbf24; font-size: 0.9rem; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 12px 15px; border-radius: 10px; margin-bottom: 25px; }
+                .exit-buttons { display: flex; gap: 15px; }
+                .btn-exit-cancel { flex: 1; padding: 14px 20px; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid #475569; border-radius: 12px; color: #e2e8f0; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.25s; }
+                .btn-exit-cancel:hover { background: linear-gradient(145deg, #475569, #334155); transform: translateY(-2px); }
+                .btn-exit-confirm { flex: 1; padding: 14px 20px; background: linear-gradient(135deg, #ef4444, #dc2626); border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+                .btn-exit-confirm:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4); }
+                .custom-modal-footer { display: none !important; }
+            </style>
+            <div class="exit-container">
+                <span class="exit-icon">🚪</span>
+                <h2 class="exit-title">${t('exit_game_title') || 'Salir del Juego'}</h2>
+                <p class="exit-text">${t('exit_game_confirm') || '¿Seguro que quieres cerrar el juego?'}</p>
+                <p class="exit-warning">⚠️ ${t('exit_game_warning') || 'El progreso no guardado se perderá.'}</p>
+                <div class="exit-buttons">
+                    <button id="btn-exit-cancel" class="btn-exit-cancel">${t('cancel')}</button>
+                    <button id="btn-exit-confirm" class="btn-exit-confirm">${t('exit_btn') || 'Cerrar'}</button>
+                </div>
+            </div>
+        `;
+
+        UI.showModal(' ', exitContent, [], true);
+
+        setTimeout(() => {
+            const cancelBtn = document.getElementById('btn-exit-cancel');
+            const confirmBtn = document.getElementById('btn-exit-confirm');
+            if (cancelBtn) {
+                cancelBtn.onclick = () => {
+                    const modal = document.querySelector('.custom-modal-overlay');
+                    if (modal) modal.remove();
+                };
+            }
+            if (confirmBtn) {
+                confirmBtn.onclick = () => { window.close(); };
+            }
+        }, 50);
     },
 
     // Save Modal
@@ -636,109 +938,131 @@ const PersistenceModule = {
         const formatSlot = (slot, key, name) => {
             if (slot) {
                 return `
-                    <div class="save-slot-card" data-key="${key}">
-                        <div class="slot-header">
-                            <span class="slot-name">${name}</span>
-                            <span class="slot-date">${slot.savedAt ? new Date(slot.savedAt).toLocaleString('es-ES') : t('no_date')}</span>
+                    <div class="save-modal-card" data-key="${key}">
+                        <div class="save-card-header">
+                            <span class="save-card-name">${name}</span>
+                            <span class="save-card-date">⏰ ${slot.savedAt ? new Date(slot.savedAt).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : t('no_date')}</span>
                         </div>
-                        <div class="slot-info">
+                        <div class="save-card-info">
                             <span>🎮 ${slot.playerName}</span>
-                            <span>💰 ${formatCurrency(slot.cash)}</span>
-                            <span>📅 ${t('year')} ${slot.year}, ${t('month')} ${slot.month}</span>
+                            <span class="save-card-money">💰 ${formatCurrency(slot.cash, 0)}</span>
+                            <span>📅 ${t('year')} ${slot.year}</span>
                         </div>
-                        <button class="btn-save-slot" onclick="PersistenceModule.confirmSaveToSlot('${key}')">💾 ${t('save_overwrite_btn')}</button>
+                        <button class="btn-save-action" onclick="PersistenceModule.confirmSaveToSlot('${key}')">💾 ${t('save_overwrite_btn')}</button>
                     </div>
                 `;
             } else {
                 return `
-                    <div class="save-slot-card empty" data-key="${key}">
-                        <div class="slot-header">
-                            <span class="slot-name">${name}</span>
-                            <span class="slot-empty">${t('save_empty')}</span>
+                    <div class="save-modal-card empty" data-key="${key}">
+                        <div class="save-card-header">
+                            <span class="save-card-name">${name}</span>
+                            <span class="save-card-empty">✨ ${t('save_empty')}</span>
                         </div>
-                        <button class="btn-save-slot" onclick="PersistenceModule.saveAndNotify('${key}')">💾 ${t('save_here')}</button>
+                        <button class="btn-save-action new" onclick="PersistenceModule.saveAndNotify('${key}')">💾 ${t('save_here')}</button>
                     </div>
                 `;
             }
         };
 
-        const msg = `
+        const saveContent = `
             <style>
-                .save-slots-container { padding: 10px 0; }
-                .save-slot-card {
-                    background: rgba(15, 23, 42, 0.8);
-                    border: 1px solid #334155;
-                    border-radius: 12px;
-                    padding: 15px;
-                    margin-bottom: 12px;
-                }
-                .save-slot-card.empty {
-                    border-style: dashed;
-                    opacity: 0.7;
-                }
-                .slot-header {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 10px;
-                }
-                .slot-name {
-                    font-weight: 700;
-                    color: #38bdf8;
-                }
-                .slot-date {
-                    font-size: 0.8rem;
-                    color: #94a3b8;
-                }
-                .slot-empty {
-                    font-size: 0.8rem;
-                    color: #64748b;
-                    font-style: italic;
-                }
-                .slot-info {
-                    display: flex;
-                    gap: 15px;
-                    font-size: 0.85rem;
-                    color: #e2e8f0;
-                    margin-bottom: 12px;
-                    flex-wrap: wrap;
-                }
-                .btn-save-slot {
-                    width: 100%;
-                    padding: 10px;
-                    background: linear-gradient(135deg, #10b981, #059669);
-                    border: none;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: transform 0.1s;
-                }
-                .btn-save-slot:hover {
-                    transform: scale(1.02);
-                }
+                .custom-modal-box h3 { display: none !important; }
+                .custom-modal-box .modal-body { padding: 0 !important; }
+                .custom-modal-box { max-width: 420px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(16, 185, 129, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(16, 185, 129, 0.15) !important; }
+                .save-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                .save-header-icon { font-size: 3.5rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.4)); }
+                .save-header-title { color: #10b981; margin: 0 0 20px; font-size: 1.4rem; font-weight: 800; text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+                .save-slots-wrapper { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+                .save-modal-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 14px; padding: 15px; text-align: left; transition: all 0.2s; position: relative; }
+                .save-modal-card::before { content: ''; position: absolute; top: 0; left: 12px; right: 12px; height: 3px; background: linear-gradient(90deg, #38bdf8, #0ea5e9); border-radius: 0 0 4px 4px; opacity: 0.7; }
+                .save-modal-card:hover { transform: translateY(-2px); border-color: rgba(56, 189, 248, 0.5); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+                .save-modal-card.empty { border-style: dashed; border-color: rgba(100, 116, 139, 0.4); }
+                .save-modal-card.empty::before { background: linear-gradient(90deg, #64748b, #475569); opacity: 0.5; }
+                .save-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+                .save-card-name { font-weight: 700; color: #38bdf8; font-size: 1rem; }
+                .save-card-date { font-size: 0.8rem; color: #94a3b8; }
+                .save-card-empty { font-size: 0.85rem; color: #64748b; font-style: italic; }
+                .save-card-info { display: flex; gap: 12px; font-size: 0.85rem; color: #e2e8f0; margin-bottom: 12px; flex-wrap: wrap; }
+                .save-card-money { color: #4ade80; font-weight: 600; }
+                .btn-save-action { width: 100%; padding: 12px; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+                .btn-save-action:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35); }
+                .btn-save-action.new { background: linear-gradient(135deg, #38bdf8, #0ea5e9); box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25); }
+                .btn-save-action.new:hover { box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35); }
+                .btn-save-close { width: 100%; padding: 14px; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid #475569; border-radius: 12px; color: #e2e8f0; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; }
+                .btn-save-close:hover { background: linear-gradient(145deg, #475569, #334155); transform: translateY(-2px); }
+                .custom-modal-footer { display: none !important; }
             </style>
-            <div class="save-slots-container">
-                ${formatSlot(slot1, this.SAVE_KEY_SLOT1, t('save_slot_1'))}
-                ${formatSlot(slot2, this.SAVE_KEY_SLOT2, t('save_slot_2'))}
+            <div class="save-container">
+                <span class="save-header-icon">💾</span>
+                <h2 class="save-header-title">${t('msg_save_title')}</h2>
+                <div class="save-slots-wrapper">
+                    ${formatSlot(slot1, this.SAVE_KEY_SLOT1, t('save_slot_1'))}
+                    ${formatSlot(slot2, this.SAVE_KEY_SLOT2, t('save_slot_2'))}
+                </div>
+                <button id="btn-save-close" class="btn-save-close">${t('close')}</button>
             </div>
         `;
 
-        UI.showModal(t('msg_save_title'), msg, [
-            { text: t('close'), style: 'secondary', fn: null }
-        ]);
+        UI.showModal(' ', saveContent, [], true);
+
+        setTimeout(() => {
+            const closeBtn = document.getElementById('btn-save-close');
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    const modal = document.querySelector('.custom-modal-overlay');
+                    if (modal) modal.remove();
+                };
+            }
+        }, 50);
     },
 
     confirmSaveToSlot(slotKey) {
-        UI.showModal(t('msg_overwrite_title'), `
-            <div style="text-align:center;">
-                <div style="font-size:3rem; margin-bottom:10px;">💾</div>
-                <p style="color:#cbd5e1; margin-bottom:15px;">${t('save_overwrite_msg')}</p>
-                <p style="color:#94a3b8; font-size:0.85rem;">${t('save_overwrite_warning')}</p>
+        const confirmContent = `
+            <style>
+                .custom-modal-box h3 { display: none !important; }
+                .custom-modal-box .modal-body { padding: 0 !important; }
+                .custom-modal-box { max-width: 400px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(251, 191, 36, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(251, 191, 36, 0.15) !important; }
+                .overwrite-container { padding: 35px 30px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                .overwrite-icon { font-size: 4rem; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.4)); }
+                .overwrite-title { color: #fbbf24; margin: 0 0 15px; font-size: 1.4rem; font-weight: 800; text-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+                .overwrite-text { color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 10px; }
+                .overwrite-warning { color: #f87171; font-size: 0.9rem; background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.2); padding: 12px 15px; border-radius: 10px; margin-bottom: 25px; }
+                .overwrite-buttons { display: flex; gap: 15px; }
+                .btn-overwrite-cancel { flex: 1; padding: 14px 20px; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid #475569; border-radius: 12px; color: #e2e8f0; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.25s; }
+                .btn-overwrite-cancel:hover { background: linear-gradient(145deg, #475569, #334155); transform: translateY(-2px); }
+                .btn-overwrite-confirm { flex: 1; padding: 14px 20px; background: linear-gradient(135deg, #fbbf24, #f59e0b); border: none; border-radius: 12px; color: #0f172a; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
+                .btn-overwrite-confirm:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4); }
+                .custom-modal-footer { display: none !important; }
+            </style>
+            <div class="overwrite-container">
+                <span class="overwrite-icon">💾</span>
+                <h2 class="overwrite-title">${t('msg_overwrite_title')}</h2>
+                <p class="overwrite-text">${t('save_overwrite_msg')}</p>
+                <p class="overwrite-warning">⚠️ ${t('save_overwrite_warning')}</p>
+                <div class="overwrite-buttons">
+                    <button id="btn-overwrite-cancel" class="btn-overwrite-cancel">${t('cancel')}</button>
+                    <button id="btn-overwrite-confirm" class="btn-overwrite-confirm">${t('confirm')}</button>
+                </div>
             </div>
-        `, [
-            { text: t('cancel'), style: 'secondary', fn: null },
-            { text: t('confirm'), style: 'primary', fn: () => PersistenceModule.saveAndNotify(slotKey) }
-        ], true);
+        `;
+
+        UI.showModal(' ', confirmContent, [], true);
+
+        // Use setTimeout to ensure DOM elements are rendered
+        setTimeout(() => {
+            const cancelBtn = document.getElementById('btn-overwrite-cancel');
+            const confirmBtn = document.getElementById('btn-overwrite-confirm');
+
+            if (cancelBtn) {
+                cancelBtn.onclick = () => {
+                    const modal = document.querySelector('.custom-modal-overlay');
+                    if (modal) modal.remove();
+                };
+            }
+            if (confirmBtn) {
+                confirmBtn.onclick = () => PersistenceModule.saveAndNotify(slotKey);
+            }
+        }, 50);
     },
 
 
@@ -887,7 +1211,8 @@ const StockMarket = {
         { symbol: 'FAKE', name: 'Fakebook', price: 668.00, trend: 0.00, history: [], volatility: 0.16, earnings: 8.50, earningsPrevious: 8.50, earningsChange: 0, earningsHistory: [8.50, 8.50, 8.50, 8.50], earningsMomentum: 'stable' },
         { symbol: 'TSLO', name: 'Teslo', price: 485.00, trend: 0.00, history: [], volatility: 0.25, earnings: 2.10, earningsPrevious: 2.10, earningsChange: 0, earningsHistory: [2.10, 2.10, 2.10, 2.10], earningsMomentum: 'stable' },
         { symbol: 'MCD', name: 'McDollars', price: 316.00, trend: 0.00, history: [], volatility: 0.06, earnings: 7.50, earningsPrevious: 7.50, earningsChange: 0, earningsHistory: [7.50, 7.50, 7.50, 7.50], earningsMomentum: 'stable' },
-        { symbol: 'SBUG', name: 'Starbugs', price: 84.60, trend: 0.00, history: [], volatility: 0.05, earnings: 2.20, earningsPrevious: 2.20, earningsChange: 0, earningsHistory: [2.20, 2.20, 2.20, 2.20], earningsMomentum: 'stable' }
+        { symbol: 'SBUG', name: 'Starbugs', price: 84.60, trend: 0.00, history: [], volatility: 0.05, earnings: 2.20, earningsPrevious: 2.20, earningsChange: 0, earningsHistory: [2.20, 2.20, 2.20, 2.20], earningsMomentum: 'stable' },
+        { symbol: 'LIFE', name: 'Life Inc.', price: 8.00, trend: 0.00, history: [], volatility: 0.07, type: 'special', earnings: 1.00, earningsPrevious: 1.00, earningsChange: 0, earningsHistory: [1.00, 1.00, 1.00, 1.00], earningsMomentum: 'stable' }
     ],
     monthCounter: 0,
 
@@ -931,9 +1256,9 @@ const StockMarket = {
         sorted[2].annualTarget = 0.10 + Math.random() * 0.10;
         sorted[3].annualTarget = 0.10 + Math.random() * 0.10;
 
-        // Tier 3: Positions 5-6 (-10% to 1% annual return)
-        sorted[4].annualTarget = -0.10 + Math.random() * 0.11;
-        sorted[5].annualTarget = -0.10 + Math.random() * 0.11;
+        // Tier 3: Positions 5-6 (-5% to +5% annual return)
+        sorted[4].annualTarget = -0.05 + Math.random() * 0.10;
+        sorted[5].annualTarget = -0.05 + Math.random() * 0.10;
 
         // Tier 4: Position 7 (-20% to -10% annual return)
         sorted[6].annualTarget = -0.20 + Math.random() * 0.10;
@@ -947,8 +1272,8 @@ const StockMarket = {
             stock.yearStartPrice = stock.price;
         });
 
-        // Set random interval for next reassignment (3-18 months)
-        this.monthsUntilReassignment = Math.floor(3 + Math.random() * 16); // 3 to 18
+        // Set random interval for next reassignment (2-6 months)
+        this.monthsUntilReassignment = Math.floor(2 + Math.random() * 5); // 2 to 6
         console.log(`[STOCK MARKET] Targets reassigned. Next reassignment in ${this.monthsUntilReassignment} months`);
     },
 
@@ -1058,6 +1383,35 @@ const StockMarket = {
                 const targetMonthlyReturn = 0.00643; // ~8% APY
                 const fluctuation = (Math.random() * stock.volatility) - (stock.volatility / 2);
                 totalChange = targetMonthlyReturn + fluctuation;
+            } else if (stock.type === 'special' && stock.symbol === 'LIFE') {
+                // LIFE Inc. Special Logic: -2% to +7% annual, determined by earnings
+                // Range: -2% (bad earnings) to +7% (good earnings) = 9% total spread
+
+                // Calculate position in range based on earnings momentum (0 to 1)
+                let earningsPosition = 0.5; // Default: middle of range (~2.5% annual)
+
+                if (stock.earningsMomentum === 'growing') {
+                    earningsPosition = 0.7 + (Math.random() * 0.3); // 0.7 to 1.0 → 4.3% to 7%
+                } else if (stock.earningsMomentum === 'declining') {
+                    earningsPosition = Math.random() * 0.3; // 0.0 to 0.3 → -2% to 0.7%
+                } else {
+                    earningsPosition = 0.3 + (Math.random() * 0.4); // 0.3 to 0.7 → 0.7% to 4.3%
+                }
+
+                // Calculate annual return: -2% + (position * 9%) = -2% to +7%
+                const annualReturn = -0.02 + (earningsPosition * 0.09);
+                const monthlyReturn = annualReturn / 12;
+
+                // Small noise for natural variation (but stays within bounds)
+                const noise = (Math.random() - 0.5) * 0.002; // ±0.1% monthly noise
+
+                totalChange = monthlyReturn + noise;
+
+                // HARD CLAMP: Absolutely never exceed bounds
+                const minMonthly = -0.02 / 12;  // -2% annual
+                const maxMonthly = 0.07 / 12;   // +7% annual
+                totalChange = Math.max(minMonthly, Math.min(maxMonthly, totalChange));
+
             } else {
                 // Regular stock logic with annual targets
                 if (!stock.annualTarget) {
@@ -1090,7 +1444,8 @@ const StockMarket = {
 
             // Update History
             stock.history.push(stock.price);
-            if (stock.history.length > 20) stock.history.shift();
+            // Limit to 50 years (600 months) to avoid infinite growth, but enough for "All"
+            if (stock.history.length > 600) stock.history.shift();
         });
     },
 
@@ -1169,12 +1524,20 @@ const StockMarket = {
             }
             GameState.lifetimeStats.totalIncome.stocks += profit;
         }
+
+        // --- NEW: Track EXACT historical realized P&L (including losses) ---
+        if (!GameState.lifetimeStats.stocks) {
+            GameState.lifetimeStats.stocks = { realizedPnL: 0, totalSoldCost: 0 };
+        }
+        GameState.lifetimeStats.stocks.realizedPnL += profit;
+        GameState.lifetimeStats.stocks.totalSoldCost += purchaseCost;
+
         pItem.quantity -= qty;
         if (pItem.quantity <= 0) {
             GameState.inventory.stocks = GameState.inventory.stocks.filter(s => s.symbol !== symbol);
         }
         return { success: true, message: t('stock_sell_detail', { qty: qty, symbol: symbol, price: formatCurrency(saleValue) }) };
-    }
+    },
 };
 
 const Portfolio = {
@@ -2288,7 +2651,11 @@ const CompanyModule = {
                         GameState.currentYearIncome = { salary: 0, rental: 0, stocks: 0, company: 0 };
                     }
                     GameState.currentYearIncome.company += co.profitLastMonth;
+
                     // Lifetime Income
+                    if (GameState.lifetimeStats && GameState.lifetimeStats.totalIncome) {
+                        GameState.lifetimeStats.totalIncome.company += co.profitLastMonth;
+                    }
                 }
             });
         }
@@ -2935,13 +3302,9 @@ const JobSystem = {
             }
         }
 
-        if (!GameState.isStudying) {
-            this.monthsInCurrentJob += 1;
-            this.monthsSinceLastRaise = (this.monthsSinceLastRaise || 0) + 1; // Track Raises
-        } else {
-            this.monthsInCurrentJob += 0.5;
-            this.monthsSinceLastRaise += 0.5;
-        }
+        // Experience always increases by 1 month regardless of studying
+        this.monthsInCurrentJob += 1;
+        this.monthsSinceLastRaise = (this.monthsSinceLastRaise || 0) + 1;
 
         // Check Promo
         this.checkAvailablePromotion();
@@ -3240,13 +3603,13 @@ const TutorialSystem = {
         style.id = 'tutorial-styles';
         style.textContent = `
             .tutorial-overlay {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
+                position: absolute !important;
+                top: -200vh !important;
+                left: -200vw !important;
+                right: auto !important;
+                bottom: auto !important;
+                width: 500vw !important;
+                height: 500vh !important;
                 background: rgba(0, 0, 0, 0.8) !important;
                 z-index: 99999 !important;
                 pointer-events: all !important;
@@ -3341,7 +3704,18 @@ const TutorialSystem = {
         if (this.overlayElement) return;
         this.overlayElement = document.createElement('div');
         this.overlayElement.className = 'tutorial-overlay';
-        document.body.appendChild(this.overlayElement);
+
+        // Append to #app to share stacking context with highlighted elements
+        const app = document.getElementById('app');
+        if (app) {
+            app.appendChild(this.overlayElement);
+            // Ensure app is relative so absolute overlay works
+            if (getComputedStyle(app).position === 'static') {
+                app.style.position = 'relative';
+            }
+        } else {
+            document.body.appendChild(this.overlayElement);
+        }
     },
 
     hideOverlay() {
@@ -3856,51 +4230,82 @@ const TutorialSystem = {
     // Tutorial: Explain Job System
     step7_ExplainJobSystem(jobTitle) {
         const content = `
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));">💼</div>
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">${t('tutorial_first_real_job')}</div>
-            </div>
-            
-            <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: center;">
-                <div style="font-size: 1.2rem; color: #4ade80; font-weight: 700;">${getJobTranslation(jobTitle)}</div>
-            </div>
-            
-            <div style="display: grid; gap: 12px;">
-                <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                        <span style="font-size: 1.2rem;">📈</span>
-                        <span style="color: #38bdf8; font-weight: 600;">${t('tutorial_promotions')}</span>
-                    </div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">${t('tutorial_promotions_msg')}</div>
+            <style>
+                .custom-modal-box h3 { display: none !important; }
+                .custom-modal-box .modal-body { padding: 0 !important; }
+                .custom-modal-box { max-width: 420px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(74, 222, 128, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(74, 222, 128, 0.15) !important; }
+                .custom-modal-footer { display: none !important; }
+                .firstjob-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                .firstjob-header { margin-bottom: 20px; }
+                .firstjob-icon { font-size: 4rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.4)); animation: jobBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+                @keyframes jobBounce { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+                .firstjob-congrats { color: #4ade80; margin: 0; font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); }
+                .firstjob-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+                .firstjob-company { background: linear-gradient(145deg, rgba(74, 222, 128, 0.15), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 14px; padding: 15px; margin-bottom: 20px; }
+                .firstjob-company-name { font-size: 1.3rem; color: #4ade80; font-weight: 800; }
+                .firstjob-tips { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+                .firstjob-tip { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(56, 189, 248, 0.15); border-radius: 12px; padding: 12px 15px; text-align: left; transition: all 0.2s; }
+                .firstjob-tip:hover { border-color: rgba(56, 189, 248, 0.3); transform: translateX(3px); }
+                .firstjob-tip-header { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+                .firstjob-tip-icon { font-size: 1.3rem; }
+                .firstjob-tip-title { color: #38bdf8; font-weight: 700; font-size: 0.95rem; }
+                .firstjob-tip-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
+                .btn-firstjob-start { width: 100%; padding: 14px; background: linear-gradient(135deg, #4ade80, #22c55e); border: none; border-radius: 12px; color: #0f172a; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+                .btn-firstjob-start:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(74, 222, 128, 0.4); }
+            </style>
+            <div class="firstjob-container">
+                <div class="firstjob-header">
+                    <span class="firstjob-icon">💼</span>
+                    <h2 class="firstjob-congrats">🎉 ${t('congratulations')}</h2>
+                    <div class="firstjob-label">${t('tutorial_first_real_job')}</div>
                 </div>
-                <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                        <span style="font-size: 1.2rem;">💰</span>
-                        <span style="color: #38bdf8; font-weight: 600;">${t('salary')}</span>
-                    </div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">${t('tutorial_salary_msg')}</div>
+                
+                <div class="firstjob-company">
+                    <div class="firstjob-company-name">${getJobTranslation(jobTitle)}</div>
                 </div>
-                <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                        <span style="font-size: 1.2rem;">🔄</span>
-                        <span style="color: #38bdf8; font-weight: 600;">${t('tutorial_change_job')}</span>
+                
+                <div class="firstjob-tips">
+                    <div class="firstjob-tip">
+                        <div class="firstjob-tip-header">
+                            <span class="firstjob-tip-icon">📈</span>
+                            <span class="firstjob-tip-title">${t('tutorial_promotions')}</span>
+                        </div>
+                        <div class="firstjob-tip-desc">${t('tutorial_promotions_msg')}</div>
                     </div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">${t('tutorial_change_job_msg')}</div>
+                    <div class="firstjob-tip">
+                        <div class="firstjob-tip-header">
+                            <span class="firstjob-tip-icon">💰</span>
+                            <span class="firstjob-tip-title">${t('salary')}</span>
+                        </div>
+                        <div class="firstjob-tip-desc">${t('tutorial_salary_msg')}</div>
+                    </div>
+                    <div class="firstjob-tip">
+                        <div class="firstjob-tip-header">
+                            <span class="firstjob-tip-icon">🔄</span>
+                            <span class="firstjob-tip-title">${t('tutorial_change_job')}</span>
+                        </div>
+                        <div class="firstjob-tip-desc">${t('tutorial_change_job_msg')}</div>
+                    </div>
                 </div>
+                
+                <button id="btn-firstjob-start" class="btn-firstjob-start">${t('tutorial_lets_work')} 💪</button>
             </div>
         `;
 
-        UI.showModal(
-            `🎉 ${t('congratulations')}`,
-            content,
-            [{
-                text: `${t('tutorial_lets_work')} 💪`, style: 'primary', fn: () => {
+        UI.showModal(' ', content, [], true);
+
+        setTimeout(() => {
+            const btn = document.getElementById('btn-firstjob-start');
+            if (btn) {
+                btn.onclick = () => {
+                    const modal = document.querySelector('.custom-modal-overlay');
+                    if (modal) modal.remove();
                     GameState.tutorialStep = 8;
                     GameState.tutorialFlags.tutorialComplete = true;
                     PersistenceModule.saveGame();
-                }
-            }], true
-        );
+                };
+            }
+        }, 50);
     },
 
     // Tutorial: Housing Crisis
@@ -4829,58 +5234,72 @@ const TutorialSystem = {
 
     // Unlock Bank
     stepBank_Unlock() {
-        const themeColor = '#3b82f6'; // Blue
-        const icon = '🏦';
-
-        let unlockMsg = `
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('tutorial_bank_unlocked')}</h3>
-            </div>
-
-            <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">${t('new_feature')}</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px;">${t('tutorial_bank_access')}</div>
-                
-                <div style="display: inline-block; background: ${themeColor}26; border: 1px solid ${themeColor}4d; padding: 10px 20px; border-radius: 30px;">
-                    <span style="color: ${themeColor}; font-weight: 700; font-size: 1.1rem;">${t('tutorial_loans_financing')}</span>
+        const unlockMsg = `
+            <style>
+                .custom-modal-box h3 { display: none !important; }
+                .custom-modal-box .modal-body { padding: 0 !important; }
+                .custom-modal-box { max-width: 420px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(59, 130, 246, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15) !important; }
+                .custom-modal-footer { display: none !important; }
+                .bank-unlock-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                .bank-unlock-header { margin-bottom: 25px; }
+                .bank-unlock-icon { font-size: 4.5rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 25px rgba(59, 130, 246, 0.5)); animation: bankBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+                @keyframes bankBounce { 0% { transform: scale(0) rotate(-20deg); } 50% { transform: scale(1.2) rotate(5deg); } 100% { transform: scale(1) rotate(0deg); } }
+                .bank-unlock-title { color: #3b82f6; margin: 0; font-size: 1.6rem; font-weight: 800; text-shadow: 0 0 25px rgba(59, 130, 246, 0.4); }
+                .bank-unlock-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
+                .bank-unlock-features { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+                .bank-unlock-feature-title { font-size: 1.2rem; font-weight: 700; color: #f8fafc; margin-bottom: 15px; }
+                .bank-unlock-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+                .bank-unlock-badge { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 16px; border-radius: 20px; color: #60a5fa; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+                .bank-unlock-desc { color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
+                .btn-bank-go { width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+                .btn-bank-go:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); }
+            </style>
+            <div class="bank-unlock-container">
+                <div class="bank-unlock-header">
+                    <span class="bank-unlock-icon">🏦</span>
+                    <h2 class="bank-unlock-title">${t('tutorial_bank_unlocked')}</h2>
+                    <div class="bank-unlock-label">${t('new_feature')}</div>
                 </div>
+                
+                <div class="bank-unlock-features">
+                    <div class="bank-unlock-feature-title">${t('tutorial_bank_access')}</div>
+                    <div class="bank-unlock-badges">
+                        <span class="bank-unlock-badge">💳 ${t('tutorial_loans_financing')}</span>
+                    </div>
+                </div>
+                
+                <p class="bank-unlock-desc">${t('tutorial_bank_congrats')}</p>
+                
+                <button id="btn-bank-go" class="btn-bank-go">🏦 ${t('go_to_bank')}</button>
             </div>
-
-            <p style="text-align: center; color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin: 0; padding: 0 10px;">
-                ${t('tutorial_bank_congrats')}
-            </p>
         `;
 
-        UI.showModal(
-            ' ',
-            unlockMsg,
-            [{
-                text: `🏦 ${t('go_to_bank')}`,
-                style: 'success',
-                fn: () => {
-                    UI.showView('bank');
+        UI.showModal(' ', unlockMsg, [], true);
 
-                    // Clear Overlay
+        setTimeout(() => {
+            const btn = document.getElementById('btn-bank-go');
+            if (btn) {
+                btn.onclick = () => {
+                    const modal = document.querySelector('.custom-modal-overlay');
+                    if (modal) modal.remove();
+
+                    UI.showView('bank');
                     TutorialSystem.hideOverlay();
                     TutorialSystem.removeHighlights();
 
                     // Start Tutorial
                     setTimeout(() => {
-                        // Step 1: Intro
                         showGameAlert(
                             t('tutorial_bank_step1'),
                             'info',
                             `🏦 ${t('tutorial_bank')} (1/3)`,
                             () => {
-                                // Step 2: Credit
                                 setTimeout(() => {
                                     showGameAlert(
                                         t('tutorial_bank_step2'),
                                         'info',
                                         `🏦 ${t('tutorial_bank')} (2/3)`,
                                         () => {
-                                            // Step 3: Real Estate
                                             setTimeout(() => {
                                                 showGameAlert(
                                                     t('tutorial_bank_step3'),
@@ -4900,9 +5319,9 @@ const TutorialSystem = {
                             true
                         );
                     }, 500);
-                }
-            }], true
-        );
+                };
+            }
+        }, 50);
     },
 
     // Check Start
@@ -5249,7 +5668,7 @@ const UI = {
     lastCash: 0,
     lastNetWorth: 0,
 
-    animateValue(obj, start, end, duration) {
+    animateValue(obj, start, end, duration, decimals = 0) {
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
@@ -5257,11 +5676,11 @@ const UI = {
             // Ease out quart
             const ease = 1 - Math.pow(1 - progress, 4);
             const current = Math.floor(progress * (end - start) + start);
-            obj.textContent = formatCurrency(current);
+            obj.textContent = formatCurrency(current, decimals);
             if (progress < 1) {
                 window.requestAnimationFrame(step);
             } else {
-                obj.textContent = formatCurrency(end);
+                obj.textContent = formatCurrency(end, decimals);
             }
         };
         window.requestAnimationFrame(step);
@@ -5441,26 +5860,26 @@ const UI = {
         const cashDisplay = document.getElementById('money-display');
         const netWorthDisplay = document.getElementById('net-worth-display');
 
-        // Animate Cash
+        // Animate Cash (keep 2 decimals as per user request)
         if (cashDisplay) {
             // Red if negative
             cashDisplay.style.color = GameState.cash < 0 ? '#ef4444' : '';
 
             if (this.lastCash !== GameState.cash) {
-                this.animateValue(cashDisplay, this.lastCash, GameState.cash, 1000);
+                this.animateValue(cashDisplay, this.lastCash, GameState.cash, 1000, 2);
                 this.lastCash = GameState.cash;
             } else {
-                cashDisplay.textContent = formatCurrency(GameState.cash);
+                cashDisplay.textContent = formatCurrency(GameState.cash, 2);
             }
         }
 
-        // Animate Net Worth
+        // Animate Net Worth (no decimals)
         if (netWorthDisplay) {
             if (this.lastNetWorth !== GameState.netWorth) {
-                this.animateValue(netWorthDisplay, this.lastNetWorth, GameState.netWorth, 1000);
+                this.animateValue(netWorthDisplay, this.lastNetWorth, GameState.netWorth, 1000, 0);
                 this.lastNetWorth = GameState.netWorth;
             } else {
-                netWorthDisplay.textContent = formatCurrency(GameState.netWorth);
+                netWorthDisplay.textContent = formatCurrency(GameState.netWorth, 0);
             }
         }
 
@@ -5596,12 +6015,12 @@ const UI = {
                 <div class="kpi-card gold net-worth-card" style="flex:1; min-width: 200px;">
                     <div class="kpi-icon gold">👑</div>
                     <span class="kpi-label">${t('net_worth')}</span>
-                    <span class="kpi-value gold lg">${formatCurrency(nw)}</span>
+                    <span class="kpi-value gold lg">${formatCurrency(nw, 0)}</span>
                 </div>
                 <div class="kpi-card green dashboard-cash-card" style="flex:1; min-width: 200px;">
                     <div class="kpi-icon green">💵</div>
                     <span class="kpi-label">${t('cash_box')}</span>
-                    <span class="kpi-value green lg">${formatCurrency(cash)}</span>
+                    <span class="kpi-value green lg">${formatCurrency(cash, 0)}</span>
                 </div>
                 <div class="kpi-card ${monthlyFlow >= 0 ? 'green' : 'red'} monthly-flow-card" style="flex:1; min-width: 160px;">
                     <div class="kpi-icon ${monthlyFlow >= 0 ? 'green' : 'red'}">${monthlyFlow >= 0 ? '📈' : '📉'}</div>
@@ -5715,6 +6134,13 @@ const UI = {
         // Data
         const stocks = StockMarket.stocks;
         const portfolio = GameState.inventory.stocks;
+
+        // Historical Calcs
+        const histPnL = GameState.lifetimeStats.stocks ? GameState.lifetimeStats.stocks.realizedPnL : 0;
+        const histCost = GameState.lifetimeStats.stocks ? GameState.lifetimeStats.stocks.totalSoldCost : 0;
+        const histPct = histCost > 0 ? (histPnL / histCost * 100).toFixed(2) : '0.00';
+        const histColor = histPnL >= 0 ? '#4ade80' : '#f87171';
+        const histSign = histPnL >= 0 ? '+' : '';
 
         // Calcs
         let portValue = 0;
@@ -5850,6 +6276,23 @@ const UI = {
                         </div>`
             }
                         </div>
+
+                         <!-- HISTORICAL PERFORMANCE -->
+                         <div class="dashboard-card" style="background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7)); border: 1px solid rgba(148, 163, 216, 0.1); margin-top: 20px;">
+                            <h3 style="margin-top:0; color:#94a3b8; font-size:1rem; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
+                                📜 ${t('historical_perf_title')}
+                            </h3>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                                <div style="background: rgba(15, 23, 42, 0.4); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                                    <div style="color:#64748b; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">${t('historical_perf_net')}</div>
+                                    <div style="color:${histColor}; font-size:1.2rem; font-weight:800;">${histSign}${formatCurrency(histPnL)}</div>
+                                </div>
+                                <div style="background: rgba(15, 23, 42, 0.4); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                                    <div style="color:#64748b; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">${t('historical_perf_pct')}</div>
+                                    <div style="color:${histColor}; font-size:1.2rem; font-weight:800;">${histSign}${histPct}%</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
 
@@ -5866,6 +6309,20 @@ const UI = {
     openStockModal(stock) {
         const portfolioItem = GameState.inventory.stocks.find(s => s.symbol === stock.symbol);
         const owned = portfolioItem ? portfolioItem.quantity : 0;
+
+        // Calculate Max Purchasable
+        const limits = GameBalance.getLimits();
+        let portValue = 0;
+        GameState.inventory.stocks.forEach(p => {
+            const s = StockMarket.getStock(p.symbol);
+            if (s) portValue += p.quantity * s.price;
+        });
+
+        const availableCash = GameState.cash;
+        const availableCap = limits.stockCap - portValue;
+        const maxCashQty = Math.floor(availableCash / stock.price);
+        const maxCapQty = limits.stockCap === Infinity ? Infinity : Math.max(0, Math.floor(availableCap / stock.price));
+        const maxQty = Math.min(maxCashQty, maxCapQty);
 
         // New mobile-FIRST LAYOUT
         // We use a flex-column container that takes up the full modal height
@@ -5970,9 +6427,12 @@ const UI = {
                                 </div>
                             </div>
 
-                            <div style="margin-bottom:12px;">
+                            <div style="margin-bottom:12px; position: relative;">
                                 <input type="number" id="stock-action-qty" placeholder="${t('stock_pos_qty')}" 
                                     style="width:100%; padding:14px; background: linear-gradient(145deg, #1e293b, #0f172a); border:1px solid #475569; border-radius:10px; color:white; font-size:1.1rem; text-align:center; font-weight: 600;">
+                                <div id="stock-max-badge" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(56, 189, 248, 0.3);">
+                                    MAX: ${maxQty}
+                                </div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                                 <button id="btn-modal-buy" class="btn-action" style="background: linear-gradient(135deg, #22c55e, #16a34a); color:white; border:none; padding:14px; border-radius:10px; font-weight:700; font-size:1rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;">${t('stock_btn_buy')}</button>
@@ -5991,6 +6451,14 @@ const UI = {
 
         // Attach Handlers
         setTimeout(() => {
+            // Max Badge click
+            const maxBadge = document.getElementById('stock-max-badge');
+            if (maxBadge) {
+                maxBadge.onclick = () => {
+                    document.getElementById('stock-action-qty').value = maxQty;
+                };
+            }
+
             // Title fix (hack to remove default header if showModal adds one)
             const modalTitle = document.querySelector('#modal-content h2');
             if (modalTitle) modalTitle.style.display = 'none'; // Hide default title
@@ -6183,7 +6651,7 @@ const UI = {
                             <!-- RIGHT: ACTIVE LOANS -->
                             <div>
                                 <h3 style="margin-top:0; color:#94a3b8; margin-bottom:20px; display: flex; align-items: center; gap: 10px;">
-                                    <span style="font-size: 1.3rem;">📋</span> ${t('bank_active_loans', { count: loans.length })}
+                                    ${t('bank_active_loans', { count: loans.length })}
                                 </h3>
                                 <div id="active-loans-wrapper">
                                     ${loans.length === 0 ?
@@ -7149,70 +7617,104 @@ const UI = {
 
             if (res.success) {
                 modal.style.display = 'none';
-                UI.showModal(t('company_founded_title'), `
-                    <div style="text-align:center;">
-                        <div style="font-size:4rem; margin-bottom:10px; animation: bounceIn 0.8s;">🏢</div>
-                        <h3 style="color:#facc15; font-size:1.6rem; margin:0 0 5px 0; text-shadow:0 0 10px rgba(250, 204, 21, 0.4);">${t('congratulations')}</h3>
-                        <p style="color:#cbd5e1; font-size:1.1rem; margin-bottom:20px;">${t('you_founded')} <strong style="color:#fff;">${state.name}</strong></p>
+
+                const companyContent = `
+                    <style>
+                        .custom-modal-box h3 { display: none !important; }
+                        .custom-modal-box .modal-body { padding: 0 !important; }
+                        .custom-modal-box { max-width: 460px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(250, 204, 21, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(250, 204, 21, 0.15) !important; }
+                        .custom-modal-footer { display: none !important; }
+                        .company-founded-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                        .company-founded-header { margin-bottom: 25px; }
+                        .company-founded-icon { font-size: 4.5rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 25px rgba(250, 204, 21, 0.5)); animation: companyBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+                        @keyframes companyBounce { 0% { transform: scale(0) rotate(-10deg); } 60% { transform: scale(1.2) rotate(5deg); } 100% { transform: scale(1) rotate(0deg); } }
+                        .company-founded-title { color: #facc15; margin: 0 0 5px; font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 25px rgba(250, 204, 21, 0.4); }
+                        .company-founded-name { color: #fff; font-size: 1.1rem; margin-bottom: 0; }
+                        .company-founded-name strong { color: #4ade80; font-size: 1.3rem; }
+                        .company-panel { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(100, 116, 139, 0.3); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: left; }
+                        .company-panel-title { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 15px; }
+                        .company-features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+                        .company-feature { display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 10px 12px; transition: all 0.2s; }
+                        .company-feature:hover { background: rgba(59, 130, 246, 0.1); transform: translateX(3px); }
+                        .company-feature.full-width { grid-column: span 2; }
+                        .company-feature-icon { font-size: 1.4rem; }
+                        .company-feature-title { color: #e2e8f0; font-weight: 700; font-size: 0.9rem; }
+                        .company-feature-desc { color: #64748b; font-size: 0.75rem; }
+                        .company-adventure { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; font-style: italic; }
+                        .btn-company-go { width: 100%; padding: 14px; background: linear-gradient(135deg, #facc15, #eab308); border: none; border-radius: 12px; color: #0f172a; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+                        .btn-company-go:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(250, 204, 21, 0.4); }
+                    </style>
+                    <div class="company-founded-container">
+                        <div class="company-founded-header">
+                            <span class="company-founded-icon">🏢</span>
+                            <h2 class="company-founded-title">${t('congratulations')}</h2>
+                            <p class="company-founded-name">${t('you_founded')} <strong>${state.name}</strong></p>
+                        </div>
                         
-                        <div style="text-align:left; background:rgba(15, 23, 42, 0.6); border:1px solid #334155; border-radius:12px; padding:20px;">
-                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">${t('control_panel')}:</p>
-                            
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                                <div style="display:flex; align-items:center;">
-                                    <span style="font-size:1.5rem; margin-right:10px;">📊</span>
+                        <div class="company-panel">
+                            <div class="company-panel-title">${t('control_panel')}:</div>
+                            <div class="company-features-grid">
+                                <div class="company-feature">
+                                    <span class="company-feature-icon">📊</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('summary')}</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">${t('overview')}</div>
+                                        <div class="company-feature-title">${t('summary')}</div>
+                                        <div class="company-feature-desc">${t('overview')}</div>
                                     </div>
                                 </div>
-                                <div style="display:flex; align-items:center;">
-                                    <span style="font-size:1.5rem; margin-right:10px;">👥</span>
+                                <div class="company-feature">
+                                    <span class="company-feature-icon">👥</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('personnel')}</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">${t('team_hr')}</div>
+                                        <div class="company-feature-title">${t('personnel')}</div>
+                                        <div class="company-feature-desc">${t('team_hr')}</div>
                                     </div>
                                 </div>
-                                <div style="display:flex; align-items:center;">
-                                    <span style="font-size:1.5rem; margin-right:10px;">📦</span>
+                                <div class="company-feature">
+                                    <span class="company-feature-icon">📦</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('product')}</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">${t('quality_control')}</div>
+                                        <div class="company-feature-title">${t('product')}</div>
+                                        <div class="company-feature-desc">${t('quality_control')}</div>
                                     </div>
                                 </div>
-                                <div style="display:flex; align-items:center;">
-                                    <span style="font-size:1.5rem; margin-right:10px;">📣</span>
+                                <div class="company-feature">
+                                    <span class="company-feature-icon">📣</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('marketing')}</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">${t('marketing_campaigns')}</div>
+                                        <div class="company-feature-title">${t('marketing')}</div>
+                                        <div class="company-feature-desc">${t('marketing_campaigns')}</div>
                                     </div>
                                 </div>
-                                <div style="display:flex; align-items:center; grid-column: span 2;">
-                                    <span style="font-size:1.5rem; margin-right:10px;">💰</span>
+                                <div class="company-feature full-width">
+                                    <span class="company-feature-icon">💰</span>
                                     <div>
-                                        <div style="color:#e2e8f0; font-weight:700; font-size:0.95rem;">${t('finance')}</div>
-                                        <div style="color:#64748b; font-size:0.8rem;">${t('ceo_salary')}</div>
+                                        <div class="company-feature-title">${t('finance')}</div>
+                                        <div class="company-feature-desc">${t('ceo_salary')}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <p style="color:#94a3b8; font-size:0.9rem; margin-top:20px;">${t('adventure_begins')}</p>
+                        
+                        <p class="company-adventure">${t('adventure_begins')}</p>
+                        <button id="btn-company-go" class="btn-company-go">🚀 ${t('go_to_dashboard')}</button>
                     </div>
-                `, [{
-                    text: t('go_to_dashboard'),
-                    style: 'success',
-                    fn: () => {
-                        UI.updateHeader();
-                        UI.updateJob(JobSystem);
-                        UI.updateDashboard();
-                        setTimeout(() => {
-                            // Force reset to ensure it runs even if it failed previously
-                            if (GameState.tutorialFlags) GameState.tutorialFlags.seenCompanySummary = false;
+                `;
 
-                            UI.checkContextualTutorial('company_summary');
-                        }, 500);
+                UI.showModal(' ', companyContent, [], true);
+
+                setTimeout(() => {
+                    const btn = document.getElementById('btn-company-go');
+                    if (btn) {
+                        btn.onclick = () => {
+                            const modalEl = document.querySelector('.custom-modal-overlay');
+                            if (modalEl) modalEl.remove();
+
+                            UI.updateHeader();
+                            UI.updateJob(JobSystem);
+                            UI.updateDashboard();
+                            setTimeout(() => {
+                                UI.checkContextualTutorial('company_summary');
+                            }, 500);
+                        };
                     }
-                }], true);
+                }, 50);
             } else {
                 showGameAlert(res.message, 'error');
             }
@@ -8202,7 +8704,7 @@ const UI = {
                 let expText = t('max_level');
                 if (nextJob) {
                     expPercent = Math.min(100, (JobSys.monthsInCurrentJob / nextJob.reqMonths) * 100);
-                    expText = `${JobSys.monthsInCurrentJob.toFixed(1)} / ${nextJob.reqMonths} ${t('months')}`;
+                    expText = `${JobSys.monthsInCurrentJob.toFixed(0)} / ${nextJob.reqMonths} ${t('months')}`;
                 }
 
                 // Get job icon based on career path
@@ -8426,10 +8928,9 @@ const UI = {
                                 
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                                     <div>
-                                        <div style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${t('market_title')}</div>
-                                        <div style="font-size:1.8rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:12px;">
-                                            <span style="background:linear-gradient(135deg, #3b82f6, #2563eb); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Global Market</span>
-                                            <span style="font-size:0.9rem; padding:4px 10px; background:rgba(59,130,246,0.1); border-radius:20px; color:#60a5fa; border:1px solid rgba(59,130,246,0.3); font-weight:600;">ETF</span>
+                                        <div style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${t('job_promotion_label')}</div>
+                                        <div style="font-size:1.6rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:12px;">
+                                            <span style="background:linear-gradient(135deg, #3b82f6, #2563eb); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">${getJobTranslation(nextJobInPath.title)}</span>
                                         </div>
                                     </div>
                                     <div style="text-align:right;">
@@ -8925,7 +9426,7 @@ const UI = {
                                 let rejectMsg = `
                                 <div style="text-align: center; margin-bottom: 20px;">
                                     <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;">${icon}</div>
-                                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">CANDIDATURA RECHAZADA</h3>
+                                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.5rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('job_rejection_title')}</h3>
                                 </div>
 
                                 <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -8935,7 +9436,7 @@ const UI = {
                                 </div>
 
                                 <p style="text-align: center; color: #94a3b8; font-size: 0.9rem; margin: 0;">
-                                    Revisa los requisitos y vuelve a intentarlo.
+                                    ${t('job_rejection_instruction')}
                                 </p>
                                 <style>
                                     @keyframes shake {
@@ -8947,7 +9448,7 @@ const UI = {
                                 </style>
                             `;
 
-                                UI.showModal(' ', rejectMsg, [{ text: 'Entendido', style: 'secondary', fn: null }], true);
+                                UI.showModal(' ', rejectMsg, [{ text: t('understood'), style: 'secondary', fn: null }], true);
                             }
                         };
                         performApply();
@@ -9482,7 +9983,11 @@ const UI = {
                                             ${upgradeDisabled ? 'background: #334155; color: #64748b; opacity: 0.6;' : 'background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);'}
                                         ">
                                             <span style="font-size: 1.1rem;">🏢</span>
-                                            ${t('comp_upgrade_office')}
+                                            <span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2;">
+                                                <span>${t('comp_upgrade_office')}</span>
+                                                ${upgradeDisabled && co.staff.length < co.maxStaff ? `<span style="font-size: 0.7rem; color: #f87171;">⚠️ ${co.staff.length}/${co.maxStaff} ${t('employees')}</span>` : ''}
+                                                ${upgradeDisabled && co.maxStaff >= locationMaxStaff ? `<span style="font-size: 0.7rem; color: #94a3b8;">📍 ${t('max_level')}</span>` : ''}
+                                            </span>
                                         </button>
                                         
                                         <!-- Auto-Payroll Btn -->
@@ -9601,8 +10106,91 @@ const UI = {
                         `;
 
                     document.getElementById('btn-upgrade-office').onclick = () => {
-                        const r = CompanyModule.upgradeOffice();
-                        if (r) { showGameAlert(r.message, r.success ? 'success' : 'error'); UI.updateJob(JobSystem); }
+                        // Calculate cost preview
+                        const co = GameState.company;
+                        if (!co) return;
+
+                        let nextLimit = 0;
+                        let baseCost = 0;
+
+                        if (co.maxStaff === 5) { nextLimit = 10; baseCost = 45000; }
+                        else if (co.maxStaff === 10) { nextLimit = 15; baseCost = 90000; }
+                        else if (co.maxStaff === 15) { nextLimit = 20; baseCost = 180000; }
+                        else {
+                            showGameAlert(t('office_is_max'), 'error');
+                            return;
+                        }
+
+                        const profitCalc = Math.max(0, co.profitLastMonth || 0) * 3;
+                        const finalCost = Math.max(baseCost, profitCalc);
+
+                        const upgradeContent = `
+                            <style>
+                                .custom-modal-box h3 { display: none !important; }
+                                .custom-modal-box .modal-body { padding: 0 !important; }
+                                .custom-modal-box { max-width: 400px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(139, 92, 246, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(139, 92, 246, 0.15) !important; }
+                                .custom-modal-footer { display: none !important; }
+                                .upgrade-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                                .upgrade-icon { font-size: 4rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.4)); }
+                                .upgrade-title { color: #a78bfa; margin: 0 0 20px; font-size: 1.4rem; font-weight: 800; }
+                                .upgrade-details { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 14px; padding: 20px; margin-bottom: 20px; text-align: left; }
+                                .upgrade-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+                                .upgrade-row:last-child { border-bottom: none; }
+                                .upgrade-label { color: #94a3b8; font-size: 0.9rem; }
+                                .upgrade-value { color: #e2e8f0; font-weight: 700; font-size: 0.95rem; }
+                                .upgrade-cost { color: #f87171 !important; font-size: 1.2rem !important; }
+                                .upgrade-buttons { display: flex; gap: 12px; }
+                                .btn-upgrade-cancel { flex: 1; padding: 12px; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid #475569; border-radius: 12px; color: #e2e8f0; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+                                .btn-upgrade-cancel:hover { background: linear-gradient(145deg, #475569, #334155); }
+                                .btn-upgrade-confirm { flex: 1; padding: 12px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+                                .btn-upgrade-confirm:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); }
+                            </style>
+                            <div class="upgrade-container">
+                                <span class="upgrade-icon">🏢</span>
+                                <h2 class="upgrade-title">${t('comp_upgrade_office')}</h2>
+                                <div class="upgrade-details">
+                                    <div class="upgrade-row">
+                                        <span class="upgrade-label">${t('current_level')}</span>
+                                        <span class="upgrade-value">${co.maxStaff} ${t('employees')}</span>
+                                    </div>
+                                    <div class="upgrade-row">
+                                        <span class="upgrade-label">${t('next_level')}</span>
+                                        <span class="upgrade-value" style="color: #4ade80;">${nextLimit} ${t('employees')}</span>
+                                    </div>
+                                    <div class="upgrade-row">
+                                        <span class="upgrade-label">${t('cost')}</span>
+                                        <span class="upgrade-value upgrade-cost">${formatCurrency(finalCost, 0)}</span>
+                                    </div>
+                                    <div class="upgrade-row">
+                                        <span class="upgrade-label">${t('cash_label')}</span>
+                                        <span class="upgrade-value" style="color: ${co.cash >= finalCost ? '#4ade80' : '#f87171'};">${formatCurrency(co.cash, 0)}</span>
+                                    </div>
+                                    <div class="upgrade-row" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; margin-top: 8px;">
+                                        <span class="upgrade-label">${t('upgrade_req')}</span>
+                                        <span class="upgrade-value" style="color: ${co.staff.length >= co.maxStaff ? '#4ade80' : '#f87171'};">${co.staff.length >= co.maxStaff ? '✅' : '❌'} ${co.staff.length}/${co.maxStaff}</span>
+                                    </div>
+                                </div>
+                                <div class="upgrade-buttons">
+                                    <button id="btn-upgrade-cancel" class="btn-upgrade-cancel">${t('cancel')}</button>
+                                    <button id="btn-upgrade-confirm" class="btn-upgrade-confirm">${t('confirm')}</button>
+                                </div>
+                            </div>
+                        `;
+
+                        UI.showModal(' ', upgradeContent, [], true);
+
+                        setTimeout(() => {
+                            document.getElementById('btn-upgrade-cancel').onclick = () => {
+                                const modal = document.querySelector('.custom-modal-overlay');
+                                if (modal) modal.remove();
+                            };
+                            document.getElementById('btn-upgrade-confirm').onclick = () => {
+                                const modal = document.querySelector('.custom-modal-overlay');
+                                if (modal) modal.remove();
+                                const r = CompanyModule.upgradeOffice();
+                                if (r) { showGameAlert(r.message, r.success ? 'success' : 'error'); UI.updateJob(JobSystem); }
+                            };
+                        }, 50);
                     };
 
                     const btnPayroll = document.getElementById('btn-upgrade-payroll');
@@ -9735,10 +10323,47 @@ const UI = {
                         }, 100);
                     };
                     window.fireEmployee = (i) => {
-                        if (confirm(t('comp_fire_confirm'))) {
-                            CompanyModule.fireStaff(i);
-                            UI.updateJob(JobSystem);
-                        }
+                        const fireContent = `
+                            <style>
+                                .custom-modal-box h3 { display: none !important; }
+                                .custom-modal-box .modal-body { padding: 0 !important; }
+                                .custom-modal-box { max-width: 380px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(239, 68, 68, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(239, 68, 68, 0.15) !important; }
+                                .custom-modal-footer { display: none !important; }
+                                .fire-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                                .fire-icon { font-size: 4rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.4)); }
+                                .fire-title { color: #f87171; margin: 0 0 15px; font-size: 1.3rem; font-weight: 800; }
+                                .fire-warning { color: #fbbf24; font-size: 0.9rem; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 10px 15px; border-radius: 10px; margin-bottom: 20px; }
+                                .fire-buttons { display: flex; gap: 12px; }
+                                .btn-fire-cancel { flex: 1; padding: 12px; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid #475569; border-radius: 12px; color: #e2e8f0; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+                                .btn-fire-cancel:hover { background: linear-gradient(145deg, #475569, #334155); }
+                                .btn-fire-confirm { flex: 1; padding: 12px; background: linear-gradient(135deg, #ef4444, #dc2626); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+                                .btn-fire-confirm:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4); }
+                            </style>
+                            <div class="fire-container">
+                                <span class="fire-icon">👋</span>
+                                <h2 class="fire-title">${t('comp_fire_confirm')}</h2>
+                                <p class="fire-warning">⚠️ ${t('comp_fire_btn') || 'Despedir'}</p>
+                                <div class="fire-buttons">
+                                    <button id="btn-fire-cancel" class="btn-fire-cancel">${t('cancel')}</button>
+                                    <button id="btn-fire-confirm" class="btn-fire-confirm">${t('confirm')}</button>
+                                </div>
+                            </div>
+                        `;
+
+                        UI.showModal(' ', fireContent, [], true);
+
+                        setTimeout(() => {
+                            document.getElementById('btn-fire-cancel').onclick = () => {
+                                const modal = document.querySelector('.custom-modal-overlay');
+                                if (modal) modal.remove();
+                            };
+                            document.getElementById('btn-fire-confirm').onclick = () => {
+                                const modal = document.querySelector('.custom-modal-overlay');
+                                if (modal) modal.remove();
+                                CompanyModule.fireStaff(i);
+                                UI.updateJob(JobSystem);
+                            };
+                        }, 50);
                     };
                     window.toggleAutoWage = (i) => {
                         if (GameState.company.staff[i]) GameState.company.staff[i].autoWage = !GameState.company.staff[i].autoWage;
@@ -10543,40 +11168,43 @@ function nextTurn() {
     let expropriationPercent = 0;
     let expropriationMessage = '';
 
-    // Tier 4
-    if (GameState.cash >= 6000000) {
-        expropriationPercent = 0.90;
-        expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
-        GameState.cash -= expropriationAmount;
-        expropriationTriggered = true;
-        expropriationMessage = t('event_wealth_tax_6m');
-    }
-    // Tier 3
-    else if (GameState.cash >= 3000000 && !GameState.expropriation3MDone) {
-        expropriationPercent = 0.70;
-        expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
-        GameState.cash -= expropriationAmount;
-        GameState.expropriation3MDone = true;
-        expropriationTriggered = true;
-        expropriationMessage = t('event_wealth_tax_3m');
-    }
-    // Tier 2
-    else if (GameState.cash >= 1000000 && !GameState.expropriation1MDone) {
-        expropriationPercent = 0.60;
-        expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
-        GameState.cash -= expropriationAmount;
-        GameState.expropriation1MDone = true;
-        expropriationTriggered = true;
-        expropriationMessage = t('event_wealth_tax_1m');
-    }
-    // Tier 1
-    else if (GameState.cash >= 500000 && !GameState.expropriation500kDone) {
-        expropriationPercent = 0.50;
-        expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
-        GameState.cash -= expropriationAmount;
-        GameState.expropriation500kDone = true;
-        expropriationTriggered = true;
-        expropriationMessage = t('event_wealth_tax_500k');
+    // Only run if endgame warning hasn't been shown (don't punish at the very end)
+    if (!GameState.endgameWarningShown) {
+        // Tier 4
+        if (GameState.cash >= 6000000) {
+            expropriationPercent = 0.90;
+            expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
+            GameState.cash -= expropriationAmount;
+            expropriationTriggered = true;
+            expropriationMessage = t('event_wealth_tax_6m');
+        }
+        // Tier 3
+        else if (GameState.cash >= 3000000 && !GameState.expropriation3MDone) {
+            expropriationPercent = 0.70;
+            expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
+            GameState.cash -= expropriationAmount;
+            GameState.expropriation3MDone = true;
+            expropriationTriggered = true;
+            expropriationMessage = t('event_wealth_tax_3m');
+        }
+        // Tier 2
+        else if (GameState.cash >= 1000000 && !GameState.expropriation1MDone) {
+            expropriationPercent = 0.60;
+            expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
+            GameState.cash -= expropriationAmount;
+            GameState.expropriation1MDone = true;
+            expropriationTriggered = true;
+            expropriationMessage = t('event_wealth_tax_1m');
+        }
+        // Tier 1
+        else if (GameState.cash >= 500000 && !GameState.expropriation500kDone) {
+            expropriationPercent = 0.50;
+            expropriationAmount = Math.floor(GameState.cash * expropriationPercent);
+            GameState.cash -= expropriationAmount;
+            GameState.expropriation500kDone = true;
+            expropriationTriggered = true;
+            expropriationMessage = t('event_wealth_tax_500k');
+        }
     }
 
     // Show Modal
@@ -10629,55 +11257,73 @@ function nextTurn() {
             const icon = '🏛️'; // Bank/Institution icon
 
             let taxMsg = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 4rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px ${themeColor}66); animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);">${icon}</div>
-                    <h3 style="color: ${themeColor}; margin: 0; font-size: 1.6rem; text-shadow: 0 0 10px ${themeColor}4d; font-weight: 800; letter-spacing: 1px;">${t('tax_authority')}</h3>
-                </div>
-
-                <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6)); border: 1px solid ${themeColor}4d; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <p style="text-align: center; color: #e2e8f0; font-size: 1rem; margin-bottom: 20px;">
-                        ${t('tax_intro')}
-                    </p>
+                <style>
+                    .custom-modal-box h3 { display: none !important; }
+                    .custom-modal-box .modal-body { padding: 0 !important; }
+                    .custom-modal-box { max-width: 420px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(59, 130, 246, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15) !important; }
+                    .custom-modal-footer { display: none !important; }
+                    .tax-warn-container { padding: 30px 25px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                    .tax-warn-icon { font-size: 4rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4)); animation: taxPulse 2s ease-in-out infinite; }
+                    @keyframes taxPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+                    .tax-warn-title { color: #3b82f6; margin: 0 0 20px; font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+                    .tax-warn-intro { color: #e2e8f0; font-size: 1rem; margin-bottom: 20px; line-height: 1.6; }
+                    .tax-bracket-table { background: rgba(15, 23, 42, 0.6); border-radius: 14px; overflow: hidden; border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 20px; }
+                    .tax-bracket-header { display: grid; grid-template-columns: 1fr 80px; padding: 12px 18px; background: rgba(59, 130, 246, 0.15); font-weight: 700; color: #93c5fd; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+                    .tax-bracket-row { display: grid; grid-template-columns: 1fr 80px; padding: 10px 18px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; color: #cbd5e1; transition: background 0.2s; }
+                    .tax-bracket-row:hover { background: rgba(59, 130, 246, 0.05); }
+                    .tax-rate { text-align: right; font-weight: 700; }
+                    .tax-reminder { color: #94a3b8; font-size: 0.9rem; font-style: italic; margin: 0; }
+                    .btn-tax-understood { width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); margin-top: 15px; }
+                    .btn-tax-understood:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); }
+                </style>
+                <div class="tax-warn-container">
+                    <span class="tax-warn-icon">${icon}</span>
+                    <h2 class="tax-warn-title">${t('tax_authority')}</h2>
+                    <p class="tax-warn-intro">${t('tax_intro')}</p>
                     
-                    <div style="background: rgba(15, 23, 42, 0.5); border-radius: 12px; overflow: hidden; border: 1px solid #334155;">
-                        <div style="display: grid; grid-template-columns: 1fr 100px; padding: 10px 15px; background: rgba(59, 130, 246, 0.1); border-bottom: 1px solid #334155; font-weight: 700; color: #93c5fd; font-size: 0.9rem;">
+                    <div class="tax-bracket-table">
+                        <div class="tax-bracket-header">
                             <span>${t('income_bracket')}</span>
                             <span style="text-align: right;">${t('tax_rate')}</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 100px; padding: 8px 15px; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1;">
+                        <div class="tax-bracket-row">
                             <span>&lt; 10.000€</span>
-                            <span style="text-align: right; color: #4ade80;">10%</span>
+                            <span class="tax-rate" style="color: #4ade80;">10%</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 100px; padding: 8px 15px; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1;">
+                        <div class="tax-bracket-row">
                             <span>10.000 - 25.000€</span>
-                            <span style="text-align: right; color: #facc15;">15%</span>
+                            <span class="tax-rate" style="color: #facc15;">15%</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 100px; padding: 8px 15px; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1;">
+                        <div class="tax-bracket-row">
                             <span>25.000 - 50.000€</span>
-                            <span style="text-align: right; color: #fb923c;">25%</span>
+                            <span class="tax-rate" style="color: #fb923c;">25%</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 100px; padding: 8px 15px; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1;">
+                        <div class="tax-bracket-row">
                             <span>50.000 - 100.000€</span>
-                            <span style="text-align: right; color: #f87171;">35%</span>
+                            <span class="tax-rate" style="color: #f87171;">35%</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 100px; padding: 8px 15px; font-size: 0.9rem; color: #cbd5e1;">
+                        <div class="tax-bracket-row">
                             <span>&gt; 100.000€</span>
-                            <span style="text-align: right; color: #ef4444; font-weight: 700;">45%</span>
+                            <span class="tax-rate" style="color: #ef4444;">45%</span>
                         </div>
                     </div>
+                    
+                    <p class="tax-reminder">"${t('tax_reminder')}"</p>
+                    <button id="btn-tax-understood" class="btn-tax-understood">${t('understood')}</button>
                 </div>
-
-                <p style="text-align: center; color: #94a3b8; font-size: 0.9rem; margin: 0; font-style: italic;">
-                    "${t('tax_reminder')}" 
-                </p>
             `;
 
-            UI.showModal(
-                ' ',
-                taxMsg,
-                [{ text: t('understood'), style: 'primary', fn: null }],
-                true
-            );
+            UI.showModal(' ', taxMsg, [], true);
+
+            setTimeout(() => {
+                const btn = document.getElementById('btn-tax-understood');
+                if (btn) {
+                    btn.onclick = () => {
+                        const modal = document.querySelector('.custom-modal-overlay');
+                        if (modal) modal.remove();
+                    };
+                }
+            }, 50);
         }, 800);
     }
 
@@ -10715,70 +11361,105 @@ function nextTurn() {
             // GameState.lifetimeStats.totalTaxesPaid += taxAmount; // Moved to callback
 
             const breakdown = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(248, 113, 113, 0.4));">📋</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">${t('tax_declaration')}</div>
-                </div>
-                
-                <div style="background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.5)); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                        <span style="font-size: 1.3rem;">📊</span>
-                        <span style="color: #38bdf8; font-weight: 700; font-size: 1rem;">${t('income_year')} ${GameState.year - 1}</span>
+                <style>
+                    .custom-modal-box h3 { display: none !important; }
+                    .custom-modal-box .modal-body { padding: 0 !important; }
+                    .custom-modal-box { max-width: 440px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(248, 113, 113, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(248, 113, 113, 0.15) !important; }
+                    .custom-modal-footer { display: none !important; }
+                    .renta-container { padding: 25px 20px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                    .renta-header { margin-bottom: 20px; }
+                    .renta-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 0 15px rgba(248, 113, 113, 0.4)); }
+                    .renta-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+                    .renta-title { color: #f87171; margin: 0; font-size: 1.3rem; font-weight: 800; }
+                    .renta-income-section { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 14px; padding: 15px; margin-bottom: 15px; }
+                    .renta-income-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; justify-content: center; }
+                    .renta-income-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+                    .renta-income-card { background: rgba(15, 23, 42, 0.6); border-radius: 10px; padding: 10px; text-align: center; }
+                    .renta-income-card-icon { font-size: 1.3rem; margin-bottom: 4px; }
+                    .renta-income-card-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 2px; }
+                    .renta-income-card-value { font-size: 0.9rem; color: #4ade80; font-weight: 700; }
+                    .renta-summary { background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 12px 15px; margin-bottom: 12px; }
+                    .renta-summary-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; padding: 3px 0; }
+                    .renta-summary-row.deduction { color: #fbbf24; }
+                    .renta-summary-divider { border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0; }
+                    .renta-base-label { font-size: 0.75rem; color: #e2e8f0; }
+                    .renta-base-value { font-size: 1.3rem; color: #4ade80; font-weight: 800; text-shadow: 0 0 15px rgba(74, 222, 128, 0.3); }
+                    .renta-bracket { font-size: 0.7rem; color: #94a3b8; margin-top: 4px; }
+                    .renta-total { background: linear-gradient(145deg, rgba(248, 113, 113, 0.15), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(248, 113, 113, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 15px; }
+                    .renta-total-label { font-size: 0.75rem; color: #f87171; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+                    .renta-total-value { font-size: 1.6rem; color: #f87171; font-weight: 800; text-shadow: 0 0 20px rgba(248, 113, 113, 0.4); }
+                    .btn-pay-taxes { width: 100%; padding: 14px; background: linear-gradient(135deg, #ef4444, #dc2626); border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+                    .btn-pay-taxes:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4); }
+                </style>
+                <div class="renta-container">
+                    <div class="renta-header">
+                        <span class="renta-icon">📋</span>
+                        <div class="renta-label">${t('tax_declaration')}</div>
+                        <h2 class="renta-title">${t('tax_return_year')} ${GameState.year - 1}</h2>
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">💼</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_salary')}</div>
-                            <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.salary)}</div>
+                    <div class="renta-income-section">
+                        <div class="renta-income-header">
+                            <span style="font-size: 1.1rem;">📊</span>
+                            <span style="color: #38bdf8; font-weight: 700; font-size: 0.9rem;">${t('income_year')} ${GameState.year - 1}</span>
                         </div>
-                        <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🏠</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_rental')}</div>
-                            <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.rental)}</div>
-                        </div>
-                        <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">📈</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_stocks')}</div>
-                            <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.stocks)}</div>
-                        </div>
-                        <div style="background: rgba(15, 23, 42, 0.5); border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🏢</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">${t('tax_src_company')}</div>
-                            <div style="font-size: 1rem; color: #4ade80; font-weight: 700;">${formatCurrency(GameState.previousYearIncome.company)}</div>
+                        <div class="renta-income-grid">
+                            <div class="renta-income-card">
+                                <div class="renta-income-card-icon">💼</div>
+                                <div class="renta-income-card-label">${t('tax_src_salary')}</div>
+                                <div class="renta-income-card-value">${formatCurrency(GameState.previousYearIncome.salary, 0)}</div>
+                            </div>
+                            <div class="renta-income-card">
+                                <div class="renta-income-card-icon">🏠</div>
+                                <div class="renta-income-card-label">${t('tax_src_rental')}</div>
+                                <div class="renta-income-card-value">${formatCurrency(GameState.previousYearIncome.rental, 0)}</div>
+                            </div>
+                            <div class="renta-income-card">
+                                <div class="renta-income-card-icon">📈</div>
+                                <div class="renta-income-card-label">${t('tax_src_stocks')}</div>
+                                <div class="renta-income-card-value">${formatCurrency(GameState.previousYearIncome.stocks, 0)}</div>
+                            </div>
+                            <div class="renta-income-card">
+                                <div class="renta-income-card-icon">🏢</div>
+                                <div class="renta-income-card-label">${t('tax_src_company')}</div>
+                                <div class="renta-income-card-value">${formatCurrency(GameState.previousYearIncome.company, 0)}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div style="background: linear-gradient(145deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: center;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 5px; padding: 0 20px;">
-                        <span>${t('gross_income')}:</span>
-                        <span>${formatCurrency(totalIncome)}</span>
+                    
+                    <div class="renta-summary">
+                        <div class="renta-summary-row">
+                            <span>${t('gross_income')}:</span>
+                            <span>${formatCurrency(totalIncome, 0)}</span>
+                        </div>
+                        <div class="renta-summary-row deduction">
+                            <span>${t('tax_expenses')} (75%):</span>
+                            <span>-${formatCurrency(deductibleExpenses, 0)}</span>
+                        </div>
+                        <div class="renta-summary-divider"></div>
+                        <div class="renta-base-label">${t('taxable_base')}</div>
+                        <div class="renta-base-value">${formatCurrency(taxableBase, 0)}</div>
+                        <div class="renta-bracket">${t('tax_bracket_label')} <span style="color: #facc15; font-weight: 600;">${(taxRate * 100).toFixed(0)}%</span></div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #fbbf24; margin-bottom: 10px; padding: 0 20px;">
-                        <span>${t('tax_expenses')} (75%):</span>
-                        <span>-${formatCurrency(deductibleExpenses)}</span>
+                    
+                    <div class="renta-total">
+                        <div class="renta-total-label">${t('to_pay')}</div>
+                        <div class="renta-total-value">${formatCurrency(taxAmount, 0)}</div>
                     </div>
-                    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;"></div>
-                    <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 5px;">${t('taxable_base')}</div>
-                    <div style="font-size: 1.5rem; color: #4ade80; font-weight: 800; text-shadow: 0 0 15px rgba(74, 222, 128, 0.3);">${formatCurrency(taxableBase)}</div>
-                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px;">${t('tax_bracket_label')} <span style="color: #facc15; font-weight: 600;">${(taxRate * 100).toFixed(0)}%</span></div>
-                </div>
-                
-                <div style="background: linear-gradient(145deg, rgba(248, 113, 113, 0.15), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(248, 113, 113, 0.4); border-radius: 12px; padding: 15px; text-align: center;">
-                    <div style="font-size: 0.8rem; color: #f87171; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">${t('to_pay')}</div>
-                    <div style="font-size: 1.8rem; color: #f87171; font-weight: 800; text-shadow: 0 0 20px rgba(248, 113, 113, 0.4);">${formatCurrency(taxAmount)}</div>
+                    
+                    <button id="btn-pay-taxes" class="btn-pay-taxes">💸 ${t('pay_taxes')}</button>
                 </div>
             `;
 
-            UI.showModal(
-                `📋 ${t('tax_return_year')} ` + (GameState.year - 1),
-                breakdown,
-                [{
-                    text: `💸 ${t('pay_taxes')} `,
-                    style: 'danger',
-                    fn: () => {
-                        // Confirm Pay
+            UI.showModal(' ', breakdown, [], true);
+
+            setTimeout(() => {
+                const btn = document.getElementById('btn-pay-taxes');
+                if (btn) {
+                    btn.onclick = () => {
+                        const modal = document.querySelector('.custom-modal-overlay');
+                        if (modal) modal.remove();
+
                         showGameAlert(
                             t('tax_paid_msg', { amount: formatCurrency(taxAmount) }),
                             'warning',
@@ -10791,12 +11472,11 @@ function nextTurn() {
                                 UI.playLossSound();
                                 UI.showTurnFeedback(-taxAmount);
                             },
-                            true // Blocking = true
+                            true
                         );
-                    }
-                }],
-                true
-            );
+                    };
+                }
+            }, 50);
         }
     }
 
@@ -10806,13 +11486,27 @@ function nextTurn() {
     // Check Events
     UI.checkStoryEvents();
 
+    // Endgame Warning (6 months before)
+    if (GameState.year === END_YEAR && GameState.month === (12 - WARNING_MONTHS_BEFORE + 1) && !GameState.endgameWarningShown) {
+        GameState.endgameWarningShown = true;
+        setTimeout(() => {
+            showGameAlert(
+                t('endgame_warning_msg', { years: END_YEAR }),
+                'warning',
+                t('endgame_warning_title'),
+                null,
+                true
+            );
+        }, 1000);
+    }
+
     if (GameState.month > 12) {
         GameState.month = 1;
         GameState.year++;
         GameState.age++; // Birthday!
 
         // Endgame
-        if (GameState.year > 50) {
+        if (GameState.year > END_YEAR) {
             setTimeout(() => showEndgameModal(), 500);
             return; // Stop game progression
         }
@@ -11222,6 +11916,7 @@ try {
             }
         }, 100);
     };
+    setupEventListeners(); // Initialize listeners
 
     // Startup
     if (PersistenceModule.checkSave()) {
@@ -11232,109 +11927,118 @@ try {
                 day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
             }) : '';
             return `
-                <div class="load-slot-card" data-key="${save.key}">
-                    <div class="slot-badge ${save.isAuto ? 'auto' : 'manual'}">${save.isAuto ? '🔄 Auto' : '💾'}</div>
+                <div class="save-slot-card" data-key="${save.key}">
+                    <div class="save-slot-header">
+                         <div class="slot-badge ${save.isAuto ? 'auto' : 'manual'}">${save.isAuto ? '🔄 Auto' : '💾 Manual'}</div>
+                         ${dateStr ? `<div class="slot-date">⏰ ${dateStr}</div>` : ''}
+                    </div>
                     <div class="slot-player">🎮 ${save.playerName}</div>
                     <div class="slot-details">
                         <span class="slot-money">💰 ${formatCurrency(save.cash)}</span>
                         <span>📅 ${t('year')} ${save.year}, ${t('month')} ${save.month}</span>
                     </div>
-                    ${dateStr ? `<div class="slot-date">⏰ ${dateStr}</div>` : ''}
                     <button class="btn-load-slot" data-key="${save.key}">▶️ ${t('load_game_btn')}</button>
                 </div>
             `;
         };
 
         const msg = `
-            <style>
-                .custom-modal-box h3 { display: none !important; }
-                .custom-modal-box .modal-body { padding: 0 !important; }
-                .custom-modal-box { max-width: 440px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid #334155 !important; }
-                .welcome-back-container { padding: 25px; text-align: center; background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); border-radius: 24px; max-height: 80vh; overflow-y: auto; }
-                .welcome-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; animation: pulse 2s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
-                @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-                .welcome-title { color: #38bdf8; margin: 0 0 8px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; } /* Removed heavy blur shadow */
-                .welcome-subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; font-smoothing: antialiased; -webkit-font-smoothing: antialiased; }
-                .saves-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-                .load-slot-card { background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 12px; padding: 12px; text-align: left; position: relative; transition: border-color 0.2s; }
-                .load-slot-card:hover { border-color: #38bdf8; }
-                .slot-badge { position: absolute; top: -6px; right: 10px; background: #1e293b; padding: 2px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 600; }
-                .slot-badge.auto { color: #4ade80; border: 1px solid #4ade80; }
-                .slot-badge.manual { color: #38bdf8; border: 1px solid #38bdf8; }
-                .slot-player { font-size: 1rem; font-weight: 700; color: #fbbf24; margin-bottom: 5px; -webkit-font-smoothing: antialiased; }
-                .slot-details { display: flex; gap: 12px; font-size: 0.8rem; color: #e2e8f0; margin-bottom: 4px; flex-wrap: wrap; -webkit-font-smoothing: antialiased; }
-                .slot-money { color: #4ade80; font-weight: 600; letter-spacing: 0.5px; } /* Increased spacing for clarity */
-                .slot-date { font-size: 0.7rem; color: #64748b; margin-bottom: 8px; font-weight: 500; }
-                .btn-load-slot { width: 100%; padding: 8px; background: linear-gradient(135deg, #4ade80, #22c55e); border: none; border-radius: 6px; color: #0f172a; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
-                .btn-load-slot:hover { transform: scale(1.02); }
-                .btn-new-game { width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 600; border-radius: 10px; border: 2px solid #475569; cursor: pointer; background: transparent; color: #94a3b8; transition: all 0.2s; }
-                .btn-new-game:hover { border-color: #f87171; color: #f87171; }
-                @media (max-width: 480px) { .welcome-back-container { padding: 20px 15px; } .welcome-icon { font-size: 2.5rem; } }
-            </style>
             <div class="welcome-back-container">
                 <span class="welcome-icon">👋</span>
                 <h2 class="welcome-title">${t('welcome_back_title')}</h2>
                 <p class="welcome-subtitle">${t('welcome_back_subtitle')}</p>
                 <div class="saves-list">${allSaves.map(renderSaveSlot).join('')}</div>
-                <button id="btn-new-game-saved" class="btn-new-game">🔄 ${t('new_game_btn')}</button>
+                <button id="btn-new-game-saved" class="btn-secondary-action">✨ ${t('new_game_btn')}</button>
             </div>
         `;
 
-        UI.showModal(t('welcome_back_title'), msg, [], true);
+        // Create Standalone Premium Modal
+        const overlay = document.createElement('div');
+        overlay.className = 'premium-modal-overlay custom-modal-overlay'; // custom-modal-overlay for existing querySelectors
 
-        document.querySelectorAll('.btn-load-slot').forEach(btn => {
-            btn.onclick = () => {
+        const box = document.createElement('div');
+        box.className = 'premium-modal-box welcome-theme';
+        box.innerHTML = msg;
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        // Event Delegation for Save Slots
+        box.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-load-slot');
+            if (btn) {
                 const key = btn.dataset.key;
-                document.querySelector('.custom-modal-overlay').remove();
-                PersistenceModule.loadFromSlot(key);
-                initGame();
-            };
+                console.log('Load clicked:', key); // Debug
+
+                if (key) {
+                    const overlayToRemove = document.querySelector('.custom-modal-overlay');
+                    if (overlayToRemove) overlayToRemove.remove();
+
+                    try {
+                        PersistenceModule.loadFromSlot(key);
+                        // Ensure initGame is called - assuming it's available in global scope or closure
+                        if (typeof initGame === 'function') {
+                            initGame();
+                        } else {
+                            console.error('initGame function not found!');
+                            location.reload(); // Fallback
+                        }
+                    } catch (err) {
+                        console.error('Error loading save:', err);
+                        alert('Error loading save: ' + err.message);
+                    }
+                }
+            }
         });
 
-        document.getElementById('btn-new-game-saved').onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // First close the welcome modal
-            const welcomeModal = document.querySelector('.custom-modal-overlay');
-            if (welcomeModal) welcomeModal.remove();
+        const newGameBtn = overlay.querySelector('#btn-new-game-saved');
+        if (newGameBtn) {
+            newGameBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-            // Confirmation
-            const confirmMsg = `
+                const welcomeModal = document.querySelector('.custom-modal-overlay');
+                if (welcomeModal) welcomeModal.remove();
+
+                // Confirmation
+                const confirmMsg = `
                 <style>
                     .custom-modal-box h3 { display: none !important; }
                     .custom-modal-box .modal-body { padding: 0 !important; }
-                    .custom-modal-box { max-width: 400px !important; border-radius: 20px !important; overflow: hidden !important; border: 1px solid #334155 !important; }
-                    .confirm-container { padding: 30px; text-align: center; background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
-                    .confirm-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
-                    .confirm-title { color: #f87171; margin: 0 0 10px; font-size: 1.3rem; font-weight: 700; }
-                    .confirm-text { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px; }
-                    .confirm-buttons { display: flex; gap: 12px; }
-                    .btn-confirm-cancel { flex: 1; padding: 12px; background: transparent; border: 2px solid #475569; border-radius: 10px; color: #94a3b8; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-                    .btn-confirm-cancel:hover { border-color: #64748b; color: #e2e8f0; }
-                    .btn-confirm-action { flex: 1; padding: 12px; background: linear-gradient(135deg, #f87171, #ef4444); border: none; border-radius: 10px; color: white; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-                    .btn-confirm-action:hover { transform: scale(1.02); }
+                    .custom-modal-box { max-width: 420px !important; border-radius: 24px !important; overflow: hidden !important; border: 1px solid rgba(248, 113, 113, 0.3) !important; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(248, 113, 113, 0.15) !important; }
+                    .confirm-container { padding: 35px 30px; text-align: center; background: linear-gradient(145deg, #1e293b, #0f172a); }
+                    .confirm-icon { font-size: 4rem; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 20px rgba(248, 113, 113, 0.4)); animation: iconPulse 2s ease-in-out infinite; }
+                    @keyframes iconPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+                    .confirm-title { color: #f87171; margin: 0 0 12px; font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 20px rgba(248, 113, 113, 0.3); letter-spacing: 0.5px; }
+                    .confirm-text { color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 30px; background: rgba(248, 113, 113, 0.08); border: 1px solid rgba(248, 113, 113, 0.2); padding: 15px 20px; border-radius: 12px; }
+                    .confirm-buttons { display: flex; gap: 15px; }
+                    .btn-confirm-cancel { flex: 1; padding: 14px 20px; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid #475569; border-radius: 12px; color: #e2e8f0; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+                    .btn-confirm-cancel:hover { background: linear-gradient(145deg, #475569, #334155); border-color: #64748b; transform: translateY(-2px); }
+                    .btn-confirm-action { flex: 1; padding: 14px 20px; background: linear-gradient(135deg, #f87171, #ef4444); border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+                    .btn-confirm-action:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4); }
                     .custom-modal-footer { display: none !important; }
                 </style>
-                <div class="confirm-container">
-                    <span class="confirm-icon">⚠️</span>
-                    <h2 class="confirm-title">${t('msg_new_game_title')}</h2>
-                    <p class="confirm-text">${t('msg_new_game_warning')}</p>
-                    <div class="confirm-buttons">
-                        <button id="btn-confirm-cancel" class="btn-confirm-cancel">${t('cancel')}</button>
-                        <button id="btn-confirm-action" class="btn-confirm-action">${t('confirm')}</button>
-                    </div>
+            <div class="confirm-container">
+                <span class="confirm-icon">⚠️</span>
+                <h2 class="confirm-title">${t('msg_new_game_title')}</h2>
+                <p class="confirm-text">${t('msg_new_game_warning')}</p>
+                <div class="confirm-buttons">
+                    <button id="btn-confirm-cancel" class="btn-confirm-cancel">${t('cancel')}</button>
+                    <button id="btn-confirm-action" class="btn-confirm-action">${t('confirm')}</button>
                 </div>
-            `;
+            </div>
+        `;
 
-            UI.showModal(' ', confirmMsg, [], true);
+                UI.showModal(' ', confirmMsg, [], true);
 
-            document.getElementById('btn-confirm-cancel').onclick = () => location.reload();
-            document.getElementById('btn-confirm-action').onclick = () => {
-                document.querySelector('.custom-modal-overlay').remove();
-                promptNewUser(initGame);
+                document.getElementById('btn-confirm-cancel').onclick = () => location.reload();
+                document.getElementById('btn-confirm-action').onclick = () => {
+                    document.querySelector('.custom-modal-overlay').remove();
+                    promptNewUser(initGame);
+                };
             };
-        };
 
+        }
     } else {
         promptNewUser(initGame);
     }
@@ -11385,207 +12089,80 @@ try {
 
     function promptNewUser(callback) {
         const msg = `
-                    <style>
-                        .custom-modal-footer, .modal-actions { display: none !important; }
-                        .custom-modal-box h3 { display: none !important; }
-                        .custom-modal-box .modal-body { padding: 0 !important; }
-                        .custom-modal-box { 
-                            max-width: 420px !important; 
-                            border-radius: 24px !important;
-                            overflow-y: auto !important;
-                            max-height: 90vh !important;
-                            border: 1px solid #334155 !important;
-                        }
-                        .profile-create-container {
-                            padding: 30px;
-                            text-align: center;
-                            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-                            border-radius: 24px;
-                            overflow: hidden;
-                        }
-                        .profile-rocket {
-                            font-size: 4rem;
-                            margin-bottom: 10px;
-                            display: block;
-                            animation: rocketBounce 2s ease-in-out infinite;
-                        }
-                        @keyframes rocketBounce {
-                            0%, 100% { transform: translateY(0); }
-                            50% { transform: translateY(-10px); }
-                        }
-                        .profile-title {
-                            color: #38bdf8;
-                            margin: 0 0 20px 0;
-                            font-size: clamp(1.1rem, 5vw, 1.6rem);
-                            font-weight: 800;
-                            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-                            line-height: 1.3;
-                        }
-                        .profile-features {
-                            background: rgba(56, 189, 248, 0.1);
-                            border: 1px solid rgba(56, 189, 248, 0.2);
-                            border-radius: 12px;
-                            padding: 15px;
-                            margin-bottom: 20px;
-                            text-align: left;
-                        }
-                        .profile-features p {
-                            color: #e2e8f0;
-                            font-size: 0.9rem;
-                            line-height: 1.8;
-                            margin: 0;
-                        }
-                        .profile-input-group {
-                            margin-bottom: 20px;
-                        }
-                        .profile-input-group label {
-                            display: block;
-                            color: #94a3b8;
-                            font-size: 0.85rem;
-                            margin-bottom: 8px;
-                            text-align: left;
-                        }
-                        .profile-input-group input {
-                            width: 100%;
-                            padding: 14px;
-                            background: #0f172a;
-                            border: 2px solid #334155;
-                            color: white;
-                            border-radius: 10px;
-                            font-size: 1rem;
-                            transition: border-color 0.2s;
-                            box-sizing: border-box;
-                        }
-                        .profile-input-group input:focus {
-                            outline: none;
-                            border-color: #38bdf8;
-                        }
-                        .profile-start-btn {
-                            width: 100%;
-                            padding: 16px;
-                            font-size: 1.1rem;
-                            font-weight: 700;
-                            border-radius: 10px;
-                            border: none;
-                            cursor: pointer;
-                            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-                            color: #0f172a;
-                            margin-bottom: 15px;
-                            transition: transform 0.1s, box-shadow 0.2s;
-                            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-                        }
-                        .profile-start-btn:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
-                        }
-                        .profile-start-btn:active {
-                            transform: scale(0.98);
-                        }
-                        .profile-tagline {
-                            color: #fbbf24;
-                            font-size: 0.85rem;
-                            font-style: italic;
-                            margin: 0;
-                        }
-                        /* Mobile */
-                        @media (max-width: 480px) {
-                            .custom-modal-box {
-                                margin: 10px !important;
-                                max-height: 90vh !important;
-                            }
-                            .profile-create-container {
-                                padding: 20px 15px;
-                            }
-                            .profile-rocket {
-                                font-size: 3rem;
-                            }
-                            .profile-title {
-                                font-size: 1.1rem;
-                            }
-                            .profile-features p {
-                                font-size: 0.85rem;
-                                line-height: 1.6;
-                            }
-                            .profile-input-group input {
-                                padding: 12px;
-                            }
-                            .profile-start-btn {
-                                padding: 14px;
-                                font-size: 1rem;
-                            }
-                        }
-                    </style>
-                    <div class="profile-create-container">
-                        <span class="profile-rocket">🚀</span>
-                        <h2 class="profile-title">${t('tutorial_welcome')}</h2>
-                        
-                        <!-- Lang Selector -->
-                        <div id="welcome-lang-selector" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 15px;">
-                            <button onclick="I18n.setLanguage('es'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇪🇸</button>
-                            <button onclick="I18n.setLanguage('en'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇬🇧</button>
-                            <button onclick="I18n.setLanguage('de'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="de" title="Deutsch" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇩🇪</button>
-                            <button onclick="I18n.setLanguage('zh'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="zh" title="中文" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇨🇳</button>
-                            <button onclick="I18n.setLanguage('ru'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="ru" title="Русский" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s;">🇷🇺</button>
+            <div class="profile-create-container">
+                <span class="profile-rocket">🚀</span>
+                <h2 class="profile-title">${t('tutorial_welcome')}</h2>
+
+                <!-- Lang Selector -->
+                <div id="welcome-lang-selector" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                    <button onclick="I18n.setLanguage('es'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="es" title="Español" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 1.2rem; transition: all 0.2s;">🇪🇸</button>
+                    <button onclick="I18n.setLanguage('en'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="en" title="English" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 1.2rem; transition: all 0.2s;">🇬🇧</button>
+                    <button onclick="I18n.setLanguage('de'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="de" title="Deutsch" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 1.2rem; transition: all 0.2s;">🇩🇪</button>
+                    <button onclick="I18n.setLanguage('zh'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="zh" title="中文" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 1.2rem; transition: all 0.2s;">🇨🇳</button>
+                    <button onclick="I18n.setLanguage('ru'); setTimeout(function(){ if(window.updateWelcomeScreen) window.updateWelcomeScreen(); }, 50);" class="lang-btn" data-lang="ru" title="Русский" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 1.2rem; transition: all 0.2s;">🇷🇺</button>
+                </div>
+
+                <div class="profile-features">
+                    <div style="display: grid; gap: 8px;">
+                        <div class="feature-row">
+                            <span class="feature-icon">📚</span>
+                            <span class="feature-text welcome-text-study"><strong style="color: #818cf8;">${t('welcome_study')}</strong> ${t('welcome_study_desc')}</span>
                         </div>
-                        
-                        <div class="profile-features">
-                            <div style="display: grid; gap: 10px;">
-                                <div style="display: flex; align-items: center; gap: 12px; background: rgba(129, 140, 248, 0.1); border: 1px solid rgba(129, 140, 248, 0.3); border-radius: 10px; padding: 10px 14px;">
-                                    <span style="font-size: 1.5rem;">📚</span>
-                                    <span class="welcome-text-study" style="color: #e2e8f0; font-size: 0.9rem;"><strong style="color: #818cf8;">${t('welcome_study')}</strong> ${t('welcome_study_desc')}</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 12px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; padding: 10px 14px;">
-                                    <span style="font-size: 1.5rem;">💼</span>
-                                    <span class="welcome-text-work" style="color: #e2e8f0; font-size: 0.9rem;"><strong style="color: #4ade80;">${t('welcome_work')}</strong> ${t('welcome_work_desc')}</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 12px; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 10px; padding: 10px 14px;">
-                                    <span style="font-size: 1.5rem;">📈</span>
-                                    <span class="welcome-text-invest" style="color: #e2e8f0; font-size: 0.9rem;"><strong style="color: #facc15;">${t('welcome_invest')}</strong> ${t('welcome_invest_desc')}</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 10px; padding: 10px 14px;">
-                                    <span style="font-size: 1.5rem;">🏢</span>
-                                    <span class="welcome-text-business" style="color: #e2e8f0; font-size: 0.9rem;"><strong style="color: #fbbf24;">${t('welcome_business')}</strong> ${t('welcome_business_desc')}</span>
-                                </div>
-                            </div>
+                        <div class="feature-row">
+                            <span class="feature-icon">💼</span>
+                            <span class="feature-text welcome-text-work"><strong style="color: #4ade80;">${t('welcome_work')}</strong> ${t('welcome_work_desc')}</span>
                         </div>
-                        
-                        <div class="profile-input-group">
-                            <label class="welcome-label-name">${t('your_name')}</label>
-                            <input type="text" id="start-player-name" placeholder="${t('name_placeholder')}" maxlength="20">
+                        <div class="feature-row">
+                            <span class="feature-icon">📈</span>
+                            <span class="feature-text welcome-text-invest"><strong style="color: #facc15;">${t('welcome_invest')}</strong> ${t('welcome_invest_desc')}</span>
                         </div>
-                        
-                        <button id="btn-start-game-custom" class="profile-start-btn">🎮 ${t('start_adventure')}</button>
-                        
-                        <p class="profile-tagline">💰 ${t('tagline')}</p>
+                        <div class="feature-row">
+                            <span class="feature-icon">🏢</span>
+                            <span class="feature-text welcome-text-business"><strong style="color: #fbbf24;">${t('welcome_business')}</strong> ${t('welcome_business_desc')}</span>
+                        </div>
                     </div>
-                `;
+                </div>
 
-        UI.showModal(t('create_profile'), msg, [], true);
+                <div class="profile-input-group">
+                    <label class="welcome-label-name">${t('your_name')}</label>
+                    <input type="text" id="start-player-name" placeholder="${t('name_placeholder')}" maxlength="20">
+                </div>
 
-        // Remove Footer
-        const overlay = document.querySelector('.custom-modal-overlay');
-        if (overlay) {
-            const footer = overlay.querySelector('.custom-modal-footer, .modal-actions');
-            if (footer) footer.style.display = 'none';
-        }
+                <button id="btn-start-game-custom" class="profile-start-btn">🎮 ${t('start_adventure')}</button>
+
+                <p class="profile-tagline">💰 ${t('tagline')}</p>
+            </div>
+        `;
+
+        // Create Standalone Premium Modal
+        const overlay = document.createElement('div');
+        overlay.className = 'premium-modal-overlay custom-modal-overlay';
+
+        const box = document.createElement('div');
+        box.className = 'premium-modal-box welcome-theme';
+        box.innerHTML = msg;
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
 
         // Attach Handler
-        document.getElementById('btn-start-game-custom').onclick = () => {
-            const name = document.getElementById('start-player-name').value || 'Inversor';
-            GameState.playerName = name;
+        const startBtn = overlay.querySelector('#btn-start-game-custom');
+        if (startBtn) {
+            startBtn.onclick = () => {
+                const nameInput = overlay.querySelector('#start-player-name');
+                const name = nameInput ? (nameInput.value || 'Inversor') : 'Inversor';
+                GameState.playerName = name;
 
-            // Cheat
-            if (name === 'SergioGuapo') {
-                GameState.cash = 200000;
-            }
+                if (name === 'SergioGuapo') {
+                    GameState.cash = 200000;
+                }
 
-            // Close Modal
-            const overlay = document.querySelector('.custom-modal-overlay');
-            if (overlay) overlay.remove();
+                overlay.remove();
 
-            callback();
-            setTimeout(() => UI.startInitialTutorial(), 500);
-        };
+                callback();
+                setTimeout(() => UI.startInitialTutorial(), 500);
+            };
+        }
     }
 
 } catch (e) {
@@ -11615,3 +12192,131 @@ function updateAudioUI() {
 document.addEventListener('DOMContentLoaded', () => {
     updateAudioUI();
 });
+
+// ============================================
+// ADAPTIVE SCALING FOR DIFFERENT SCREEN SIZES
+// ============================================
+function applyAdaptiveScaling() {
+    const baseWidth = 1920;   // Reference width (Full HD)
+    const baseHeight = 1080;  // Reference height
+    const minScale = 0.85;    // Minimum scale (small screens)
+    const maxScale = 1.0;     // Maximum scale (large screens)
+
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Calculate scale based on both dimensions, use the smaller one
+    const scaleW = screenWidth / baseWidth;
+    const scaleH = screenHeight / baseHeight;
+    let scale = Math.min(scaleW, scaleH);
+
+    // Clamp between min and max
+    scale = Math.max(minScale, Math.min(maxScale, scale));
+
+    // Apply transform scale to the entire app container
+    const app = document.getElementById('app');
+    if (app) {
+        app.style.transform = `scale(${scale})`;
+        app.style.transformOrigin = 'center top';
+    }
+}
+
+// Apply on load and resize
+window.addEventListener('load', applyAdaptiveScaling);
+window.addEventListener('resize', applyAdaptiveScaling);
+
+// --- THANK YOU SCREEN (SOLO DEV) ---
+function showThankYouScreen() {
+    // Styling constants
+    const overlayStyle = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        z-index: 10000; animation: fadeIn 0.8s ease-out;
+    `;
+
+    // Create container
+    const container = document.createElement('div');
+    container.id = 'thank-you-screen';
+    container.style.cssText = overlayStyle;
+
+    const content = `
+        <style>
+            .ty-content { 
+                text-align: center; max-width: 600px; padding: 50px 40px; 
+                background: rgba(255,255,255,0.03); 
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 32px; 
+                backdrop-filter: blur(25px);
+                box-shadow: 0 30px 80px -10px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+                transform: translateY(30px); 
+                animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.2s; 
+                opacity: 0;
+            }
+            .ty-title {
+                font-size: 2.8rem; font-weight: 900; margin-bottom: 30px;
+                background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+                -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                text-transform: uppercase; letter-spacing: 2px;
+                filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.4));
+            }
+            .ty-msg {
+                font-size: 1.15rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 45px;
+                font-weight: 400;
+            }
+            .ty-actions { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+            .ty-btn {
+                padding: 16px 36px; border-radius: 50px; font-weight: 700; font-size: 1.05rem;
+                cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); border: none;
+                display: flex; align-items: center; gap: 12px;
+                text-decoration: none;
+            }
+            .ty-btn-rate { 
+                background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%); 
+                color: #000; 
+                box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.4); 
+            }
+            .ty-btn-rate:hover { 
+                transform: translateY(-4px) scale(1.02); 
+                box-shadow: 0 20px 35px -5px rgba(251, 191, 36, 0.5); 
+            }
+            .ty-btn-restart { 
+                background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+                color: #fff;
+                border: none;
+                box-shadow: 0 10px 25px -5px rgba(22, 163, 74, 0.4);
+                font-size: 1.2rem;
+                padding: 18px 45px;
+            }
+            .ty-btn-restart:hover { 
+                background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
+                transform: translateY(-4px) scale(1.05); 
+                box-shadow: 0 20px 40px -5px rgba(22, 163, 74, 0.6);
+            }
+            
+            @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+            /* Mobile adjustment */
+            @media (max-width: 768px) {
+                .ty-content { width: 85%; padding: 40px 25px; }
+                .ty-title { font-size: 2rem; }
+                .ty-actions { flex-direction: column; width: 100%; }
+                .ty-btn { justify-content: center; width: 100%; }
+            }
+        </style>
+        <div class="ty-content">
+            <div class="ty-title">${t('ty_title')}</div>
+            <div class="ty-msg">${t('ty_msg')}</div>
+            <div class="ty-actions">
+
+                <button class="ty-btn ty-btn-restart" onclick="location.reload()">
+                    ${t('ty_btn_restart')}
+                </button>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = content;
+    document.body.appendChild(container);
+}
