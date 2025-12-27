@@ -5971,9 +5971,7 @@
             #audio-toggle-desktop,
             #desktop-save-btn,
             #desktop-exit-btn,
-            #lang-switch-btn,
-            #header-game-title,
-            #top-bar-container {
+            #lang-switch-btn {
                 display: none !important;
             }
 
