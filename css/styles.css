@@ -5991,15 +5991,16 @@
                 font-size: 1.5rem !important;
             }
 
-            /* FORCE #app full width by ID */
+            /* FORCE #app full width - NO SCALING */
             div#app,
             #app {
                 width: 100% !important;
                 max-width: 100% !important;
                 min-width: 100% !important;
-                padding: 0 !important;
+                padding: 10px 5px 0 5px !important;
                 margin: 0 !important;
                 box-sizing: border-box !important;
+                transform: none !important;
             }
 
             /* Scrollable modals on mobile */
@@ -6009,14 +6010,15 @@
             .game-confirm-overlay {
                 overflow-y: auto !important;
                 -webkit-overflow-scrolling: touch;
-                padding: 20px 10px !important;
+                padding: 10px !important;
+                align-items: flex-start !important;
             }
 
             .premium-modal-box,
             .modal-box {
-                max-height: none !important;
-                margin: auto !important;
-                overflow: visible !important;
+                max-height: 85vh !important;
+                overflow-y: auto !important;
+                margin: 10px auto !important;
             }
 
             /* Welcome modal adjustments */
