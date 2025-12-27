@@ -77,10 +77,19 @@
         }
 
         #app {
-            width: 80%;
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 20px 30px;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (min-width: 769px) {
+            #app {
+                width: 80%;
+                max-width: 1800px;
+                margin: 0 auto;
+                padding: 20px 30px;
+            }
         }
 
         /* Hidden until splash finishes */
