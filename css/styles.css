@@ -3382,14 +3382,24 @@
             align-items: center;
         }
 
+        #top-bar-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 5%;
+            right: 5%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent);
+        }
+
         #top-bar-container::after {
             content: '';
             position: absolute;
-            bottom: 0px;
-            left: 10%;
-            width: 80%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent);
         }
 
         /* Btn Groups */
@@ -4509,12 +4519,25 @@
             justify-content: center;
         }
 
+        #top-bar-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 5%;
+            right: 5%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent);
+            pointer-events: none;
+        }
+
         #top-bar-container::after {
             content: '';
             position: absolute;
-            inset: 0;
-            border-bottom: 2px solid;
-            border-image: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent) 1;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent);
             pointer-events: none;
         }
 
