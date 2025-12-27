@@ -5942,14 +5942,15 @@
                 padding: 10px 10px 20px 10px !important;
                 margin: 0 !important;
                 overflow-x: hidden !important;
+                /* Premium gradient with optimized grid (larger cells = fewer renders) */
                 background:
-                    linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px),
+                    linear-gradient(rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(30, 41, 59, 0.3) 1px, transparent 1px),
                     radial-gradient(ellipse at top, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
                     radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
                     radial-gradient(ellipse at bottom left, rgba(74, 222, 128, 0.05) 0%, transparent 50%),
                     linear-gradient(180deg, #0a0f1a 0%, #0f172a 50%, #0a0f1a 100%) !important;
-                background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+                background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
                 background-color: #0f172a !important;
             }
 
@@ -6006,31 +6007,40 @@
                 transform: none !important;
             }
 
-            /* Scrollable modals on mobile - universal */
+            /* Modal overlays - fixed, no scroll */
             .premium-modal-overlay,
             .custom-modal-overlay,
             .game-alert-overlay,
-            .game-confirm-overlay,
-            [class*="-overlay"] {
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
-                -webkit-overflow-scrolling: touch;
+            .game-confirm-overlay {
+                position: fixed !important;
+                overflow: hidden !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 padding: 10px !important;
-                align-items: flex-start !important;
             }
 
+            /* Modal boxes - scroll inside */
             .premium-modal-box,
             .modal-box,
+            .custom-modal-box,
             .game-alert-box,
             .game-confirm-box,
-            [class*="-box"],
-            [class*="modal"]>div {
-                max-height: 80vh !important;
+            .modal-body,
+            .modal-content {
+                max-height: 85vh !important;
                 max-width: 95vw !important;
                 overflow-y: auto !important;
                 overflow-x: hidden !important;
-                margin: 10px auto !important;
-                word-wrap: break-word !important;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Specific modal containers that need scroll */
+            .firstjob-container,
+            .profile-create-container {
+                max-height: 75vh !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
             }
 
             /* Welcome modal adjustments */
@@ -6049,5 +6059,53 @@
 
             .profile-tagline {
                 font-size: 0.85rem !important;
+            }
+        }
+
+        /* Landscape mode optimizations for mobile */
+        @media (orientation: landscape) and (max-height: 500px) {
+            body {
+                padding: 5px 10px 10px 10px !important;
+            }
+
+            .app-header {
+                padding: 8px !important;
+                gap: 3px !important;
+            }
+
+            .header-center {
+                margin-top: 5px !important;
+            }
+
+            #next-turn-btn {
+                padding: 8px !important;
+                font-size: 0.95rem !important;
+            }
+
+            #bottom-nav {
+                padding: 5px 0 !important;
+            }
+
+            .b-nav-item {
+                padding: 6px 0 4px !important;
+                font-size: 0.5rem !important;
+            }
+
+            .b-nav-item .nav-emoji {
+                font-size: 1rem !important;
+            }
+
+            /* Reduce modal heights in landscape */
+            .premium-modal-box,
+            .modal-box,
+            .custom-modal-box,
+            .game-alert-box,
+            .game-confirm-box {
+                max-height: 80vh !important;
+            }
+
+            .firstjob-container,
+            .profile-create-container {
+                max-height: 70vh !important;
             }
         }

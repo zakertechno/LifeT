@@ -89,6 +89,10 @@ function showSplashScreen() {
     // Skip splash on mobile devices
     if (window.innerWidth <= 768) {
         document.body.classList.remove('splash-active');
+        // Initialize mobile features
+        if (typeof PullToRefresh !== 'undefined') {
+            setTimeout(() => PullToRefresh.init(), 500);
+        }
         return;
     }
 
@@ -313,6 +317,10 @@ function finishSplashScreen(overlay) {
     setTimeout(() => {
         overlay.remove();
         document.body.classList.remove('splash-active');
+        // Initialize mobile features (for desktop users who resize later)
+        if (typeof PullToRefresh !== 'undefined') {
+            PullToRefresh.init();
+        }
     }, 1000);
 }
 

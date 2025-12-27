@@ -2,6 +2,193 @@
 const END_YEAR = 50;
 const WARNING_MONTHS_BEFORE = 6;
 
+// Mobile Detection
+const isMobileDevice = () => window.innerWidth <= 768;
+
+// Haptic Feedback (Mobile Only)
+function hapticFeedback(type = 'light') {
+    if (!isMobileDevice()) return;
+    if (!navigator.vibrate) return;
+
+    const patterns = {
+        light: 10,
+        medium: 25,
+        heavy: 50,
+        success: [10, 50, 30],
+        error: [50, 30, 50]
+    };
+
+    try {
+        navigator.vibrate(patterns[type] || 10);
+    } catch (e) {
+        // Vibration not supported
+    }
+}
+
+// Touch Events Optimization (Mobile Only)
+function addFastClick(element, callback) {
+    if (!element) return;
+
+    let touchStarted = false;
+
+    if (isMobileDevice()) {
+        element.addEventListener('touchstart', (e) => {
+            touchStarted = true;
+        }, { passive: true });
+
+        element.addEventListener('touchend', (e) => {
+            if (touchStarted) {
+                touchStarted = false;
+                e.preventDefault();
+                callback(e);
+            }
+        }, { passive: false });
+    }
+
+    // Always add click for desktop and fallback
+    element.addEventListener('click', (e) => {
+        if (!touchStarted) {
+            callback(e);
+        }
+    });
+}
+
+// Pull-to-Refresh (Mobile Only)
+const PullToRefresh = {
+    startY: 0,
+    currentY: 0,
+    pulling: false,
+    indicator: null,
+    threshold: 100,
+
+    init() {
+        if (!isMobileDevice()) return;
+
+        // Create indicator element
+        this.indicator = document.createElement('div');
+        this.indicator.id = 'pull-refresh-indicator';
+        this.indicator.innerHTML = '⏬ Desliza para avanzar mes';
+        this.indicator.style.cssText = `
+            position: fixed;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #38bdf8;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 9999;
+            transition: top 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            pointer-events: none;
+        `;
+        document.body.appendChild(this.indicator);
+
+        document.addEventListener('touchstart', (e) => this.onTouchStart(e), { passive: true });
+        document.addEventListener('touchmove', (e) => this.onTouchMove(e), { passive: true });
+        document.addEventListener('touchend', (e) => this.onTouchEnd(e), { passive: true });
+    },
+
+    onTouchStart(e) {
+        // Only trigger at top of page
+        if (window.scrollY > 10) return;
+        // Don't trigger on modals
+        if (e.target.closest('.custom-modal-overlay, .premium-modal-overlay, .game-alert-overlay')) return;
+
+        this.startY = e.touches[0].clientY;
+        this.pulling = true;
+    },
+
+    onTouchMove(e) {
+        if (!this.pulling) return;
+
+        this.currentY = e.touches[0].clientY;
+        const delta = this.currentY - this.startY;
+
+        if (delta > 20 && delta < this.threshold * 1.5) {
+            const progress = Math.min(delta / this.threshold, 1);
+            this.indicator.style.top = `${-50 + (delta * 0.5)}px`;
+            this.indicator.style.opacity = progress;
+
+            if (progress >= 1) {
+                this.indicator.innerHTML = '✅ ¡Suelta para avanzar!';
+                this.indicator.style.color = '#4ade80';
+            } else {
+                this.indicator.innerHTML = '⏬ Desliza para avanzar mes';
+                this.indicator.style.color = '#38bdf8';
+            }
+        }
+    },
+
+    onTouchEnd(e) {
+        if (!this.pulling) return;
+
+        const delta = this.currentY - this.startY;
+
+        if (delta >= this.threshold) {
+            hapticFeedback('success');
+            // Trigger next turn
+            if (typeof nextTurn === 'function') {
+                nextTurn();
+            }
+        }
+
+        // Reset
+        this.pulling = false;
+        this.indicator.style.top = '-50px';
+        this.indicator.style.opacity = '0';
+        this.startY = 0;
+        this.currentY = 0;
+    }
+};
+
+// Lazy Load Chart.js (Mobile Only)
+const ChartLoader = {
+    loaded: false,
+    loading: false,
+    callbacks: [],
+
+    load(callback) {
+        // If already loaded globally (desktop), just run callback
+        if (typeof Chart !== 'undefined') {
+            this.loaded = true;
+            if (callback) callback();
+            return;
+        }
+
+        // If already loaded via lazy load
+        if (this.loaded) {
+            if (callback) callback();
+            return;
+        }
+
+        // Queue callback
+        if (callback) this.callbacks.push(callback);
+
+        // If already loading, wait
+        if (this.loading) return;
+
+        this.loading = true;
+
+        const script = document.createElement('script');
+        script.src = 'assets/js/chart.min.js';
+        script.onload = () => {
+            this.loaded = true;
+            this.loading = false;
+            // Run all queued callbacks
+            this.callbacks.forEach(cb => cb());
+            this.callbacks = [];
+        };
+        script.onerror = () => {
+            this.loading = false;
+            console.warn('Failed to load Chart.js');
+        };
+        document.head.appendChild(script);
+    }
+};
+
 // Endgame
 
 function showEndgameModal() {
@@ -582,8 +769,14 @@ const ChartModule = {
     instanceStock: null, // Track stock instance too
 
     drawChart(canvasId, history, visibility = { netWorth: true, cash: true, debt: true }) {
-        // Check Lib
+        // Lazy load Chart.js on mobile if needed
         if (typeof Chart === 'undefined') {
+            if (isMobileDevice()) {
+                ChartLoader.load(() => {
+                    this.drawChart(canvasId, history, visibility);
+                });
+                return;
+            }
             console.warn('Chart.js not loaded - skipping chart rendering');
             return;
         }
@@ -701,8 +894,14 @@ const ChartModule = {
         }
     },
     drawStockChart(canvasId, stock, timeframe) {
-        // Check Lib
+        // Lazy load Chart.js on mobile if needed
         if (typeof Chart === 'undefined') {
+            if (isMobileDevice()) {
+                ChartLoader.load(() => {
+                    this.drawStockChart(canvasId, stock, timeframe);
+                });
+                return;
+            }
             console.warn('Chart.js not loaded - skipping stock chart rendering');
             return;
         }
@@ -7808,6 +8007,7 @@ const UI = {
 
 
     playCoinSound() {
+        hapticFeedback('success'); // Mobile haptic
         if (GameState.isMuted) return; // Mute Check
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -7836,6 +8036,7 @@ const UI = {
     },
 
     playLossSound() {
+        hapticFeedback('error'); // Mobile haptic
         if (GameState.isMuted) return; // Mute Check
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -11085,6 +11286,9 @@ const UI = {
 
 // Game Loop
 function nextTurn() {
+    // Mobile haptic feedback
+    hapticFeedback('medium');
+
     // Tut Cleanup
     if (GameState.tutorialStep === 4) {
         TutorialSystem.hideOverlay();

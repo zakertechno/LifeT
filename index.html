@@ -29,7 +29,12 @@
     <!-- Local Scripts -->
     <!-- Splash Screen (must load first) -->
     <script src="js/splash.js"></script>
-    <script src="assets/js/chart.min.js"></script>
+    <!-- Chart.js: Load immediately on desktop, lazy on mobile -->
+    <script>
+        if (window.innerWidth > 768) {
+            document.write('<script src="assets/js/chart.min.js"><\/script>');
+        }
+    </script>
     <script src="assets/js/twemoji.min.js"></script>
 
     <!-- Styles -->
