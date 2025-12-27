@@ -5953,16 +5953,32 @@
 
             /* Header alignment fix */
             .header-left {
-                padding-left: 5px !important;
+                padding-left: 0 !important;
+                margin-left: 0 !important;
             }
 
-            /* Hide player name button on mobile */
+            /* Show house icon, hide player name on mobile */
             .home-btn {
+                display: flex !important;
+                padding: 5px !important;
+            }
+
+            #header-player-name {
                 display: none !important;
             }
 
             .home-icon-img {
                 display: inline-flex !important;
+                font-size: 1.5rem !important;
+            }
+
+            /* Force #app full width */
+            div#app {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-sizing: border-box !important;
             }
 
             /* Scrollable modals on mobile */
