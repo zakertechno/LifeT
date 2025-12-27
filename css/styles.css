@@ -5927,8 +5927,32 @@
             }
 
             body {
-                padding-bottom: 70px;
-                background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+                padding: 0 !important;
+                margin: 0 !important;
+                padding-bottom: 70px !important;
+                background: #0f172a !important;
+            }
+
+            html {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Header alignment fix */
+            .header-left {
+                padding-left: 5px !important;
+            }
+
+            .home-btn {
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+            }
+
+            .home-icon-img {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
 
             /* Scrollable modals on mobile */
