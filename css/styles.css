@@ -3382,16 +3382,6 @@
             align-items: center;
         }
 
-        #top-bar-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 5%;
-            right: 5%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent);
-        }
-
         #top-bar-container::after {
             content: '';
             position: absolute;
@@ -4517,17 +4507,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        #top-bar-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 5%;
-            right: 5%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #facc15, #f59e0b, #facc15, transparent);
-            pointer-events: none;
         }
 
         #top-bar-container::after {
@@ -6076,20 +6055,51 @@
 
             /* Welcome modal adjustments */
             .profile-create-container {
-                padding: 15px !important;
+                padding: 10px !important;
+                gap: 8px !important;
             }
 
             .profile-rocket {
-                font-size: 2.5rem !important;
-                margin-bottom: 10px !important;
+                font-size: 2rem !important;
+                margin-bottom: 5px !important;
             }
 
             .profile-title {
-                font-size: 1.3rem !important;
+                font-size: 1.1rem !important;
+                margin-bottom: 3px !important;
             }
 
             .profile-tagline {
-                font-size: 0.85rem !important;
+                font-size: 0.75rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            /* Compact save slots */
+            .save-slot-card {
+                padding: 10px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .save-slot-card h4 {
+                font-size: 0.9rem !important;
+                margin-bottom: 4px !important;
+            }
+
+            .save-slot-card p,
+            .save-slot-card span {
+                font-size: 0.75rem !important;
+            }
+
+            .save-slot-card button {
+                padding: 8px 12px !important;
+                font-size: 0.8rem !important;
+            }
+
+            /* New game button compact */
+            .btn-new-game {
+                padding: 12px !important;
+                font-size: 0.9rem !important;
+                margin-top: 8px !important;
             }
         }
 
