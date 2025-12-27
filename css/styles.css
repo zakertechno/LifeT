@@ -4644,6 +4644,20 @@
         }
 
         @media (max-width: 768px) {
+
+            /* Consistent 95% width for all views on mobile */
+            .lifestyle-view-content,
+            .education-container,
+            .job-container,
+            .bank-container,
+            .re-container,
+            .market-container,
+            .dashboard-content {
+                width: 95% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+            }
+
             .education-container {
                 grid-template-columns: 1fr;
             }
