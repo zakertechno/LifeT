@@ -53,7 +53,7 @@ function addFastClick(element, callback) {
     });
 }
 
-// Pull-to-Refresh (Mobile Only)
+// Pull-to-Refresh (DISABLED - user preference)
 const PullToRefresh = {
     startY: 0,
     currentY: 0,
@@ -62,7 +62,8 @@ const PullToRefresh = {
     threshold: 100,
 
     init() {
-        if (!isMobileDevice()) return;
+        // Feature disabled
+        return;
 
         // Create indicator element
         this.indicator = document.createElement('div');
@@ -70,7 +71,7 @@ const PullToRefresh = {
         this.indicator.innerHTML = '⏬ Desliza para avanzar mes';
         this.indicator.style.cssText = `
             position: fixed;
-            top: -50px;
+            top: -80px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #1e293b, #334155);
@@ -80,9 +81,10 @@ const PullToRefresh = {
             font-size: 0.9rem;
             font-weight: 600;
             z-index: 9999;
-            transition: top 0.2s ease;
+            transition: top 0.2s ease, opacity 0.2s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             pointer-events: none;
+            opacity: 0;
         `;
         document.body.appendChild(this.indicator);
 
@@ -137,7 +139,7 @@ const PullToRefresh = {
 
         // Reset
         this.pulling = false;
-        this.indicator.style.top = '-50px';
+        this.indicator.style.top = '-80px';
         this.indicator.style.opacity = '0';
         this.startY = 0;
         this.currentY = 0;
