@@ -5939,9 +5939,8 @@
             }
 
             body {
-                padding: 0 !important;
+                padding: 10px 5px 70px 5px !important;
                 margin: 0 !important;
-                padding-bottom: 70px !important;
                 overflow-x: hidden !important;
                 background:
                     linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px),
