@@ -6006,22 +6006,31 @@
                 transform: none !important;
             }
 
-            /* Scrollable modals on mobile */
+            /* Scrollable modals on mobile - universal */
             .premium-modal-overlay,
             .custom-modal-overlay,
             .game-alert-overlay,
-            .game-confirm-overlay {
+            .game-confirm-overlay,
+            [class*="-overlay"] {
                 overflow-y: auto !important;
+                overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch;
                 padding: 10px !important;
                 align-items: flex-start !important;
             }
 
             .premium-modal-box,
-            .modal-box {
-                max-height: 85vh !important;
+            .modal-box,
+            .game-alert-box,
+            .game-confirm-box,
+            [class*="-box"],
+            [class*="modal"]>div {
+                max-height: 80vh !important;
+                max-width: 95vw !important;
                 overflow-y: auto !important;
+                overflow-x: hidden !important;
                 margin: 10px auto !important;
+                word-wrap: break-word !important;
             }
 
             /* Welcome modal adjustments */
