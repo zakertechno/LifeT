@@ -194,13 +194,13 @@ function showEndgameModal() {
                 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
             }
 
-            /* Premium Button Clean */
+            /* Restart Button */
             .center-btn {
                 position: relative;
                 width: 140px;
                 height: 140px;
                 border-radius: 50%;
-                /* Dark Premium Background with golden rim */
+                /* Dark background with golden rim */
                 background: radial-gradient(circle at 30% 30%, #303030, #020617);
                 border: 4px solid #451a03; 
                 color: #fbbf24; /* Gold Icon */
@@ -357,7 +357,7 @@ function resetGame() {
         </div>
     `;
 
-    // Create Premium Modal Overlay
+    // Create modal overlay
     const overlay = document.createElement('div');
     overlay.className = 'premium-modal-overlay custom-modal-overlay';
 
@@ -1048,7 +1048,7 @@ const PersistenceModule = {
 
         UI.showModal(' ', confirmContent, [], true);
 
-        // Use setTimeout to ensure DOM elements are rendered
+        // Wait for DOM render
         setTimeout(() => {
             const cancelBtn = document.getElementById('btn-overwrite-cancel');
             const confirmBtn = document.getElementById('btn-overwrite-confirm');
@@ -1871,7 +1871,7 @@ const RealEstate = {
     nextTurn() {
         // Cycle monthly market listings
         if (this.availableProperties.length > 0) {
-            // Assuming index 0 is oldest due to push order
+            // Remove oldest (index 0)
             this.availableProperties.shift();
         }
         if (this.availableProperties.length < 6) {
@@ -3435,7 +3435,7 @@ const JobSystem = {
                     fn: () => {
                         const btn = document.querySelector('.b-nav-item[data-view="job"]');
                         if (btn) btn.click();
-                        // Also for desktop?
+                        // Desktop nav
                         const dBtn = document.querySelector('.nav-btn[data-view="job"]');
                         if (dBtn) dBtn.click();
                     }
@@ -3805,8 +3805,7 @@ const TutorialSystem = {
 
         // Final check: Bottom screen edge
         if (top + tooltipRect.height > window.innerHeight - 10) {
-            // If it goes off bottom, force it above even if it's tight, or try center?
-            // Fallback to center screen if completely stuck
+            // Force above or center if stuck
             if (top < 10) {
                 top = window.innerHeight / 2 - tooltipRect.height / 2;
                 left = window.innerWidth / 2 - tooltipRect.width / 2;
@@ -4133,11 +4132,7 @@ const TutorialSystem = {
         GameState.tutorialFlags.completedFirstDegree = true;
 
         // Celebration modal
-        const themeColor = '#4ade80'; // Green/Success (Match text) or Indigo? Plan said Indigo but text uses Green. Let's stick to Green for "Enhorabuena"/Success match.
-        // Using Green (#4ade80) for success vibe
-
-
-        // But keep the success/checks vibe.
+        const themeColor = '#4ade80'; // Green/Success
 
         const finalTheme = '#818cf8'; // Indigo
         const icon = '🎓';
@@ -5501,16 +5496,14 @@ function showGameAlert(message, type = 'info', title = null, callback = null, bl
 
 // Styled confirm modal. Returns Promise<boolean>
 function showGameConfirm(message, title = '¿Confirmar?', confirmText = 'Confirmar', cancelText = 'Cancelar') {
-    // t() unavailable in default params 
-    // Assuming t() is available globally.
-    // If not, we should handle inside:
+    // t() unavailable in default params
     confirmText = confirmText === 'Confirmar' ? t('confirm') : confirmText;
     cancelText = cancelText === 'Cancelar' ? t('cancel') : cancelText;
     return new Promise((resolve) => {
         const existing = document.querySelector('.game-confirm-overlay');
         if (existing) existing.remove();
 
-        // Create premium modal
+        // Create modal
         const overlay = document.createElement('div');
         overlay.className = 'game-confirm-overlay';
         overlay.style.cssText = `
@@ -6156,7 +6149,7 @@ const UI = {
         const returnDir = totalReturn >= 0 ? '+' : '';
         const returnClass = totalReturn >= 0 ? '#4ade80' : '#f87171';
 
-        // New: Get Limits
+        // Get limits
         const limits = GameBalance.getLimits();
         const limitDisp = limits.stockCap === Infinity ? '∞' : formatCurrency(limits.stockCap);
         const limitPct = limits.stockCap === Infinity ? 0 : Math.min(100, (portValue / limits.stockCap) * 100);
@@ -6324,11 +6317,7 @@ const UI = {
         const maxCapQty = limits.stockCap === Infinity ? Infinity : Math.max(0, Math.floor(availableCap / stock.price));
         const maxQty = Math.min(maxCashQty, maxCapQty);
 
-        // New mobile-FIRST LAYOUT
-        // We use a flex-column container that takes up the full modal height
-        // content-header: Fixed
-        // content-body: Scrollable (Chart + Stats)
-        // content-footer: Fixed (Buttons)
+        // Mobile-first layout: header fixed, body scrollable, footer fixed
 
         const trendColor = stock.trend >= 0 ? '#4ade80' : '#f87171';
         const trendBg = stock.trend >= 0 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)';
@@ -6445,7 +6434,7 @@ const UI = {
 
 
         // Overwrite the default modal buttons logic by passing empty array
-        // We handle buttons manually inside the HTML
+        // Buttons handled manually in HTML
         // Sanitize newlines for HTML modal
         this.showModal(' ', msg.replace(/\n/g, ' '), [], true);
 
@@ -6663,10 +6652,7 @@ const UI = {
                 loans.map(loan => {
                     const progress = ((loan.termMonths - loan.remainingMonths) / loan.termMonths) * 100;
                     const loanIcon = loan.isMortgage ? '🏠' : '💳';
-                    // Translate loan type if it's dynamic, or leave as is if generated elsewhere.
-                    // Assuming loan.type is already correct or hard to translate retroactively. 
-                    // New mortgages use "Hipotecario...", old ones might differ.
-                    // Ideally we'd store a key, but for now let's leave loan.type.
+                    // loan.type used as-is
 
                     return `
                                             <div class="active-loan-card">
@@ -6703,11 +6689,11 @@ const UI = {
 
 
         // Events
-        const amountInput = document.getElementById('loan-amount'); // FIXED ID
-        const rangeInput = document.getElementById('loan-years'); // FIXED ID
+        const amountInput = document.getElementById('loan-amount');
+        const rangeInput = document.getElementById('loan-years');
         const yearsVal = document.getElementById('loan-years-val');
         const monthlyPreview = document.getElementById('loan-monthly-preview');
-        const btnRequest = document.getElementById('btn-request-loan-dynamic'); // Note: ID in HTML above is btn-request-loan-dynamic
+        const btnRequest = document.getElementById('btn-request-loan-dynamic');
 
         const updatePreview = () => {
             if (!amountInput || !rangeInput) return;
@@ -7735,10 +7721,10 @@ const UI = {
         document.getElementById('company-wizard-modal').style.display = 'none';
     },
 
-    // Modified to call Company Tutorial upon success
+    // Triggers Company Tutorial
     finishCompanyWizard() {
 
-        // I'll leave the event listener logic but invoke tutorial there.
+        // Tutorial invoked via event listener
     },
 
     render() {
@@ -8085,7 +8071,7 @@ const UI = {
                     ${lockOverlay}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3 style="color: #cbd5e1; margin: 0; display: flex; align-items: center; gap: 10px; font-size: 1rem;">
-                            <span style="font-size: 1.3rem;">${getCatIcon(catKey)}</span> ${t(catKey)}
+                            <span style="font-size: 1.3rem;">${getCatIcon(catKey)}</span> ${t('lifestyle_cat_' + catKey)}
                         </h3>
                         <span style="background: rgba(236, 72, 153, 0.15); color: #ec4899; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(236, 72, 153, 0.3);">${t('level')} ${levelNum}/${maxLevel}</span>
                     </div>
@@ -8475,11 +8461,7 @@ const UI = {
 
             details.appendChild(lockedGrid);
 
-            // Need to append to container. But container has innerHTML set. 
-            // We should append to the .education-container inside or just append to container?
-            // container.innerHTML replaced everything.
-            // The structure is: div#education-view > div.education-container > ...
-            // So we should append to the .education-container.
+            // Append to .education-container (not outer div)
             container.querySelector('.education-container').appendChild(details);
         }
     },
@@ -8506,12 +8488,9 @@ const UI = {
             btn.textContent = a.text;
             btn.className = `btn-modal btn-${a.style}-modal`;
             btn.onclick = () => {
-                // Execute callback first (so inputs are still in DOM)
+                // Execute callback first
                 if (a.fn) {
-                    // Optional: catch errors so modal still closes? 
-                    // For now, let's just run it. If it fails, console will show it.
-                    // But we should ensure close happens if possible, unless we want to keep it open on error?
-                    // Simple approach: Run then Close.
+                    // Run then close
                     try {
                         a.fn();
                     } catch (e) {
@@ -11085,7 +11064,7 @@ const UI = {
         // Event 2A
         if (GameState.year === 2 && GameState.month === 4) {
             GameState.expensesUnlocked = true;
-            // Notification removed as requested
+            // Notification disabled
         }
 
         // Event 2B
@@ -11544,7 +11523,7 @@ function nextTurn() {
 
     // Milestones
     const milestones = [5000, 50000, 100000, 500000, 1000000];
-    if (!GameState.achievedMilestones) GameState.achievedMilestones = []; // Old Save Safety
+    if (!GameState.achievedMilestones) GameState.achievedMilestones = []; // Legacy save fix
 
     milestones.forEach(m => {
         if (nw >= m && !GameState.achievedMilestones.includes(m)) {
@@ -11952,7 +11931,7 @@ try {
             </div>
         `;
 
-        // Create Standalone Premium Modal
+        // Create modal overlay
         const overlay = document.createElement('div');
         overlay.className = 'premium-modal-overlay custom-modal-overlay'; // custom-modal-overlay for existing querySelectors
 
@@ -12134,7 +12113,7 @@ try {
             </div>
         `;
 
-        // Create Standalone Premium Modal
+        // Create modal overlay
         const overlay = document.createElement('div');
         overlay.className = 'premium-modal-overlay custom-modal-overlay';
 

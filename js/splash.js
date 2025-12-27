@@ -86,6 +86,12 @@ function generateEpicSound() {
 }
 
 function showSplashScreen() {
+    // Skip splash on mobile devices
+    if (window.innerWidth <= 768) {
+        document.body.classList.remove('splash-active');
+        return;
+    }
+
     // Hide all content until splash finishes
     document.body.classList.add('splash-active');
 

@@ -1128,21 +1128,20 @@
                 margin: 20px auto !important;
                 width: 90% !important;
 
-                /* Prevent overflow of viewport by capping height */
+                /* Max height 80vh */
                 max-height: 80vh !important;
-                /* 80% height as requested */
 
-                /* Enable internal scrolling if content is too long */
+                /* Scrollable */
                 overflow-y: auto !important;
 
-                /* Compact padding */
+                /* Padding */
                 padding: 15px !important;
 
-                /* Ensure flex column if not already */
+                /* Flex column */
                 display: flex;
                 flex-direction: column;
 
-                /* Reset fullscreen overrides if any */
+                /* Reset border-radius */
                 border-radius: 12px !important;
             }
 
@@ -3731,7 +3730,7 @@
                 max-height: 100%;
                 border-radius: 0;
                 border: none;
-                /* Ensure scrolling happens here if needed */
+                /* Scrollable container */
                 overflow-y: hidden;
             }
 
@@ -3855,7 +3854,7 @@
             filter: grayscale(0.7);
         }
 
-        /* --- Premium Dash --- */
+        /* Company Dashboard */
 
         .comp-dash-container {
             display: flex;
@@ -4158,7 +4157,7 @@
             letter-spacing: 1px;
             cursor: pointer;
 
-            /* INVERTED STATE (Requested): Default is "Pressed/Sunken" */
+            /* Default: pressed state */
             box-shadow: none;
             transform: translateY(4px);
 
@@ -4937,16 +4936,12 @@
             transform: translateX(-50%);
             margin: 0;
             pointer-events: none;
-            /* Let clicks pass through if needed */
+            /* Click-through */
             white-space: nowrap;
             text-align: center;
         }
 
-        /* =========================================
-   MODALS REDESIGN (Welcome & Endgame)
-   ========================================= */
-
-        /* Shared / Welcome Modal */
+        /* Modals (Welcome & Endgame) */
         .welcome-back-container {
             padding: 30px;
             text-align: center;
@@ -5268,11 +5263,7 @@
             box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
         }
 
-        /* =========================================
-   MODALS REDESIGN (Welcome & Endgame)
-   ========================================= */
-
-        /* Shared / Welcome Modal */
+        /* Modals (Welcome & Endgame) */
         .welcome-back-container {
             padding: 30px;
             text-align: center;
@@ -5657,10 +5648,7 @@
             box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
         }
 
-        /* =========================================
-   PREMIUM MODAL SYSTEM (Standalone)
-   ========================================= */
-
+        /* Modal System */
         .premium-modal-overlay {
             position: fixed;
             top: 0;
@@ -5712,17 +5700,13 @@
             }
         }
 
-
-        /* =========================================
-   NEW GAME PROFILE / RESET UI
-   ========================================= */
-
+        /* Profile / Reset UI */
         .profile-create-container {
             padding: 30px;
             text-align: center;
             border-radius: 24px;
             overflow: hidden;
-            /* Background handled by parent premium-box theme */
+            /* Parent theme handles background */
         }
 
         .profile-rocket {
@@ -5931,4 +5915,53 @@
         .btn-reset-confirm:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            #app {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 10px !important;
+            }
+
+            body {
+                padding-bottom: 70px;
+                background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+            }
+
+            /* Scrollable modals on mobile */
+            .premium-modal-overlay,
+            .custom-modal-overlay,
+            .game-alert-overlay,
+            .game-confirm-overlay {
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                padding: 20px 10px !important;
+            }
+
+            .premium-modal-box,
+            .modal-box {
+                max-height: none !important;
+                margin: auto !important;
+                overflow: visible !important;
+            }
+
+            /* Welcome modal adjustments */
+            .profile-create-container {
+                padding: 15px !important;
+            }
+
+            .profile-rocket {
+                font-size: 2.5rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            .profile-title {
+                font-size: 1.3rem !important;
+            }
+
+            .profile-tagline {
+                font-size: 0.85rem !important;
+            }
         }
